@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-withdrawal',
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 export class WithdrawalPage implements OnInit {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private navCtrl: NavController
   ) { }
   accountNo = ""
   ngOnInit() {
@@ -20,6 +22,10 @@ export class WithdrawalPage implements OnInit {
 
   submit(){
     this.router.navigateByUrl('/withdrawal/amount')
+  }
+
+  goBack(){
+    this.navCtrl.back()
   }
 
 }

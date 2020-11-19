@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-confirm',
@@ -10,7 +11,8 @@ export class ConfirmPage implements OnInit {
   showProcessing = false
   processCompleted = false
   constructor(
-    private router: Router
+    private router: Router,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -24,6 +26,10 @@ export class ConfirmPage implements OnInit {
   processingButtonClicked(){
     this.showProcessing = false
     this.router.navigateByUrl('/deposit/receipt')
+  }
+
+  goBack(){
+    this.navCtrl.back()
   }
 
 }

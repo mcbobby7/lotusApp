@@ -1,6 +1,12 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>confirm</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Withdrawal</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -24,10 +30,13 @@
 
 
   <div>
-    <ion-button>Cancel</ion-button>
-    <ion-button (click)="submit()">Proceed</ion-button>
+    
   </div>
 </ion-content>
+<ion-footer style="background-color: white;">
+  <ion-button expand="block" fill="outline">Cancel</ion-button>
+  <ion-button expand="block" (click)="submit()">Proceed</ion-button>
+</ion-footer>
 
 <app-processing 
   *ngIf="showProcessing"

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-depositor-detail',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DepositorDetailPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private navCtrl: NavController
+  ) { }
 
   ngOnInit() {
+  }
+
+  goBack(){
+    this.navCtrl.back()
   }
 
 }

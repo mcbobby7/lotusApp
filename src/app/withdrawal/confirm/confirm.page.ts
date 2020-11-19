@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-confirm',
@@ -11,7 +12,8 @@ export class ConfirmPage implements OnInit {
   processCompleted = false
   showProcessing = false
   constructor(
-    private router: Router
+    private router: Router,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -25,4 +27,7 @@ export class ConfirmPage implements OnInit {
     window.setTimeout(()=>{this.processCompleted = true}, 3000)
   }
 
+  goBack(){
+    this.navCtrl.back()
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-amount',
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 export class AmountPage implements OnInit {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private navCtrl: NavController
   ) { }
   amount = ""
   get disableSubmit(){
@@ -22,4 +24,7 @@ export class AmountPage implements OnInit {
     this.router.navigateByUrl('withdrawal/confirm')
   }
 
+  goBack(){
+    this.navCtrl.back()
+  }
 }

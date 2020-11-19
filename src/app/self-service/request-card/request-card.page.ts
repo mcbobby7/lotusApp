@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-request-card',
@@ -31,7 +32,8 @@ export class RequestCardPage implements OnInit {
   ]
 
   constructor(
-    private router: Router
+    private router: Router,
+    public navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -48,5 +50,13 @@ export class RequestCardPage implements OnInit {
 
   processingButtonClicked(){
     this.router.navigateByUrl('/tabs/tab1')
+  }
+
+  goBack(){
+    if(this.page == 2){
+      this.page = 1
+    } else {
+      this.navCtrl.back()
+    }
   }
 }

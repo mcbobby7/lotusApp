@@ -1,6 +1,12 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>request-card</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Request Card</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,12 +22,12 @@
     </div>
     <div class="form-group">
       <ion-label> Select Pickup Location </ion-label>
-      <ion-select-option
+      <ion-select>
+        <ion-select-option
         *ngFor="let location of pickUpLocations"
         [value]="location.id"
-        >{{location.name}}</ion-select-option
-      >
-      <ion-select> </ion-select>
+        >{{location.name}}</ion-select-option>
+      </ion-select>
     </div>
   </ng-template>
   <ng-template [ngIf]="page==2">
