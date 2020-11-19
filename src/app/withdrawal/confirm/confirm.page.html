@@ -1,0 +1,58 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Withdrawal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <div class="title-value">
+        <span class="title">Account Name</span>
+        <span class="value">Oreoluwa Uche H.</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Account Number</span>
+        <span class="value">010101010101</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Amount</span>
+        <span class="value">1000</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+
+  <div>
+    
+  </div>
+</ion-content>
+<ion-footer style="background-color: white;">
+  <ion-button expand="block" fill="outline">Cancel</ion-button>
+  <ion-button expand="block" (click)="submit()">Proceed</ion-button>
+</ion-footer>
+
+<app-processing 
+  *ngIf="showProcessing"
+  (buttonClick)="processingButtonClicked()"
+  [processCompleted]="processCompleted"
+  >
+  <span processed-title>
+    Generate Receipt
+  </span>
+  <span processed-detail>
+    Please collect cash from teller
+  </span>
+  <span processing-title>
+    Request Submitted
+  </span>
+  <span processing-detail>
+    Please hold on for authentication
+  </span>
+</app-processing>

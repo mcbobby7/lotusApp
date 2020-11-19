@@ -1,0 +1,28 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goback()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Account Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid style="padding: 15px 15px 0 15px">
+      <ion-col size="8">
+        <ion-label>Account Number or BVN</ion-label>
+          <div style="padding: 5px;"></div>
+            <div style="border:1px solid #dddada; border-radius: 5px;">
+            <ion-input type="text" placeholder="Enter Account Number here"></ion-input>
+          </div> 
+      </ion-col>     
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+        <ion-button expand="full" style="background-color: #4895CE;" (click)="submit()">Proceed</ion-button>
+</ion-footer>

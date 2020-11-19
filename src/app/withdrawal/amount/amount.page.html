@@ -1,0 +1,38 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Withdrawal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <div class="title-value">
+        <span class="title">Account Name</span>
+        <span class="value">Oreoluwa Uche H.</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Account Number</span>
+        <span class="value">010101010101</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="form-group">
+    <ion-label>
+      Amount
+    </ion-label>
+    <ion-input [(ngModel)]="amount" style="border: 1px solid black; border-radius: 2px;"></ion-input>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
+</ion-footer>
