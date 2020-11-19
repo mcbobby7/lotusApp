@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>deposit</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-group">
+    <ion-label>
+      Account Number
+    </ion-label>
+    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+  </div>
+  <div class="form-group">
+    <ion-label>
+      Account Name
+    </ion-label>
+    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+  </div>
+  <div class="form-group">
+    <ion-label>
+      Amount
+    </ion-label>
+    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="block" [routerLink]="['/deposit/depositor-detail']">Proceed</ion-button>
+</ion-footer>

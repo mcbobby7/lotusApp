@@ -24,6 +24,9 @@
     </ion-label>
     <ion-input [(ngModel)]="amount" style="border: 1px solid black; border-radius: 2px;"></ion-input>
   </div>
-  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
 
 </ion-content>
+
+<ion-footer>
+  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
+</ion-footer>

@@ -25,6 +25,25 @@
 
   <div>
     <ion-button>Cancel</ion-button>
-    <ion-button>Proceed</ion-button>
+    <ion-button (click)="submit()">Proceed</ion-button>
   </div>
 </ion-content>
+
+<app-processing 
+  *ngIf="showProcessing"
+  (buttonClick)="processingButtonClicked()"
+  [processCompleted]="processCompleted"
+  >
+  <span processed-title>
+    Generate Receipt
+  </span>
+  <span processed-detail>
+    Please collect cash from teller
+  </span>
+  <span processing-title>
+    Request Submitted
+  </span>
+  <span processing-detail>
+    Please hold on for authentication
+  </span>
+</app-processing>

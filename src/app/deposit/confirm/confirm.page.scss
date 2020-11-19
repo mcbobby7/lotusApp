@@ -1,0 +1,42 @@
+.title-value{
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    color: #000000;
+}
+
+.title{
+    font-weight: 16px;
+    font-weight: 400;
+}
+
+.value{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.edit-container{
+    margin-top: -20px;
+    margin-bottom: -20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.edit-container > div{
+    background-color: blue;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+ion-card-header{
+    display: flex; justify-content: space-between;
+    font-size: medium;
+    font-weight: bold;
+}

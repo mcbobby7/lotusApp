@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,9 +7,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./confirm.page.scss'],
 })
 export class ConfirmPage implements OnInit {
-
-  processCompleted = false
   showProcessing = false
+  processCompleted = false
   constructor(
     private router: Router
   ) { }
@@ -17,12 +16,14 @@ export class ConfirmPage implements OnInit {
   ngOnInit() {
   }
 
-  processingButtonClicked(){
-    this.router.navigateByUrl('deposit/receipt')
-  }
   submit(){
     this.showProcessing = true
     window.setTimeout(()=>{this.processCompleted = true}, 3000)
+  }
+
+  processingButtonClicked(){
+    this.showProcessing = false
+    this.router.navigateByUrl('/deposit/receipt')
   }
 
 }

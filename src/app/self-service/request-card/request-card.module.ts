@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ConfirmPageRoutingModule } from './confirm-routing.module';
+import { RequestCardPageRoutingModule } from './request-card-routing.module';
 
-import { ConfirmPage } from './confirm.page';
+import { RequestCardPage } from './request-card.page';
 import { ProcessingComponent } from 'src/app/processing/processing.component';
 
 @NgModule({
@@ -14,8 +14,8 @@ import { ProcessingComponent } from 'src/app/processing/processing.component';
     CommonModule,
     FormsModule,
     IonicModule,
-    ConfirmPageRoutingModule
+    RequestCardPageRoutingModule
   ],
-  declarations: [ConfirmPage, ProcessingComponent]
+  declarations: [RequestCardPage, ProcessingComponent]
 })
-export class ConfirmPageModule {}
+export class RequestCardPageModule {}

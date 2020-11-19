@@ -1,0 +1,18 @@
+<div class="main">
+  <div style="margin: 30px" >
+    <ion-spinner name="lines" [ngStyle]="{display: processCompleted ? 'none' : 'block'}"></ion-spinner>
+  </div>
+
+  <div style="margin: 10px;">
+    <ion-label color='primary' style="font-size: 20px; font-weight: bold;">
+      <ng-content *ngIf="processCompleted" select="[processed-title]"></ng-content>
+      <ng-content *ngIf="!processCompleted" select="[processing-title]"></ng-content>
+    </ion-label></div>
+  <div style="font-size: 15px;">
+    <ng-content *ngIf="processCompleted" select="[processed-detail]"></ng-content>
+    <ng-content *ngIf="!processCompleted" select="[processing-detail]"></ng-content>
+  </div>
+  <div style="margin: 10px; width: 70vw;">
+    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block'>{{successButtonText}}</ion-button>
+  </div>
+</div>
