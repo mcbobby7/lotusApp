@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>amount</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <div class="title-value">
+        <span class="title">Account Name</span>
+        <span class="value">Oreoluwa Uche H.</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Account Number</span>
+        <span class="value">010101010101</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="form-group">
+    <ion-label>
+      Amount
+    </ion-label>
+    <ion-input [(ngModel)]="amount" style="border: 1px solid black; border-radius: 2px;"></ion-input>
+  </div>
+  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
+
+</ion-content>
