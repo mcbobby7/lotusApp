@@ -1,0 +1,38 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goback()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center;">Generate Statement</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-label style="text-align: center;">Select Statement Period</ion-label>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-label>From:</ion-label> 
+          <div style="border-radius: 5px; border: 1px bold; display:flex; align-items: center;">
+            <ion-datetime #datetime displayFormat="DD MM YY" placeholder="12/Oct/2020"></ion-datetime>
+            <ion-icon name="calendar" (click)="showDate()"></ion-icon>
+          </div>
+      </ion-col>
+      <ion-col>
+          <ion-label>To:</ion-label>        
+          <div style="border-radius: 5px; border: 1px bold; display:flex; align-items: center;">
+            <ion-datetime #datetime displayFormat="DD MM YY" placeholder="12/Oct/2020"></ion-datetime>
+            <ion-icon name="calendar" (click)="showDate()"></ion-icon>
+          </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+<ion-footer class="ion-no-border">
+        <ion-button expand="full" style="background-color: #4895CE;">Send To</ion-button>
+</ion-footer>
