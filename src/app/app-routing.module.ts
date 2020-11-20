@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'withdrawal',
-    loadChildren: () => import('./withdrawal/withdrawal.module').then( m => m.WithdrawalPageModule)
+    loadChildren: () => import('./withdrawal/withdrawal.module').then( m => m.WithdrawalPageModule),
   },
   {
     path: 'deposit',
@@ -28,11 +28,13 @@ const routes: Routes = [
   },
   {
     path: 'self-service',
-    loadChildren: () => import('./self-service/self-service.module').then( m => m.SelfServicePageModule)
+    loadChildren: () => import('./self-service/self-service.module').then( m => m.SelfServicePageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'customercare',
-    loadChildren: () => import('./customercare/customercare.module').then( m => m.CustomercarePageModule)
+    loadChildren: () => import('./customercare/customercare.module').then( m => m.CustomercarePageModule),
+    canActivate: [AuthGuard]
   }
 ];
 

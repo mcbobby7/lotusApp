@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { User, UserClass } from "../_models/user";
 import { Storage } from '@ionic/storage';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class AuthenticationService {
     main_id = 0;
     user: User={}
     users = [];
+    justAuthenticated = new Subject<User>()
  constructor(public storage: Storage){}
 
     getuser(){
@@ -63,7 +65,8 @@ export class AuthenticationService {
         updateuser(user){        
         this.users = [];
         this.users.push(user);
-        this.storage.set('user', this.users);     
+        this.storage.set('user', this.users);    
+        this.justAuthenticated.next(user) 
       
         }
 
