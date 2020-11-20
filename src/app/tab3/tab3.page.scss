@@ -1,0 +1,47 @@
+.avatar {
+    vertical-align: middle;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.head-section{
+    background-color: #4895CEFF; padding: 10px; padding-top: 30px; display: flex; flex-direction: column;
+    color: white;
+    border-radius: 50px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    padding-bottom: 50px;
+}
+
+.head-section > *{
+    padding: 10px;
+}
+
+.card-title{
+    padding-top: 20px; font-size: 17px; font-weight: 500;
+}
+
+.card-icon-svg{
+    height: 40px; width: 40px
+}
+
+.card-icon-cover{
+    padding: 10px; border-radius: 50%; background-color: white
+}
+
+.card-icon-section{
+    display: flex; justify-content: flex-end;
+}
+
+.card-title-detail{
+    font-size: 11px;
+    font-weight: 100;
+    color: red;
+    line-height: 15px;
+    padding-top: 10px;
+}
+
+.card{
+    margin: 10px; flex: auto; padding: 10px; border-radius: 10px; width: 50%;box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}

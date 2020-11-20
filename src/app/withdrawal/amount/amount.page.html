@@ -1,6 +1,12 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>amount</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Withdrawal</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -24,6 +30,9 @@
     </ion-label>
     <ion-input [(ngModel)]="amount" style="border: 1px solid black; border-radius: 2px;"></ion-input>
   </div>
-  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
 
 </ion-content>
+
+<ion-footer>
+  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
+</ion-footer>

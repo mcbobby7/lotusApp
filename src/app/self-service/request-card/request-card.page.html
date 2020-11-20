@@ -1,0 +1,90 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Request Card</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-template [ngIf]="page==1">
+    <div class="form-group">
+      <ion-label> Select Card Type </ion-label>
+      <ion-select>
+        <ion-select-option *ngFor="let type of cardTypes" [value]="type.id"
+          >{{type.name}}</ion-select-option
+        >
+      </ion-select>
+    </div>
+    <div class="form-group">
+      <ion-label> Select Pickup Location </ion-label>
+      <ion-select>
+        <ion-select-option
+        *ngFor="let location of pickUpLocations"
+        [value]="location.id"
+        >{{location.name}}</ion-select-option>
+      </ion-select>
+    </div>
+  </ng-template>
+  <ng-template [ngIf]="page==2">
+    <ion-card>
+      <ion-card-header color='primary'>
+        <span>
+          Card Detail
+        </span>
+        <div class="edit-container">
+          <div>
+            <ion-icon name="pencil-outline"></ion-icon>
+          </div>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="title-value">
+          <span class="title">Card Type</span>
+          <span class="value">MasterCard</span>
+        </div>
+        <div class="title-value">
+          <span class="title">Pickup Location</span>
+          <span class="value">Abuja</span>
+        </div>
+        <div style="font-size: 12px; color: teal">
+          You will be charged N1,050.00 for card production charge please select
+          debit account.
+        </div>
+        <div class="form-group">
+          <ion-label> Select Account </ion-label>
+          <ion-select>
+            <ion-select-option
+            *ngFor="let account of userAccounts"
+            [value]="account.id"
+            >{{account.name}}</ion-select-option
+          >
+          </ion-select>
+        </div>
+      </ion-card-content>
+      </ion-card>
+  </ng-template>
+</ion-content>
+
+<ion-footer>
+  <ion-button (click)="onSubmit()" expand="block">Proceed</ion-button>
+</ion-footer>
+
+<app-processing successButtonText="Goto Home" *ngIf="showProcessing" (buttonClick)="processingButtonClicked()" [processCompleted]="processCompleted">
+  <span processed-title>
+    Successful
+  </span>
+  <span processed-detail>
+    
+  </span>
+  <span processing-title>
+    Processing
+  </span>
+  <span processing-detail>
+    
+  </span>
+</app-processing>

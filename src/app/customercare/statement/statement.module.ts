@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { StatementPageRoutingModule } from './statement-routing.module';
 
 import { StatementPage } from './statement.page';
+import { ProcessingComponent } from 'src/app/processing/processing.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { StatementPage } from './statement.page';
     IonicModule,
     StatementPageRoutingModule
   ],
-  declarations: [StatementPage]
+  declarations: [StatementPage, ProcessingComponent]
 })
 export class StatementPageModule {}

@@ -1,0 +1,91 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Deposit</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header color='primary'>
+      <span>
+        Account Detail
+      </span>
+      <div class="edit-container">
+        <div>
+          <ion-icon name="pencil-outline"></ion-icon>
+        </div>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="title-value">
+        <span class="title">Account Name</span>
+        <span class="value">Oreoluwa Uche H.</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Account Number</span>
+        <span class="value">010101010101</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Amount</span>
+        <span class="value">1000</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header color='primary'>
+      <span>
+        Depositor Detail
+      </span>
+      <div class="edit-container">
+        <div>
+          <ion-icon name="pencil-outline"></ion-icon>
+        </div>
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="title-value">
+        <span class="title">Name</span>
+        <span class="value">Oreoluwa Uche H.</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Phone Number</span>
+        <span class="value">010101010101</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Email Address</span>
+        <span class="value">1000</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Comment</span>
+        <span class="value">1000</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="block" (click)="submit()">
+    Confirm
+  </ion-button>
+</ion-footer>
+
+<app-processing *ngIf="showProcessing" (buttonClick)="processingButtonClicked()" (click)="processingClicked()" [processCompleted]="processCompleted">
+  <span processed-title>
+    Request Submitted
+  </span>
+  <span processed-detail>
+    Transaction Successful
+  </span>
+  <span processing-title>
+    Please hand cash over to Teller
+  </span>
+  <span processing-detail>
+    Generate Receipt
+  </span>
+</app-processing>
