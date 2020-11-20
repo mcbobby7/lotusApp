@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <g id="Group_3798" data-name="Group 3798" transform="translate(-52 -201)">
+    <rect id="Rectangle_320" data-name="Rectangle 320" width="48" height="48" rx="10" transform="translate(52 201)" fill="#4791ff" opacity="0.17"/>
+    <g id="wallet" transform="translate(61.728 209.523)">
+      <path id="Path_12500" data-name="Path 12500" d="M40.861,10.344V5.172H35.689V0H24.482V3.448H21.9V5.172H18.448A3.452,3.452,0,0,0,15,8.62V24.51a4.8,4.8,0,0,0,4.8,4.8H42.585V10.344ZM39.137,6.9v3.448H35.689V6.9ZM26.206,1.724h7.758v8.62H32.24v-6.9H26.206ZM23.62,5.172h6.9v5.172h-6.9ZM18.448,6.9H21.9v3.448H18.448a1.724,1.724,0,1,1,0-3.448ZM16.724,24.51V11.6a3.425,3.425,0,0,0,1.724.464h.862V27.545A3.079,3.079,0,0,1,16.724,24.51Zm24.137-2.94H36.15L35,19.846l1.149-1.724h4.711ZM35.227,16.4l-2.3,3.448,2.3,3.448h5.633v4.29H24.482V19.846H22.758v7.738H21.034V12.068H40.861V16.4Z" transform="translate(-15)" fill="#4895ce"/>
+    </g>
+  </g>
+</svg>
