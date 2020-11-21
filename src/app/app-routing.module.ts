@@ -4,7 +4,7 @@ import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 
 const routes: Routes = [
   
-   {path: '', redirectTo: 'deposit/receipt', pathMatch: 'full'},
+  //  {path: '', redirectTo: 'deposit/receipt', pathMatch: 'full'},
   {
     path: '',
     // redirectTo: 'self-service/request-card',
@@ -34,7 +34,6 @@ const routes: Routes = [
   {
     path: 'customercare',
     loadChildren: () => import('./customercare/customercare.module').then( m => m.CustomercarePageModule),
-    canActivate: [AuthGuard]
   }
 ];
 

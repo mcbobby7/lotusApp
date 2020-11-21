@@ -25,7 +25,8 @@ export class ConfirmPage implements OnInit {
 
   processingButtonClicked(){
     this.showProcessing = false
-    this.router.navigateByUrl('/deposit/receipt')
+    // this.router.navigateByUrl('/deposit/receipt')
+    this.router.navigateByUrl('/')
   }
 
   goBack(){

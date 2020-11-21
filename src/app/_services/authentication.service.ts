@@ -63,11 +63,10 @@ export class AuthenticationService {
               }
 
         updateuser(user){        
-        this.users = [];
-        this.users.push(user);
-        this.storage.set('user', this.users);    
-        this.justAuthenticated.next(user) 
-      
+            this.users = [];
+            this.users.push(user);
+            this.storage.set('user', this.users);    
+            this.justAuthenticated.next(user)
         }
 
         removeUser(user): void {

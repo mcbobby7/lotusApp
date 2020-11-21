@@ -4,63 +4,71 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-<div style="display: flex; margin-top: 50px">
+<div style="
+display: flex;
+height: calc(100vh - 110px);
+justify-content: space-between;
+flex-direction: column;
+">
   <div class="card" (click)="goto('/customercare/balance')">
-    <div class="card-icon-section">
-      <div class='card-icon-cover'>
-        <ion-icon name="reader-outline" class="card-icon-svg"></ion-icon>
+    <div>
+      <div class="card-icon-section">
+        <div class="card-icon-cover">
+          <img src="/assets/images/account-balance.svg" />
+        </div>
+      </div>
+      <div>
+        <div class="card-title">Account Balance</div>
+        <div class="card-title-detail">
+          Check your account balance
+        </div>
       </div>
     </div>
-    <div class="card-title">
-      Account Balance
-    </div>
-    <!-- <div class="card-title-detail" style="color: #FF7474;">
-      Deposit money into your account
-    </div> -->
   </div>
-
-  <div class="card" (click)="goto('/customercare')">
-    <div class="card-icon-section">
-      <div class='card-icon-cover'>
-        <ion-icon name="square-outline"  class="card-icon-svg"></ion-icon>
+<div class="card" (click)="goto('')">
+    <div>
+      <div class="card-icon-section">
+        <div class="card-icon-cover">
+          <img src="/assets/images/BVN-details.svg" />
+        </div>
+      </div>
+      <div>
+        <div class="card-title">BVN details</div>
+        <div class="card-title-detail">
+          Check your BVN information
+        </div>
       </div>
     </div>
-    <div class="card-title">
-      BVN details
-    </div>
-    <!-- <div class="card-title-detail" style="color: #AF89EE;">
-      Withdraw money to your bank account
-    </div> -->
   </div>
-</div>
-
-<div style="display: flex;">
-  <div class="card">
-    <div class="card-icon-section">
-      <div class='card-icon-cover'>
-        <ion-icon name="person-outline" class="card-icon-svg"></ion-icon>
+<div class="card" (click)="goto('')">
+    <div>
+      <div class="card-icon-section">
+        <div class="card-icon-cover">
+          <img src="/assets/images/account officer.svg" />
+        </div>
+      </div>
+      <div>
+        <div class="card-title">Accout Officer</div>
+        <div class="card-title-detail">
+          Get contact details of your account officer
+        </div>
       </div>
     </div>
-    <div class="card-title">
-      Account Officer
-    </div>
-    <!-- <div class="card-title-detail" style="color: #7CB599;">
-      Check your account balance, transaction history, etc
-    </div> -->
   </div>
-
-  <div class="card" (click)="goto('/customercare/statement')">
-    <div class="card-icon-section">
-      <div class='card-icon-cover'>
-        <ion-icon name="receipt-outline" class="card-icon-svg"></ion-icon>
+<div class="card" (click)="goto('/customercare/statement')">
+    <div>
+      <div class="card-icon-section">
+        <div class="card-icon-cover">
+          <img src="/assets/images/generate-statement.svg" />
+        </div>
+      </div>
+      <div>
+        <div class="card-title">Generate Statetment</div>
+        <div class="card-title-detail">
+          Get your account statement
+        </div>
       </div>
     </div>
-    <div class="card-title">
-      Generate statement
-    </div>
-    <!-- <div class="card-title-detail" style="color: #1F75E9;">
-      Chat with our customer service, get your account manager information
-    </div> -->
   </div>
 </div>
 </ion-content>
