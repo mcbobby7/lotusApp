@@ -4,7 +4,7 @@ import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 
 const routes: Routes = [
   
-  // {path: '', redirectTo: 'customercare/statement', pathMatch: 'full'},
+   {path: '', redirectTo: 'deposit/receipt', pathMatch: 'full'},
   {
     path: '',
     // redirectTo: 'self-service/request-card',

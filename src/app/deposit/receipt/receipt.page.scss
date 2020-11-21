@@ -1,0 +1,28 @@
+.cta1 {
+    --background:#FFFFFF;
+    --color: #707070;
+    --border-color:#707070;
+    --border-width: 0.5px;
+    font-size: 14px;
+    display: block;
+    --border-radius: 4px;
+    opacity: 100%; 
+    text-transform: uppercase;
+}
+
+#cancel, #confirm {
+    display:inline-block;
+    width: 48%;
+    height:50px;
+    padding: 5px;
+}
+
+.cta {
+    --background:#4895CE;
+    --color: #fff;
+    font-size: 14px;
+    display: block;
+    --border-radius: 4px;
+    opacity: 100%; 
+    text-transform: uppercase;
+}

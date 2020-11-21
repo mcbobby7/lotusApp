@@ -32,4 +32,8 @@ export class ConfirmPage implements OnInit {
     this.navCtrl.back()
   }
 
+  processingClicked(){
+    
+  }
+
 }
