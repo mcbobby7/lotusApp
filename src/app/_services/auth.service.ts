@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from './authentication.service';
 import { User, UserClass } from "../_models/user";
+import { Subject } from 'rxjs';
 
 
 @Injectable()
 export class AuthService {
+  authenticated = new Subject<User>()
     main_id = 0;
     user: User={}
     authstatus: boolean = false;
@@ -18,13 +20,12 @@ return new Promise((resolve, reject) => {
   //  console.log(users[0]);
 
     this.user = users[0];    
-  // console.log(this.user)
     if (this.user) {
       this.main_id = this.user.id;
-    //  console.log('User in App Components: ', this.user);
       let auStatus = false;
       if (this.user.user_id > 0) {
- 
+        this.authenticated.next(this.user)
+        resolve(true) 
         } else {
           this.authServ.clearusers();
           resolve(false);
