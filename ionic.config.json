@@ -1,5 +1,7 @@
 {
   "name": "BankTeller-Automation",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

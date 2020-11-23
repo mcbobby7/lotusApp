@@ -1,0 +1,97 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
+        ;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Funds Transfer</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- <ion-card>
+    <ion-card-content>
+      <div class="title-value">
+        <span class="title">Account Name</span>
+        <span class="value">Oreoluwa Uche H.</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Account Number</span>
+        <span class="value">010101010101</span>
+      </div>
+      <div class="title-value">
+        <span class="title">Amount</span>
+        <span class="value">1000</span>
+      </div>
+    </ion-card-content>
+  </ion-card> -->
+
+  <ion-card style="margin: 12px; background-color: #E0ECFF;">
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="5"><span style="font-size: 12px; color: #000; font-weight: bold;">Bank Name:</span></ion-col>
+          <ion-col size="7"><span style="font-size: 10px; color: #000; float: right;">Guaranty Trust Bank</span></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="7"><span style="font-size: 12px; color: #000; font-weight: bold;">Account Name:</span></ion-col>
+          <ion-col size="5"><span style="font-size: 10px; color: #000;float: right;">Sherif Sorunke</span></ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Account Number:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;"><span style="float: right;">9866435723</span></ion-col>          
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Amount:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;float: right;">
+            <span style="float: right;">{{30000 | number:'.2'}}</span>
+            </ion-col>          
+        </ion-row>         
+        
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <div>
+    
+  </div>
+</ion-content>
+<ion-footer style="background-color: white;" class="ion-no-border">
+  <ion-row>
+    <ion-col size="6">
+      <ion-button class="cta1" expand="block" (click)="goBack()" id="cancel"  fill="outline">
+        <ion-label>CANCEL</ion-label>
+      </ion-button>
+    </ion-col>
+    <ion-col size="6">
+       
+    <ion-button (click)="submit()" class="cta" expand="block" id="confirm" fill="default">
+      <ion-label>CONFIRM</ion-label>
+    </ion-button>
+    </ion-col>
+  </ion-row>
+
+</ion-footer >
+
+<app-processing 
+  *ngIf="showProcessing"
+  (buttonClick)="processingButtonClicked()"
+  [processCompleted]="processCompleted"
+  >
+  <span processed-title>
+    Generate Receipt
+  </span>
+  <span processed-detail>
+    Please collect cash from teller
+  </span>
+  <span processing-title>
+    Request Submitted
+  </span>
+  <span processing-detail>
+    Please hold on for authentication
+  </span>
+</app-processing>

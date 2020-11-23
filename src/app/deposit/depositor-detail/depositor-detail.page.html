@@ -6,37 +6,37 @@
         ;"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Deposit</ion-title>
+    <ion-title>Depositor's Details</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="form-group">
     <ion-label>
-      Name
+      Full Name
     </ion-label>
-    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+    <ion-input placeholder="Full Name"></ion-input>
   </div>
   <div class="form-group">
     <ion-label>
       Phone number
     </ion-label>
-    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+    <ion-input placeholder="Phone number"></ion-input>
   </div>
   <div class="form-group">
     <ion-label>
       Email
     </ion-label>
-    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+    <ion-input placeholder="Email"></ion-input>
   </div>
   <div class="form-group">
     <ion-label>
       Comments
     </ion-label>
-    <ion-input style="border: 1px solid black; border-radius: 2px;"></ion-input>
+    <ion-textarea rows="6" placeholder="Comments"></ion-textarea>
   </div>
 </ion-content>
 
-<ion-footer>
+<ion-footer class="ion-no-border">
   <ion-button expand="block" [routerLink]="['/deposit/confirm']">Proceed</ion-button>
 </ion-footer>

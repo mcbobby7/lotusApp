@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'customercare',
     loadChildren: () => import('./customercare/customercare.module').then( m => m.CustomercarePageModule),
+  },  {
+    path: 'fundtransfer',
+    loadChildren: () => import('./fundtransfer/fundtransfer.module').then( m => m.FundtransferPageModule)
   }
+
 ];
 
 @NgModule({

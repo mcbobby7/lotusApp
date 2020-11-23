@@ -20,7 +20,7 @@ export class ConfirmPage implements OnInit {
 
   submit(){
     this.showProcessing = true
-    window.setTimeout(()=>{this.processCompleted = true}, 3000)
+    window.setTimeout(()=>{this.processCompleted = true}, 5000)
   }
 
   processingButtonClicked(){

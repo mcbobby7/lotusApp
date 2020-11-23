@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" style="background-color: #F5F6FA; !important">
+<ion-content [fullscreen]="true" style="background-color: #F5F6FA !important">
   <!-- <div style="" class="head-section">
     <img src="https://www.w3schools.com/howto/img_avatar.png" class="avatar">
 
@@ -21,7 +21,7 @@
     />
   </div>
 
-  <div style="padding-left: 20px !important; margin-bottom: -20px;">What do you want to do today</div>
+  <div style="padding-left: 14px !important; margin-bottom: -20px;">What do you want to do today</div>
 
   <div
     style="
@@ -60,6 +60,21 @@
         </div>
       </div>
     </div>
+    <div class="card" (click)="gotofundtransfer()">
+      <div>
+        <div class="card-icon-section">
+          <div class="card-icon-cover">
+            <img src="/assets/images/self-service.svg" />
+          </div>
+        </div>
+        <div>
+          <div class="card-title">Funds Transfer</div>
+          <div class="card-title-detail">
+            Transfer funds to another account
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- </div> -->
 
     <!-- <div style="display: flex;"> -->
@@ -71,7 +86,7 @@
           </div>
         </div>
         <div>
-          <div class="card-title">Self service</div>
+          <div class="card-title">Self Service</div>
           <div class="card-title-detail">
             Check your account balance, transaction history, etc
           </div>

@@ -11,26 +11,33 @@
 </ion-header>
 
 <ion-content>
-  <div class="form-group">
+  <div class="form-group" *ngIf="intrusmntType == 'cash'">
     <ion-label>
       Account Number
     </ion-label>
-    <ion-input></ion-input>
+    <ion-input placeholder="Account Number"></ion-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" *ngIf="intrusmntType == 'Cheque'">
     <ion-label>
-      Account Name
+      Bank Name
     </ion-label>
-    <ion-input></ion-input>
+    <ion-input placeholder="Bank Name"></ion-input>
   </div>
-  <div class="form-group">
+  <div class="form-group" *ngIf="intrusmntType == 'Cheque'">
     <ion-label>
-      Amount
+     Cheque Number
     </ion-label>
-    <ion-input></ion-input>
+    <ion-input placeholder="Cheque Number"></ion-input>
+  </div>
+  <div class="form-group" >
+    <ion-label>
+      <span *ngIf="intrusmntType == 'Cheque'">Total Amount on Cheque</span>
+      <span *ngIf="intrusmntType == 'cash'">Amount</span>
+    </ion-label>
+    <ion-input placeholder="Amount"></ion-input>
   </div>
 </ion-content>
 
-<ion-footer>
+<ion-footer class="ion-no-border">
   <ion-button expand="block" [routerLink]="['/deposit/depositor-detail']">Proceed</ion-button>
 </ion-footer>

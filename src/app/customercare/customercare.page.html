@@ -7,6 +7,7 @@
       </ion-button>
     </ion-buttons>
     <ion-title>Account Login</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
@@ -15,14 +16,14 @@
       <ion-col size="8">
         <ion-label>Account Number or BVN</ion-label>
           <div style="padding: 5px;"></div>
-            <div style="border:1px solid #dddada; border-radius: 5px;">
-            <ion-input type="text" placeholder="Enter Account Number here"></ion-input>
-          </div> 
+         
+            <ion-input type="text" placeholder="Enter Account Number here" style="font-size: 12px;"></ion-input>
+          
       </ion-col>     
   </ion-grid>
 
 </ion-content>
 
-<ion-footer>
+<ion-footer class="ion-no-border">
         <ion-button expand="full" style="background-color: #4895CE;" (click)="submit()">Proceed</ion-button>
 </ion-footer>

@@ -16,7 +16,9 @@
     <ng-content *ngIf="processCompleted" select="[processed-detail]"></ng-content>
     <ng-content *ngIf="!processCompleted" select="[processing-detail]"></ng-content>
   </div>
-  <div style="margin: 10px; width: 70vw;">
+  <div style="margin: 10px; width: 70vw;" >
     <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block'>{{successButtonText}}</ion-button>
+    <div style="padding: 5px;"></div>
+    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline">{{okButtonText}}</ion-button>
   </div>
 </div>
