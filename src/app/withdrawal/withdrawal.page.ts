@@ -36,8 +36,9 @@ export class WithdrawalPage implements OnInit {
       withdrawalForm.accountName = bank.name
       withdrawalForm.accountNo = this.accountNo
       withdrawalForm.balance = bank.balance
-      this.withdrawalService.store(withdrawalForm)
-      this.router.navigateByUrl('/withdrawal/amount')
+      this.withdrawalService.store(withdrawalForm).then(data => {
+        this.router.navigate(['capturebiometric'], {queryParams: {nxtRoute: '/withdrawal/amount'}})
+      })
     }, err => {
       this.loadingAccountName = false
       this.shortcuts.showErrorToast('Error fetching account details')
