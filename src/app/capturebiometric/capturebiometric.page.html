@@ -1,0 +1,38 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Withdrawal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="main">
+    <div style="margin: 20px" >
+      <img src="assets/images/biometric.png" *ngIf="!startSpinner && !processCompleted">
+      <ion-spinner name="lines" *ngIf="startSpinner"></ion-spinner>
+      
+      <div *ngIf="processCompleted">
+        <ion-icon name="checkmark-outline" color="primary" style="width: 50px; height: 50px;"></ion-icon>
+      </div>
+    </div>
+  
+    <div style="margin: 10px;">
+      <ion-label color='primary' style="font-size: 18px; font-weight: bold;text-align: center;">
+        <span *ngIf="processCompleted">
+          Biometric verified Successfully
+        </span>
+        <span *ngIf="!processCompleted && !startSpinner">
+          Place finger on the fingerprint device to verify account
+        </span>
+        <span *ngIf="!processCompleted && startSpinner">
+          Biometric Captured
+        </span>
+      </ion-label>
+    </div>
+
+  </div>
+</ion-content>
