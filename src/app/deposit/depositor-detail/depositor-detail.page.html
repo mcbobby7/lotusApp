@@ -2,8 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
-        ;"></ion-icon>
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>Depositor's Details</ion-title>
@@ -15,25 +14,26 @@
     <ion-label>
       Full Name
     </ion-label>
-    <ion-input placeholder="Full Name"></ion-input>
+    <ion-input placeholder="Full Name" [(ngModel)]="depositObj.depositorFullname" name="depositorFullname" id="depositorFullname" #depositorFullname="ngModel" required></ion-input>
+  
   </div>
   <div class="form-group">
     <ion-label>
       Phone number
     </ion-label>
-    <ion-input placeholder="Phone number"></ion-input>
+    <ion-input placeholder="Phone number" [(ngModel)]="depositObj.depositorPhoneNumber" name="depositorPhoneNumber" id="depositorPhoneNumber" #depositorPhoneNumber="ngModel" required></ion-input>
   </div>
   <div class="form-group">
     <ion-label>
       Email
     </ion-label>
-    <ion-input placeholder="Email"></ion-input>
+    <ion-input placeholder="Email" [(ngModel)]="depositObj.depositorEmail" name="depositorEmail" id="depositorEmail" #depositorEmail="ngModel" ></ion-input>
   </div>
   <div class="form-group">
     <ion-label>
-      Comments
+      Narration
     </ion-label>
-    <ion-textarea rows="6" placeholder="Comments"></ion-textarea>
+    <ion-textarea rows="6" placeholder="Narration" [(ngModel)]="depositObj.narration" name="narration" id="narration" #narration="ngModel" ></ion-textarea>
   </div>
 </ion-content>
 

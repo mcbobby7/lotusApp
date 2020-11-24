@@ -1,23 +1,40 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController,AlertController, ToastController } from '@ionic/angular';
-
+import { InputvalidationService} from '../_services/inputvalidation.service';
 @Component({
   selector: 'app-deposit',
   templateUrl: './deposit.page.html',
   styleUrls: ['./deposit.page.scss'],
 })
 export class DepositPage implements OnInit {
+depositForm: FormGroup;
 intrusmntType: any = '';
+invalidAccount: boolean = false;
+invalidAmount: boolean = false;
+ depositObj:{
+   accountNumber?: string,
+   bankName?: string,
+   chqNumber?: string,
+   amount?: string,
+   depositorFullname?: string,
+   depositorPhoneNumber?: string,
+   depositorEmail?: string,
+   narration?: string
+ }={}
+
   constructor(
     private navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private router : Router
+    private router : Router,
+    private inpVali:InputvalidationService
+
   ) { }
   ionViewWillEnter(){
 this.getinstrumentType()
-  }
+  }  
   async getinstrumentType(){
     const alert = await this.alertCtrl.create({
       cssClass: 'myalertradiocustom-class',
@@ -74,6 +91,18 @@ this.intrusmntType = instrumentType;
   
     await alert.present();
   }
+
+  submitRequest(depositDetails){
+    if(this.inpVali.invalidAccount){
+      return false;
+    }
+    if(this.inpVali.invalidAmount){
+      return false;
+    }
+
+    this.router.navigate(['/deposit/depositor-detail'],{queryParams:{depositDetails: JSON.stringify(depositDetails)}})
+  }
+ 
   ngOnInit() {
   }
 
