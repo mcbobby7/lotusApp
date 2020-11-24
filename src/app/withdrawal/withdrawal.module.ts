@@ -7,14 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { WithdrawalPageRoutingModule } from './withdrawal-routing.module';
 
 import { WithdrawalPage } from './withdrawal.page';
+import { AccountInputComponent } from '../components/account-input/account-input.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    WithdrawalPageRoutingModule
+    WithdrawalPageRoutingModule,
   ],
-  declarations: [WithdrawalPage]
+  declarations: [WithdrawalPage, AccountInputComponent]
 })
 export class WithdrawalPageModule {}

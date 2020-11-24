@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { DecimalPipe} from '@angular/common';
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class InputvalidationService {
+  amountChanged = new Subject<number>()
   invalidAccount: boolean = false;
   invalidAmount: boolean = false;
   constructor(  private toastCtrl: ToastController,
@@ -12,6 +14,7 @@ export class InputvalidationService {
   getCurrency(amount: number) {
     var divamnt = (amount/100)
     console.log(amount)
+    this.amountChanged.next(divamnt)
     return this.currencyPipe.transform(divamnt,'.2');
   }
 

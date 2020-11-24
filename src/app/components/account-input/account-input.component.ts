@@ -24,7 +24,7 @@ export class AccountInputComponent implements OnInit {
 
   ngOnInit() {}
 
-  async validate(event,fieldelement){
+  async validate(event){
     var inputentry =  event.target.value;
 
     var reg = new RegExp('^[-,-.0-9]+$');
@@ -33,12 +33,12 @@ export class AccountInputComponent implements OnInit {
       this.invalid = false;
         if(inputentry.length == 10){
           this.valueChange.emit(inputentry)
+          this.invalid = false;
         }
-        if(inputentry.length != 10){
+        if(inputentry.length > 10){
           this.invalid = true;
           this.shortcut.showErrorToast("Account number can't be more than 10 digits")
         }else{
-          this.invalid = false;
         }
     }else{
       if(event.key == "Backspace" || event.key == "Delete" || event.key == "ArrowLeft" || event.key == "ArrowRight"){
