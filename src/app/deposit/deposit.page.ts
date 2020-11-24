@@ -1,41 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NavController,AlertController, ToastController } from '@ionic/angular';
-import { InputvalidationService} from '../_services/inputvalidation.service';
+import { NavController, AlertController, ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { BankService, BankAccount } from '../_services/bank.service';
+import { Deposit, DepositService } from '../_services/deposit.service';
+import { InputvalidationService } from '../_services/inputvalidation.service';
+import { ShortcutsService } from '../_services/shortcuts.service';
 @Component({
   selector: 'app-deposit',
   templateUrl: './deposit.page.html',
   styleUrls: ['./deposit.page.scss'],
 })
 export class DepositPage implements OnInit {
-depositForm: FormGroup;
-intrusmntType: any = '';
-invalidAccount: boolean = false;
-invalidAmount: boolean = false;
- depositObj:{
-   accountNumber?: string,
-   bankName?: string,
-   chqNumber?: string,
-   amount?: string,
-   depositorFullname?: string,
-   depositorPhoneNumber?: string,
-   depositorEmail?: string,
-   narration?: string
- }={}
+  loadingBankAccount = false
+  depositForm: FormGroup;
+  intrusmntType: any = '';
+  invalidAccount: boolean = false;
+  invalidAmount: boolean = false;
+  depositObj: Deposit = {}
 
   constructor(
     private navCtrl: NavController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private router : Router,
-    private inpVali:InputvalidationService
-
+    private router: Router,
+    private inpVali: InputvalidationService,
+    private shortcutService: ShortcutsService,
+    private depositService: DepositService,
+    private bankService: BankService
   ) { }
-  ionViewWillEnter(){
-this.getinstrumentType()
-  }  
-  async getinstrumentType(){
+  ionViewWillEnter() {
+    this.getinstrumentType()
+  }
+  async getinstrumentType() {
     const alert = await this.alertCtrl.create({
       cssClass: 'myalertradiocustom-class',
       header: 'Instrument Type ',
@@ -45,15 +43,15 @@ this.getinstrumentType()
           name: 'instType',
           type: 'radio',
           label: 'Cash',
-          value: 'cash',  
+          value: 'cash',
         },
         {
           name: 'instType',
           type: 'radio',
           label: 'Cheque',
-          value: 'Cheque',  
+          value: 'Cheque',
         }
-      ],    
+      ],
       buttons: [
         {
           text: 'Cancel',
@@ -66,16 +64,16 @@ this.getinstrumentType()
         }, {
           text: 'Select',
           cssClass: 'alertCtrlbtnpry',
-          handler: async (instrumentType) => {         
-            if(instrumentType){
+          handler: async (instrumentType) => {
+            if (instrumentType) {
               const toast = await this.toastCtrl.create({
                 duration: 3000,
                 message: instrumentType + ' selected',
                 color: "success"
               });
               toast.present();
-this.intrusmntType = instrumentType;
-            }else{
+              this.intrusmntType = instrumentType;
+            } else {
               const toast = await this.toastCtrl.create({
                 duration: 3000,
                 message: 'Please select Instrument Type',
@@ -88,25 +86,41 @@ this.intrusmntType = instrumentType;
         }
       ]
     });
-  
+
     await alert.present();
   }
 
-  submitRequest(depositDetails){
-    if(this.inpVali.invalidAccount){
-      return false;
+  validateForm() {
+    if (this.depositObj.accountNumber && this.depositObj.amount) {
+      return true
     }
-    if(this.inpVali.invalidAmount){
-      return false;
-    }
-
-    this.router.navigate(['/deposit/depositor-detail'],{queryParams:{depositDetails: JSON.stringify(depositDetails)}})
+    return false
   }
- 
+
+  submitRequest(depositDetails) {
+    if (this.validateForm()) {
+      this.loadingBankAccount = true
+      const subject = this.bankService.getBankByAccountNumber(this.depositObj.accountNumber)
+      subject.subscribe((bank: BankAccount) => {
+        this.loadingBankAccount = false
+        console.log(bank)
+        this.depositObj.bankName = bank.name
+        this.depositService.store(this.depositObj).then(data => {
+          this.router.navigate(['/deposit/depositor-detail'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
+        })
+      }, () => {
+        this.loadingBankAccount = false
+        this.shortcutService.showErrorToast('Invalid account number')
+      })
+    } else {
+      this.shortcutService.showErrorToast('Please fill all required fields')
+    }
+  }
+
   ngOnInit() {
   }
 
-  goBack(){
+  goBack() {
     this.navCtrl.back()
   }
 
