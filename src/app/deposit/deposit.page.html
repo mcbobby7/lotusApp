@@ -51,5 +51,8 @@
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-button [disabled]="depositForm.invalid" (click)="submitRequest(depositObj)" expand="block" >Proceed</ion-button>
+  <ion-button [disabled]="depositForm.invalid || loadingBankAccount" (click)="submitRequest(depositObj)" expand="block" >
+    <span *ngIf="!loadingBankAccount">Proceed</span>
+    <span *ngIf="loadingBankAccount">Loading bank details ...</span>
+  </ion-button>
 </ion-footer>
