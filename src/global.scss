@@ -30,25 +30,28 @@
 ion-content>div{
     padding: 10px 15px !important;
 }
+ion-content>form>div{
+    padding: 10px 15px !important;
+}
 .card-title{
     font-size: 16px !important;
 }
 ion-select.border{
     border: 1px solid #eeeff1;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 16px;
 }
 ion-button{
     border-radius: 4px !important;
-    font-size: 12px;
+    font-size: 14px;
 }
 ion-input{
     border-radius: 4px !important;
     border: 1px solid #eeeff1 !important;
-    font-size: 12px;
+    font-size: 16px;
 }
 ion-label{
-    font-size: 14px;
+    font-size: 16px;
 }
 ion-title{
     font-size: 14px;  

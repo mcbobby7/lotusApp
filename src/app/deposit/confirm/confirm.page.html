@@ -74,17 +74,22 @@
         
         <ion-row>
           <ion-col size="7"><span style="font-size: 12px; color: #000; font-weight: bold;">Account Name:</span></ion-col>
-          <ion-col size="5"><span style="font-size: 10px; color: #000;">Sherif Sorunke</span></ion-col>
+          <ion-col size="5"><span style="font-size: 10px; color: #000;">{{depositObj.depositorFullname}}</span></ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Account Number:</ion-col>
-          <ion-col size="5" style="font-size: 10px; color: #000;">9866435723</ion-col>          
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{depositObj.accountNumber}}</ion-col>          
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Bank:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{depositObj.bankName}}</ion-col>          
         </ion-row>
 
         <ion-row>
           <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Amount:</ion-col>
-          <ion-col size="5" style="font-size: 10px; color: #000;">&#8358;30,000:00</ion-col>          
+          <ion-col size="5" style="font-size: 10px; color: #000;">&#8358; {{depositObj.amount}}</ion-col>          
         </ion-row>         
         
       </ion-grid>
@@ -97,29 +102,29 @@
         
         <ion-row>
           <ion-col size="7"><span style="font-size: 12px; color: #000; font-weight: bold;">Depositor Name:</span></ion-col>
-          <ion-col size="5"><span style="font-size: 10px; color: #000;">Sherif Sorunke</span></ion-col>
+          <ion-col size="5"><span style="font-size: 10px; color: #000;">{{depositObj.depositorFullname}}</span></ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Depositor Number:</ion-col>
-          <ion-col size="5" style="font-size: 10px; color: #000;">090866435723</ion-col>          
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{depositObj.depositorPhoneNumber}}</ion-col>          
         </ion-row>
 
         <ion-row>
           <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Depositor Email:</ion-col>
-          <ion-col size="5" style="font-size: 10px; color: #000;">sherrif@smartace.ng</ion-col>          
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{depositObj.depositorEmail}}</ion-col>          
         </ion-row>
 
         <ion-row>
-          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Depositor Comment:</ion-col>
-          <ion-col size="5" style="font-size: 10px; color: #000;">Comment</ion-col>          
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Naration:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{depositObj.narration}}</ion-col>          
         </ion-row>        
       </ion-grid>
     </ion-card-content>
   </ion-card>
 </ion-content>
 
-<ion-footer>
+<ion-footer class="ion-no-border">
   <ion-button expand="block" (click)="submit()">
     Confirm
   </ion-button>

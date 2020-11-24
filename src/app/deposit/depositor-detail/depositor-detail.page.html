@@ -2,8 +2,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
-        ;"></ion-icon>
+        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>Depositor's Details</ion-title>
@@ -11,32 +10,34 @@
 </ion-header>
 
 <ion-content>
-  <div class="form-group">
-    <ion-label>
-      Full Name
-    </ion-label>
-    <ion-input placeholder="Full Name"></ion-input>
-  </div>
-  <div class="form-group">
-    <ion-label>
-      Phone number
-    </ion-label>
-    <ion-input placeholder="Phone number"></ion-input>
-  </div>
-  <div class="form-group">
-    <ion-label>
-      Email
-    </ion-label>
-    <ion-input placeholder="Email"></ion-input>
-  </div>
-  <div class="form-group">
-    <ion-label>
-      Comments
-    </ion-label>
-    <ion-textarea rows="6" placeholder="Comments"></ion-textarea>
-  </div>
+  <form [formGroup]="depositorForm">
+    <div class="form-group">
+      <ion-label>
+        Full Name *
+      </ion-label>
+      <ion-input placeholder="Full Name" formControlName="depositorFullname" [(ngModel)]="depositObj.depositorFullname" name="depositorFullname" id="depositorFullname" required></ion-input>
+    </div>
+    <div class="form-group">
+      <ion-label>
+        Phone number  *
+      </ion-label>
+      <ion-input placeholder="Phone number" formControlName="depositorPhoneNumber" [(ngModel)]="depositObj.depositorPhoneNumber" name="depositorPhoneNumber" id="depositorPhoneNumber" required></ion-input>
+    </div>
+    <div class="form-group">
+      <ion-label>
+        Email
+      </ion-label>
+      <ion-input placeholder="Email" formControlName="depositorEmail" [(ngModel)]="depositObj.depositorEmail" name="depositorEmail" id="depositorEmail"></ion-input>
+    </div>
+    <div class="form-group">
+      <ion-label>
+        Narration
+      </ion-label>
+      <ion-textarea rows="6" formControlName="narration" placeholder="Narration" [(ngModel)]="depositObj.narration" name="narration" id="narration"></ion-textarea>
+    </div>
+  </form>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-button expand="block" [routerLink]="['/deposit/confirm']">Proceed</ion-button>
+  <ion-button (click)="submit()" [disabled]="!depositorForm.valid" expand="block">Proceed</ion-button>
 </ion-footer>

@@ -19,12 +19,12 @@
 }
 
 .card-title{
-    padding-bottom: 15px; font-size: 22px; font-weight: bold;
+    padding-bottom: 5px; font-size: 16px; font-weight: bold;
     color: #000000;
 }
 
-.card-icon-cover > img{
-    height: 50px; width: 50px
+.card-icon-cover  img{
+    height: 50px; width: 50px;max-width: unset;
 }
 
 .card-icon-cover{
@@ -37,7 +37,7 @@
 }
 
 .card-title-detail{
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 100;
     color: #707070;
     line-height: 15px;
