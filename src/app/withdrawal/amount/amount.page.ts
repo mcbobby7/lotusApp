@@ -8,14 +8,15 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./amount.page.scss'],
 })
 export class AmountPage implements OnInit {
-
+  acctBal:number = 20000;
+  amount?: number;
   constructor(
     private router: Router,
     private navCtrl: NavController
   ) { }
-  amount = ""
+ 
   get disableSubmit(){
-    return !(Number(this.amount) > 0)
+    return !(Number(this.amount) > 0)?true:(this.amount > this.acctBal?true:false)
   }
 
   ngOnInit() {

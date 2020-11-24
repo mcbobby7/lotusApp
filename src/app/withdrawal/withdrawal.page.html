@@ -15,11 +15,11 @@
     <ion-label>
       Account Number
     </ion-label>
-    <ion-input [(ngModel)]="accountNo" style="border: 1px solid black; border-radius: 2px;"></ion-input>
+    <ion-input [(ngModel)]="accountNo" placeholder="Account Number" style="border: 1px solid black; border-radius: 2px;"></ion-input>
   </div>
 
 </ion-content>
 
-<ion-footer>
+<ion-footer class="ion-no-border">
   <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
 </ion-footer>

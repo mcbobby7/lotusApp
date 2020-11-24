@@ -9,6 +9,7 @@ export class ProcessingComponent implements OnInit {
   @Output() buttonClick = new EventEmitter()
   @Input() processCompleted = false
   @Input() successButtonText = 'Generate Receipt'
+  @Input() okButtonText = 'Ok'
   constructor() { }
 
   ngOnInit() {}

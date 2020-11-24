@@ -30,16 +30,31 @@
 ion-content>div{
     padding: 10px 15px !important;
 }
-
+.card-title{
+    font-size: 16px !important;
+}
 ion-select.border{
-    border: 1px solid #BBC5D5;
+    border: 1px solid #eeeff1;
     border-radius: 4px;
+    font-size: 12px;
+}
+ion-button{
+    border-radius: 4px !important;
+    font-size: 12px;
 }
 ion-input{
     border-radius: 4px !important;
-    border: 1px solid #BBC5D5 !important;
+    border: 1px solid #eeeff1 !important;
+    font-size: 12px;
 }
-
+ion-label{
+    font-size: 14px;
+}
+ion-title{
+    font-size: 14px;  
+    text-align: center;
+    padding-right: 5px;
+}
 .form-group > ion-label{
     color: #313131;
     font-size: 14px;
@@ -63,7 +78,7 @@ ion-input{
 
 #cancel, #confirm {
     display:inline-block;
-    width: 48%;
+    width: 100%;
     height:50px;
     padding: 5px;
 }
@@ -77,3 +92,21 @@ ion-input{
     opacity: 100%; 
     text-transform: uppercase;
 }
+
+ion-footer{
+    padding: 15px;
+    background-color: #ffffff;
+}
+ion-footer > ion-button{
+    --border-radius: 4px;
+}
+ion-datetime{
+    font-size: 12px;
+
+}
+.error {
+    color: #ea6153;
+    font-weight: normal;
+    text-align: left;
+    font-size: 12px;
+  }

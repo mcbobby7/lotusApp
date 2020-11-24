@@ -30,7 +30,9 @@ export class Tab1Page implements OnInit{
       }
     })
   }
-
+  gotofundtransfer(){
+    this.router.navigateByUrl('/fundtransfer')
+  }
   gotoWithdrawal(){
     this.router.navigateByUrl('/withdrawal')
   }
@@ -40,11 +42,11 @@ export class Tab1Page implements OnInit{
   }
 
   gotoCustomerService(){
-    this.router.navigateByUrl('/tabs/tab2')
+    this.router.navigateByUrl('/tabs/tab3')
   }
 
   gotoEnquiries(){
-    this.router.navigateByUrl('/tabs/tab3')
+    this.router.navigateByUrl('/tabs/tab2')
   }
 
 }
