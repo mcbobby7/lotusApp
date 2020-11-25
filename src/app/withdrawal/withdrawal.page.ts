@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { BankAccount, BankService } from '../_services/bank.service';
@@ -11,6 +12,9 @@ import { Withdrawal, WithdrawalService } from '../_services/withdrawal.service';
   styleUrls: ['./withdrawal.page.scss'],
 })
 export class WithdrawalPage implements OnInit {
+  formGroup = new FormGroup({
+    accountNo: new FormControl('')
+  })
 
   withdrawal: Withdrawal = {}
   loadingAccountName = false
@@ -22,8 +26,7 @@ export class WithdrawalPage implements OnInit {
     private withdrawalService: WithdrawalService
   ) { }
   accountNo = ""
-  ngOnInit() {
-  }
+  ngOnInit() {}
   get disableSubmit(){
     return !(this.accountNo.length == 10 && Number(this.accountNo) > 0)
   }

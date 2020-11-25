@@ -19,7 +19,7 @@ export class ShortcutsService {
     const toast = await this.toastCtrl.create({
       message,
       duration: 3000,
-      cssClass: cssClass
+      color: cssClass
     })
     toast.present()
 
