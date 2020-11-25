@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { BankAccount, BankService } from '../_services/bank.service';
@@ -11,6 +12,9 @@ import { TransferService } from '../_services/transfer.service';
   styleUrls: ['./fundtransfer.page.scss'],
 })
 export class FundtransferPage implements OnInit {
+  formGroup = new FormGroup({
+    accountNo: new FormControl('')
+  })
   loadingBankAccount = false
   accountNo = ""
   constructor(
