@@ -4,12 +4,13 @@ import { Subject } from 'rxjs';
 export interface BankAccount {
   number: string,
   name: string,
-  balance: number
+  balance: number,
+  bankName: string
 }
 
 const banks: BankAccount[] = [
-  {name: 'Sherrif Shorunke', number: '1111111111', balance: 100000},
-  {name: 'Ridwan Adeleke', number: '1000000000', balance: 2000000}
+  {name: 'Sherrif Shorunke', number: '1111111111', balance: 100000,bankName:''},
+  {name: 'Ridwan Adeleke', number: '1000000000', balance: 2000000,bankName:''}
 ]
 @Injectable({
   providedIn: 'root'

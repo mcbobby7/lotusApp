@@ -38,7 +38,7 @@ export class AmountInputComponent implements OnInit {
     return this.currencyPipe.transform(divamnt,'.2');
   }
 
-  async validate(event) {
+  async avalidate(event) {
     this.inputValidation.validate(event, 'amount')
   }
 
