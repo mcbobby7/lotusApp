@@ -1,20 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
 import { WithdrawalPageRoutingModule } from './withdrawal-routing.module';
 
 import { WithdrawalPage } from './withdrawal.page';
+import { AccountInputComponent } from '../components/account-input/account-input.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
-    WithdrawalPageRoutingModule
+    WithdrawalPageRoutingModule,
   ],
-  declarations: [WithdrawalPage]
+  declarations: [WithdrawalPage, AccountInputComponent]
 })
 export class WithdrawalPageModule {}

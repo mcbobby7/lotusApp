@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Withdrawal, WithdrawalService } from 'src/app/_services/withdrawal.service';
 
 @Component({
   selector: 'app-confirm',
@@ -8,20 +9,25 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./confirm.page.scss'],
 })
 export class ConfirmPage implements OnInit {
+  withdrawal: Withdrawal = {}
 
   processCompleted = false
   showProcessing = false
   constructor(
     private router: Router,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private withdrawalService: WithdrawalService
   ) { }
 
   ngOnInit() {
+    this.withdrawalService.get().subscribe(data => {
+      this.withdrawal = data
+    })
   }
 
   processingButtonClicked(){
-    // this.router.navigateByUrl('deposit/receipt')
-    this.router.navigateByUrl('/')
+    this.router.navigateByUrl('withdrawal/receipt')
+    // this.router.navigateByUrl('/')
   }
   submit(){
     this.showProcessing = true

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AmountPageRoutingModule } from './amount-routing.module';
 
 import { AmountPage } from './amount.page';
+import { AmountInputComponent } from 'src/app/components/amount-input/amount-input.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { AmountPage } from './amount.page';
     IonicModule,
     AmountPageRoutingModule
   ],
-  declarations: [AmountPage]
+  declarations: [AmountPage, AmountInputComponent]
 })
 export class AmountPageModule {}

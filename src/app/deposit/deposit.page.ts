@@ -96,6 +96,15 @@ export class DepositPage implements OnInit {
     }
     return false
   }
+  avalidate(event,fieldelement){
+    var inputentry =  event.target.value;
+ var valRes =  this.inpVali.validate(event,fieldelement);
+ if(valRes && fieldelement == "amount" ){
+  var amt = inputentry.replace(/,/g, "");
+  var newamt = amt.replace('.', "");
+  this.depositObj.amount = this.inpVali.getCurrency(newamt);
+ }
+  }
 
   submitRequest(depositDetails) {
     if (this.validateForm()) {

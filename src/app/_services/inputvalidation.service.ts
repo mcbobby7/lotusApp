@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { DecimalPipe} from '@angular/common';
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class InputvalidationService {
+  amountChanged = new Subject<any>()
   invalidAccount: boolean = false;
   invalidAmount: boolean = false;
   constructor(  private toastCtrl: ToastController,
-    private currencyPipe: DecimalPipe) { }
+    private dPipe: DecimalPipe) { }
   getCurrency(amount: number) {
     var divamnt = (amount/100)
-    console.log(amount)
-    return this.currencyPipe.transform(divamnt,'.2');
+  //  console.log(amount)
+    this.amountChanged.next(this.dPipe.transform(divamnt,'.2'))
+    return this.dPipe.transform(divamnt,'.2');
   }
 
   async validate(event,fieldelement){
@@ -26,22 +29,19 @@ export class InputvalidationService {
       if(fieldelement == "accountNumber"){
         if(inputentry.length != 10){
           this.invalidAccount = true;
-          // const toast = await this.toastCtrl.create({
-          //   duration: 3000,
-          //   message: 'Account Number must be 10 digit',
-          //   color: "danger"
-          // });
-          // toast.present();
+          return true;
         }else{
           this.invalidAccount = false;
+          return false;
         }
         
         }
         if(fieldelement == "amount" ){
           var amt = inputentry.replace(/,/g, "");
           var newamt = amt.replace('.', "");
-
           event.target.value = this.getCurrency(newamt);
+
+          return true;
         }
     }else{
       if(event.key == "Backspace" || event.key == "Delete" || event.key == "ArrowLeft" || event.key == "ArrowRight"){

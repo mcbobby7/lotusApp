@@ -11,15 +11,19 @@
 </ion-header>
 
 <ion-content>
-  <div class="form-group">
+  <div class="form-group" [formGroup]="formGroup">
     <ion-label>
       Account Number
     </ion-label>
-    <ion-input [(ngModel)]="accountNo" placeholder="Account Number" style="border: 1px solid black; border-radius: 2px; font-size: 13px;"></ion-input>
+    <app-account-input [(value)]="accountNo" formControlName="accountNo"></app-account-input>
+    <!-- <ion-input [(ngModel)]="accountNo" placeholder="Account Number" style="border: 1px solid black; border-radius: 2px;"></ion-input> -->
   </div>
 
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-button expand="block" [disabled]="disableSubmit" (click)="submit()">Proceed</ion-button>
+  <ion-button expand="block" [disabled]="formGroup.invalid || loadingAccountName" (click)="submit()">
+    <span *ngIf="!loadingAccountName">Proceed</span>
+    <span *ngIf="loadingAccountName">Checking account number ...</span>
+  </ion-button>
 </ion-footer>

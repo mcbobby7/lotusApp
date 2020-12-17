@@ -32,6 +32,7 @@ export class DepositorDetailPage implements OnInit {
 
   submit(){
     // console.log(this.depositObj)
+    this.depositService.store(this.depositObj)
     this.router.navigateByUrl('/deposit/confirm', {queryParams: JSON.parse})
   }
 

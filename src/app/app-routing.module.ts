@@ -3,18 +3,8 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 
 const routes: Routes = [
-  
-  //  {path: '', redirectTo: 'deposit/receipt', pathMatch: 'full'},
-  {
-    path: '',
-    // redirectTo: 'self-service/request-card',
-    // pathMatch: 'full'
-    // loadChildren: () => import('./welcome/welcome.module').then( m => m.WelcomePageModule)
-    // loadChildren: () => import('./withdrawal/withdrawal.module').then( m => m.WithdrawalPageModule)
-    // loadChildren: () => import('./deposit/deposit.module').then( m => m.DepositPageModule)
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
-    //loadChildren: () => import('./capturebiometric/capturebiometric.module').then(m => m.CapturebiometricPageModule)
-  },
+  {path:'', redirectTo:'home', pathMatch: 'full'},
+
   {
     path: 'withdrawal',
     loadChildren: () => import('./withdrawal/withdrawal.module').then( m => m.WithdrawalPageModule),
@@ -43,7 +33,21 @@ const routes: Routes = [
   {
     path: 'capturebiometric',
     loadChildren: () => import('./capturebiometric/capturebiometric.module').then( m => m.CapturebiometricPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'dashbord',
+    loadChildren: () => import('./dashbord/dashbord.module').then( m => m.DashbordPageModule)
+  },
+  {
+    path: 'cashdeposit',
+    loadChildren: () => import('./deposit/cashdeposit/cashdeposit.module').then( m => m.CashdepositPageModule)
   }
+
+
 
 ];
 

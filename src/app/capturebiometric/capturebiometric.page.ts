@@ -18,6 +18,7 @@ nextRoute: any = '';
   ) { }
   ionViewWillEnter(){
     this.activatedroute.queryParams.subscribe(data=>{
+      console.log(data)
       if(data.nxtRoute){
         this.nextRoute = data.nxtRoute;
       }

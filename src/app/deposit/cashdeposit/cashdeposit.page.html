@@ -1,0 +1,93 @@
+
+
+<ion-content>
+  <form name="depositForm" id="depositForm" #depositForm="ngForm">
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Cash Deposit</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<div class="page-wrapper" *ngIf="!depositMultpleObj.accountInfo.length">
+  
+  <ion-row>
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label class="justifyCenter">Enter Account Number</ion-label>
+        <ion-input  type="tel" [(ngModel)]="depositObj.accountNumber" name="accountNumber" id="accountNumber" #accountNumber="ngModel" placeholder="Enter account number here" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+        <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+        </div>
+    </ion-col>
+  </ion-row>
+<ion-row>
+  <ion-col size="12" style="padding: 20px">
+    <ion-button [disabled]="depositForm.invalid || loadingBankAccount" (click)="submitRequest(depositObj)" shape="round" fill="solid" expand="block" class="btnStyle">
+    <span *ngIf="!loadingBankAccount">Next</span>
+    <span *ngIf="loadingBankAccount">Loading bank details ...</span>
+    </ion-button>
+    <div style="padding: 10px;"></div>
+  </ion-col>
+</ion-row>
+
+</div>
+<div class="page-wrapper" style="margin-top:5px" *ngIf="!depositMultpleObj.accountInfo.length">
+  <ion-row>
+    <ion-col size="12" style="padding: 20px">
+      <ion-button (click)="addDeposit()"  fill="clear" expand="block" style="color: #ffffff;">
+        <span style="font-size: 18px;font-weight: bold;">Multiple Deposit</span>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</div>
+</form>
+<div  class="page-wrapper" *ngIf="depositMultpleObj.accountInfo.length > 0">
+<div *ngFor="let dep of depositMultpleObj.accountInfo" style="width: 100%;border:1px solid #ffffff;border-radius: 4px; padding:5px;margin-top:10px">
+  <ion-row>
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label>Account Number</ion-label>
+        <ion-input style="text-align: left;"  type="tel" [(ngModel)]="dep.accountNumber" name="accountNumber" id="accountNumber" #accountNumber="ngModel" placeholder="Enter account number here" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+        <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+        </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label>Amount</ion-label>
+        <ion-input style="text-align: left;"  type="tel" [(ngModel)]="dep.accountNumber" name="accountNumber" id="accountNumber" #accountNumber="ngModel" placeholder="Enter amount" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+        <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+        </div>
+    </ion-col>
+  </ion-row>
+</div>
+<ion-row>
+  <ion-col size="12">
+    <ion-button (click)="addDeposit()"  fill="clear" expand="block" >
+      <img src="assets/images/addmoredeposit_btn.png" style="width: 10rem;">
+    </ion-button>
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col size="12" style="padding:5px 20px 20px 20px">
+    <ion-button [disabled]="depositForm.invalid || loadingBankAccount" (click)="submitRequest(depositObj)" shape="round" fill="solid" expand="block" class="btnStyle">
+    <span *ngIf="!loadingBankAccount">Next</span>
+    <span *ngIf="loadingBankAccount">Loading bank details ...</span>
+    </ion-button>
+    <div style="padding: 10px;"></div>
+  </ion-col>
+</ion-row>
+</div>
+
+</ion-content>
+<ion-footer class="ion-no-border justifyCenter" >
+  <img src="assets/images/dashboard_upper_logo.png" style="width: 7rem;">
+</ion-footer>
