@@ -15,7 +15,7 @@ export class AmountInputComponent implements OnInit {
     // this.innerValue = val
   }
 
-  @Output() valueChange = new EventEmitter<number>()
+  @Output() valueChange = new EventEmitter<any>()
   constructor(
     private shortcuts: ShortcutsService,
     private currencyPipe: DecimalPipe,
@@ -39,7 +39,14 @@ export class AmountInputComponent implements OnInit {
   }
 
   async avalidate(event) {
-    this.inputValidation.validate(event, 'amount')
+    var inputentry =  event.target.value;
+    var valRes = this.inputValidation.validate(event, 'amount')
+    if(valRes){
+      var amt = inputentry.replace(/,/g, "");
+      var newamt = amt.replace('.', "");
+      this.innerValue = this.inputValidation.getCurrency(newamt);
+      this.valueChange.emit(Number(newamt) / 100)
+     }
   }
 
 }

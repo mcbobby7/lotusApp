@@ -43,7 +43,8 @@
       <span *ngIf="intrusmntType == 'Cheque'">Total Amount on Cheque</span>
       <span *ngIf="intrusmntType == 'cash'">Amount</span>
     </ion-label>
-    <ion-input type="tel" placeholder="0.00" (keyup)="inpVali.validate($event,'amount')" [(ngModel)]="depositObj.amount" name="amount" id="amount" #amount="ngModel" required ></ion-input>
+    <ion-input type="tel" placeholder="0.00" (keyup)="avalidate($event,'amount')" [(ngModel)]="depositObj.amount" name="amount" id="amount" #amount="ngModel" required ></ion-input>
+
     <ion-label *ngIf="!inpVali.invalidAccount"></ion-label>
     <span *ngIf="inpVali.invalidAmount"><small class="error">Invalid Amount</small></span>
   </div>

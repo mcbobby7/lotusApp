@@ -1,0 +1,17 @@
+
+<div class="wrapper">
+  <div style="text-align: center;width: 100%; padding:20px;color: #ffff;border-bottom: 1px solid #ffff;">
+   Deposit Type
+    <span style="float: right;" (click)="selectdeposittype('')">
+      <ion-icon name="close-outline"></ion-icon>
+    </span>
+  </div>
+
+<div style="display: flex;justify-content: center;padding: 10px;" (click)="selectdeposittype('cash')"> 
+  <img src="assets/images/cashdeposit_button.png" style="height: 4rem;">
+</div>
+<div style="display: flex;justify-content: center;padding: 10px;" (click)="selectdeposittype('cheque')">
+   <img src="assets/images/chequedeposit_button.png" style="height: 4rem;">
+</div>
+<div style="padding: 10px;"></div>
+</div>

@@ -45,10 +45,10 @@ export class AmountPage implements OnInit {
       this.transfer.bank = this.bankType
       this.transferService.store(this.transfer).then(() => {
         this.router.navigateByUrl('fundtransfer/confirm')
-      }, () => {
-        this.loadingBankAccount = false
-        this.shortcuts.showErrorToast('Error fetching account details')
       })
+    }, () => {
+      this.loadingBankAccount = false
+      this.shortcuts.showErrorToast('Error fetching account details')
     })
   }
 

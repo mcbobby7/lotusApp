@@ -39,10 +39,10 @@ export class FundtransferPage implements OnInit {
       }).then(data => {
         this.loadingBankAccount = false
         this.router.navigate(['capturebiometric'], {queryParams: {nxtRoute: '/fundtransfer/amount'}})
-      }, () => {
-        this.loadingBankAccount = false
-        this.shortcuts.showErrorToast('Error checking account number.')
       })
+    }, () => {
+      this.loadingBankAccount = false
+      this.shortcuts.showErrorToast('Error - Invalid Account Number')
     })
   }
 

@@ -44,7 +44,7 @@ export class WithdrawalPage implements OnInit {
       })
     }, err => {
       this.loadingAccountName = false
-      this.shortcuts.showErrorToast('Error fetching account details')
+      this.shortcuts.showErrorToast('Error - Invalid Account Number')
     })
   }
 

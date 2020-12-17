@@ -1,12 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goback()">
-        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
-        ;"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title style="font-size: 14px; font-weight: bold; text-align: center;">Receipt</ion-title>
+
+    <ion-title style="font-size: 14px; font-weight: bold; text-align: center;">Deposit Receipt</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -31,6 +26,33 @@
           <ion-col size="5" style="font-size: 10px; color: #000;">&#8358; {{deposit.amount}} </ion-col>
         </ion-row>         
         
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card style="margin: 12px; background-color: #E0ECFF;">
+    <ion-card-content>
+      <ion-grid>
+        
+        <ion-row>
+          <ion-col size="7"><span style="font-size: 12px; color: #000; font-weight: bold;">Depositor Name:</span></ion-col>
+          <ion-col size="5"><span style="font-size: 10px; color: #000;">{{deposit.depositorFullname}}</span></ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Depositor Number:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{deposit.depositorPhoneNumber}}</ion-col>          
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Depositor Email:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{deposit.depositorEmail}}</ion-col>          
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="7" style="font-size: 12px; color: #000; font-weight: bold;">Naration:</ion-col>
+          <ion-col size="5" style="font-size: 10px; color: #000;">{{deposit.narration}}</ion-col>          
+        </ion-row>        
       </ion-grid>
     </ion-card-content>
   </ion-card>

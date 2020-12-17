@@ -16,6 +16,19 @@ export interface Deposit{
   narration?: string
 }
 
+export interface multiDeposit{
+  accountInfo?: accountDetails[];
+  depositorFullname?: string,
+  depositorPhoneNumber?: string,
+  depositorEmail?: string,
+  narration?: string
+}
+
+export interface accountDetails{
+  accountNumber?: string,
+  amount?: string,
+}
+
 @Injectable({
   providedIn: 'root'
 })
