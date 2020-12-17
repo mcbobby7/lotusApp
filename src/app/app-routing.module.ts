@@ -45,7 +45,11 @@ const routes: Routes = [
   {
     path: 'cashdeposit',
     loadChildren: () => import('./deposit/cashdeposit/cashdeposit.module').then( m => m.CashdepositPageModule)
+  },  {
+    path: 'enquiries',
+    loadChildren: () => import('./enquiries/enquiries.module').then( m => m.EnquiriesPageModule)
   }
+
 
 
 
