@@ -12,7 +12,8 @@ const routes: Routes = [
     // loadChildren: () => import('./welcome/welcome.module').then( m => m.WelcomePageModule)
     // loadChildren: () => import('./withdrawal/withdrawal.module').then( m => m.WithdrawalPageModule)
     // loadChildren: () => import('./deposit/deposit.module').then( m => m.DepositPageModule)
-    loadChildren: () => import('./capturebiometric/capturebiometric.module').then(m => m.CapturebiometricPageModule)
+    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    //loadChildren: () => import('./capturebiometric/capturebiometric.module').then(m => m.CapturebiometricPageModule)
   },
   {
     path: 'withdrawal',
