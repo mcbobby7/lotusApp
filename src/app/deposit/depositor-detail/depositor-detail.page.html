@@ -1,15 +1,17 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Depositor's Details</ion-title>
-  </ion-toolbar>
-</ion-header>
+
 
 <ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">    
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Depositor's Details</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <div class="page-wrapper" >
   <form [formGroup]="depositorForm">
     <div class="form-group">
       <ion-label>
@@ -36,6 +38,7 @@
       <ion-textarea rows="6" formControlName="narration" placeholder="Narration" [(ngModel)]="depositObj.narration" name="narration" id="narration"></ion-textarea>
     </div>
   </form>
+</div>
 </ion-content>
 
 <ion-footer class="ion-no-border">

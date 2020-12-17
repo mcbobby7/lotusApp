@@ -53,6 +53,7 @@ this.navCtrl.back()
     this.depositMultpleObj.accountInfo.push({accountNumber:'',amount:''});
     console.log(this.depositMultpleObj.accountInfo)
   }
+  
   submitRequest(depositDetails) {
     if (this.validateForm()) {
       this.loadingBankAccount = true
