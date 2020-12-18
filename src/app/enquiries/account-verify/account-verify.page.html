@@ -1,0 +1,25 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Verification</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div  class="page-wrapper">
+    <ion-row style="display: flexbox; justify-content: center; margin: 30px 10px;">
+      <ion-row style="margin-bottom: 20px;">
+        <span style="text-align: center;">
+          Place your thumb on the fingerprint scanner to verify your account
+        </span>
+      </ion-row> 
+      <ion-row>
+        <ion-img routerLink="['/selfservice']" src="assets/images/fingerprint.png" class="icons" ></ion-img>
+      </ion-row>
+    </ion-row>
+  
+    </div>

@@ -1,0 +1,27 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <ion-icon name="home-outline"></ion-icon>          
+        </ion-button>
+      </ion-buttons>
+      <div style="display: flexbox; align-items: center; justify-content: center;">
+        <ion-img src="assets/images/bank_logo.png" style="width: 50px; height: 50px; display: flex; justify-self: center; align-self: center;"></ion-img>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+  <div  class="page-wrapper">
+    <ion-row style="display: flexbox; justify-content: center; margin: 30px 10px;">
+
+        <ion-label style="padding-bottom: 10px;">Enter email to send statement to:</ion-label>
+       <ion-input type="email" name="email" placeholder="Enter your email here"></ion-input>
+      </ion-row> 
+
+    <div style="text-align:center;z-index:1000; width:100%;">
+      <div style="padding-top:10px;"></div>
+      <ion-button routerLink="statement" color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+        PROCEED
+      </ion-button>
+      </div>
+    </div>

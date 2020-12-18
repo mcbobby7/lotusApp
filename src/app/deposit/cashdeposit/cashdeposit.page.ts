@@ -34,7 +34,7 @@ export class CashdepositPage implements OnInit {
 this.navCtrl.back()
   }
   avalidate(event,fieldelement){
-    var inputentry =  event.target.value;
+  var inputentry =  event.target.value;
  var valRes =  this.inpVali.validate(event,fieldelement);
  if(valRes && fieldelement == "amount" ){
   var amt = inputentry.replace(/,/g, "");
