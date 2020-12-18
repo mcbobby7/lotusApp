@@ -46,8 +46,8 @@ export class DashbordPage implements OnInit {
     subject.subscribe(async val => {
       modal.dismiss()
       if(val){
-    if(val == "cash")this.router.navigate(['cashdeposit']);
-    if(val == "cheque")this.router.navigate(['chequedeposit']);
+    if(val == "cash")this.router.navigate(['withdrawal']);
+    if(val == "cheque")this.router.navigate(['chequewithdrawal']);
       } else {
        modal.dismiss()
       }

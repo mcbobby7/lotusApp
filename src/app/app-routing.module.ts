@@ -70,6 +70,14 @@ const routes: Routes = [
     path: 'chequeconfirm',
     loadChildren: () => import('./deposit/chequedeposit/chequeconfirm/chequeconfirm.module').then( m => m.ChequeconfirmPageModule)
   },
+  {
+    path: 'chequewithdrawal',
+    loadChildren: () => import('./withdrawal/chequewithdrawal/chequewithdrawal.module').then( m => m.ChequewithdrawalPageModule)
+  },
+  {
+    path: 'chequewithdrawalconfirm',
+    loadChildren: () => import('./withdrawal/chequewithdrawalconfirm/chequewithdrawalconfirm.module').then( m => m.ChequewithdrawalconfirmPageModule)
+  }
 
 
 
