@@ -19,10 +19,8 @@ const routes: Routes = [
   {
     path: 'receipt',
     loadChildren: () => import('./receipt/receipt.module').then( m => m.ReceiptPageModule)
-  },  {
-    path: 'cashdeposit',
-    loadChildren: () => import('./cashdeposit/cashdeposit.module').then( m => m.CashdepositPageModule)
-  }
+  },
+
 
 ];
 

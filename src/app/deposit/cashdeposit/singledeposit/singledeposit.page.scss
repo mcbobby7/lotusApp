@@ -1,0 +1,36 @@
+.form-group{
+  padding: 5px;
+}
+
+.form-group > ion-input{
+  margin-top: 10px;
+}
+
+ion-input{
+  border-radius: 4px !important;
+  border: 1px solid #0065B0 !important;
+  background-color:rgba(0,0,0, 0.38);
+  font-size: 18px;
+  text-align: center;
+}
+
+ion-textarea{
+  border-radius: 4px !important;
+  border: 1px solid #0065B0 !important;
+  font-size: 18px;
+  background-color:rgba(0,0,0, 0.38);
+  text-align: center;
+
+}
+
+ion-content{
+  --background: url('/assets/images/dashboard_bg.png') 0 0/100% 100% no-repeat;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.grpRadio{
+  --background: transparent;
+   --color:#fff;
+}

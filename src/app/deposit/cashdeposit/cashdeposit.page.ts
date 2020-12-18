@@ -18,8 +18,8 @@ export class CashdepositPage implements OnInit {
   intrusmntType: any = '';
   invalidAccount: boolean = false;
   invalidAmount: boolean = false;
-  depositObj: Deposit = {};
-  depositMultpleObj: multiDeposit ={accountInfo:[]};
+  depositObj: Deposit = {singleDeposit: true,proceedChk: false};
+  depositMultpleObj: multiDeposit ={accountInfo:[], multiDeposit: true};
 
   constructor(    
     private navCtrl: NavController,
@@ -50,8 +50,7 @@ this.navCtrl.back()
   }
 
   addDeposit(){
-    this.depositMultpleObj.accountInfo.push({accountNumber:'',amount:''});
-    console.log(this.depositMultpleObj.accountInfo)
+    this.router.navigate(['/multideposit'])
   }
   
   submitRequest(depositDetails) {
@@ -61,9 +60,10 @@ this.navCtrl.back()
       subject.subscribe((bank: BankAccount) => {
         this.loadingBankAccount = false
         console.log(bank)
-        this.depositObj.bankName = bank.name
+        this.depositObj.bankName = bank.bankName;
+        this.depositObj.accountName = bank.name;
         this.depositService.store(this.depositObj).then(data => {
-          this.router.navigate(['/deposit/depositor-detail'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
+          this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
         })
       }, () => {
         this.loadingBankAccount = false

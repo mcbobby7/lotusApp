@@ -24,7 +24,7 @@ export class DashbordPage implements OnInit {
       modal.dismiss()
       if(val){
     if(val == "cash")this.router.navigate(['cashdeposit']);
-    if(val == "cheque")this.router.navigate(['deposit']);
+    if(val == "cheque")this.router.navigate(['chequedeposit']);
       } else {
        modal.dismiss()
       }

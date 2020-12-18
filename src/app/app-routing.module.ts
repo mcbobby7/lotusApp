@@ -47,13 +47,29 @@ const routes: Routes = [
     loadChildren: () => import('./deposit/cashdeposit/cashdeposit.module').then( m => m.CashdepositPageModule)
   },
   {
-    path: 'enquiries',
-    loadChildren: () => import('./enquiries/enquiries.module').then( m => m.EnquiriesPageModule)
+    path: 'singledeposit',
+    loadChildren: () => import('./deposit/cashdeposit/singledeposit/singledeposit.module').then( m => m.SingledepositPageModule)
   },
   {
-    path: 'selfservice',
-    loadChildren: () => import('../app/selfservice/selfservice.module').then( m => m.SelfservicePageModule)
-  }
+    path: 'multideposit',
+    loadChildren: () => import('./deposit/cashdeposit/multideposit/multideposit.module').then( m => m.MultidepositPageModule)
+  },
+  {
+    path: 'chequedeposit',
+    loadChildren: () => import('./deposit/chequedeposit/chequedeposit.module').then( m => m.ChequedepositPageModule)
+  },
+  {
+    path: 'chequedepositinput',
+    loadChildren: () => import('./deposit/chequedeposit/chequedeposit-input/chequedeposit-input.module').then( m => m.ChequedepositInputPageModule)
+  },
+  {
+    path: 'chequedepositordetails',
+    loadChildren: () => import('./deposit/chequedeposit/chequedepositordetails/chequedepositordetails.module').then( m => m.ChequedepositordetailsPageModule)
+  },
+  {
+    path: 'chequeconfirm',
+    loadChildren: () => import('./deposit/chequedeposit/chequeconfirm/chequeconfirm.module').then( m => m.ChequeconfirmPageModule)
+  },
 
 
 

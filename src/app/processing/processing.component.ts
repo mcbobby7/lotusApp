@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { DepositService } from '../_services/deposit.service';
 
 @Component({
   selector: 'app-processing',
@@ -7,11 +9,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ProcessingComponent implements OnInit {
   @Output() buttonClick = new EventEmitter()
+  
   @Input() processCompleted = false
-  @Input() successButtonText = 'Generate Receipt'
+  @Input() successButtonText = 'Print Receipt'
   @Input() okButtonText = 'Ok'
-  constructor() { }
-
+  constructor(private router: Router,
+    private depositService: DepositService,) { }
+  goBack(){
+    this.depositService.store({})
+this.router.navigate(['dashbord'])
+  }
   ngOnInit() {}
 
 }

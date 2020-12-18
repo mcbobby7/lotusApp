@@ -1,0 +1,102 @@
+
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Cheque Deposit</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="page-wrapper" >
+    <div >
+      <div  style="width: 100%;border:1px solid rgba(255,255,255, 0.30);border-radius: 4px; padding:10px;margin-top:10px">
+    <p>Account Name:</p>
+    <h1>{{depositObj.accountName}}</h1>
+    </div>
+    </div>
+
+
+    <h5>Sending to:</h5>
+    <ion-radio-group name="selfdeposit" [(ngModel)]="depositObj.selfdeposit" [value]="depositObj.selfdeposit">
+    <ion-list style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+    
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>Own Account</ion-label>
+        <ion-radio slot="end" value="ownaccount" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    
+    
+    </ion-list>
+    <div style="padding: 10px;"></div>
+    <ion-list  style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>Other Account</ion-label>
+        <ion-radio slot="end" value="otheraccount" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    </ion-list>
+    
+    </ion-radio-group>
+
+    <div *ngFor="let dep of depositObj.accountInfo; let i = index" style="width: 100%;border:1px solid #ffffff;border-radius: 4px; padding:5px;margin-top:10px">
+      <ion-row>
+        <ion-col size="12">
+          <span style="float: right;" (click)="removeItem(i)">
+            <ion-icon name="close-outline"></ion-icon>
+          </span>
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Issuing Bank</ion-label>
+            <ion-select [(ngModel)]="dep.issuingBank" name="issuingBank"  placeholder="Select bank" >
+              <ion-select-option>FCMB</ion-select-option>
+              <ion-select-option>FBN</ion-select-option>
+              <ion-select-option>GT Bank</ion-select-option>
+              <ion-select-option>Zenith Bank</ion-select-option>
+            </ion-select>           
+            </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Cheque Number</ion-label>
+            <ion-input   type="text" [(ngModel)]="dep.chqNumber" name="chqNumber"  placeholder="Enter cheque number" ></ion-input>
+        
+            </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Amount</ion-label>
+            <ion-input   type="tel" [(ngModel)]="dep.amount" name="amount"  placeholder="Enter amount" (keyup)="avalidate($event,'amount',i)" required></ion-input>
+            <span *ngIf="dep.erroramount"><small class="error">Invalid Amount</small></span>
+            </div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button (click)="addDeposit()"  fill="clear" expand="block" >
+          <img src="assets/images/addmoredeposit_btn.png" style="width: 10rem;">
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    </div>
+
+
+    <ion-row>
+      <ion-col size="12" style="padding:5px 20px 20px 20px">
+        <ion-button  (click)="validateForm()" shape="round" fill="solid" expand="block" class="btnStyle">
+        <span *ngIf="!loadingBankAccount">Proceed</span>
+        <span *ngIf="loadingBankAccount">Loading ...</span>
+        </ion-button>
+        <div style="padding: 10px;"></div>
+      </ion-col>
+    </ion-row>
+</ion-content>
