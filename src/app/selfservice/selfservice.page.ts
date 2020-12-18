@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
-import { BankAccount, BankService, } from 'src/app/_services/bank.service';
-import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_services/deposit.service';
+import {  NavController } from '@ionic/angular';
+import {  BankService, } from 'src/app/_services/bank.service';
+import {  DepositService } from 'src/app/_services/deposit.service';
 import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 
