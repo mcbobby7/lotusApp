@@ -1,4 +1,5 @@
 
+
 <ion-content>
   <ion-header class="ion-no-border">
     <ion-toolbar>
@@ -7,7 +8,7 @@
           <img src="assets/images/back_btn.png" style="width: 2rem;">    
         </ion-button>
       </ion-buttons>
-      <ion-title>Deposit Details</ion-title>
+      <ion-title>Cheque Deposit Details</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -20,44 +21,45 @@
         </ion-col>         
         </ion-row>
       </ion-grid>
+      <ion-row>
+        <ion-col size="12"  style="border-bottom:1px solid rgb(255,255,255,0.20);">
+          <span style="font-size: 14px; font-weight: normal;">{{depositObj.accountName}} - {{depositObj.accountNumber}}</span><br> <br>
+         <p>Cheque Details:</p>
+        </ion-col>
+     
+      </ion-row>
 
-      <ion-grid *ngIf="depositObj.multiDeposit">
+      <ion-grid >
         <ion-row *ngFor="let dep of depositObj.accountInfo" >
           <ion-col size="12" style="border-bottom:1px dashed rgb(255,255,255,0.20);">
-            <span style="font-size: 14px; font-weight: normal;">{{dep.accountName}} - {{dep.accountNumber}}</span><br>
-            <span style="font-size: 14px; font-weight: normal;">N{{dep.amount}}</span>
+            <span style="font-size: 14px; font-weight: normal;">
+              Cheque No: {{dep.chqNumber}} &nbsp; &nbsp; Bank: {{dep.issuingBank}}</span><br>
+          Amount:  <span style="font-size: 14px; font-weight: normal;">N{{dep.amount}}</span>
           </ion-col>         
         </ion-row>
       </ion-grid>
 
-      <ion-grid *ngIf="depositObj.singleDeposit">
+      <ion-grid >
+        <ion-row>
+          <ion-col size="12" style="border-bottom:1px solid rgb(255,255,255,0.20);">
+          <span style="font-size: 16px; font-weight: normal;">Total:</span>
+        </ion-col>         
+        </ion-row>
         <ion-row>
           <ion-col size="12"  style="border-bottom:1px solid rgb(255,255,255,0.20);">
-            <span style="font-size: 16px; font-weight: bold;">{{depositObj.accountName}}</span> <br>
-            <span style="font-size: 16px; font-weight: normal;">{{depositObj.accountNumber}}</span>
+            <span style="font-size: 20px; font-weight: normal;">{{kchqTotal | number: '.2'}}</span>
+           
           </ion-col>
        
         </ion-row>
-
-        <ion-row>
-          <ion-col size="12" style="font-size: 12px; font-weight: normal;border-bottom:1px solid rgb(255,255,255,0.20);">Amount: <br>
-            <span style="font-size: 16px; font-weight: normal;">N{{depositObj.amount}}</span>
-          </ion-col>
-        
-        </ion-row>      
-
-        <ion-row *ngIf="depositObj.singleDeposit && depositObj.selfdeposit == 'ownaccount'">
-          <ion-col size="12" style="font-size: 12px; font-weight: normal;">
-            <span style="font-size: 16px; font-weight: normal;">{{depositObj.narration}}</span>
-          </ion-col>
-        
-        </ion-row>   
         
       </ion-grid>
-    </ion-card-content>
-  </ion-card>
 
-  <ion-card  *ngIf="depositObj.multiDeposit || depositObj.selfdeposit == 'otheraccount'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
+      
+    </ion-card-content>
+  
+  </ion-card>
+  <ion-card  *ngIf="depositObj.selfdeposit == 'otheraccount'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
       <ion-grid>
         <ion-row>
@@ -79,7 +81,6 @@
     </ion-card-content>
   </ion-card>
 </ion-content>
-
 <ion-footer class="ion-no-border">
   <ion-button (click)="submit()"  shape="round" fill="solid" expand="block" class="btnStyle">
     Proceed
@@ -95,8 +96,7 @@
     <!-- Transaction Successful -->
   </span>
   <span processing-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    Your Transaction is being processed, 
-    Please hand cash over to Teller
+    Your Transaction is being processed.
   </span>
   <span processing-detail>
     <!-- Generate Receipt -->

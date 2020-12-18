@@ -66,6 +66,13 @@ ion-input{
     width: 15rem;
     background-color:rgba(0,0,0, 0.38);
 }
+ion-select{
+    border-radius: 4px !important;
+    border: 1px solid #0065B0 !important;
+    font-size: 18px;
+    text-align: center;
+    background-color:rgba(0,0,0, 0.38);
+}
 ion-label{
     font-size: 16px;
 }
@@ -119,9 +126,7 @@ ion-footer{
     padding: 15px;
     background-color: #ffffff;
 }
-ion-footer > ion-button{
-    --border-radius: 4px;
-}
+
 ion-datetime{
     font-size: 12px;
 

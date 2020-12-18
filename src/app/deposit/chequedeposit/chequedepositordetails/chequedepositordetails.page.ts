@@ -7,11 +7,11 @@ import { InputvalidationService } from 'src/app/_services/inputvalidation.servic
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 
 @Component({
-  selector: 'app-depositor-detail',
-  templateUrl: './depositor-detail.page.html',
-  styleUrls: ['./depositor-detail.page.scss'],
+  selector: 'app-chequedepositordetails',
+  templateUrl: './chequedepositordetails.page.html',
+  styleUrls: ['./chequedepositordetails.page.scss'],
 })
-export class DepositorDetailPage implements OnInit {
+export class ChequedepositordetailsPage implements OnInit {
   depositObj: any = {}
 
   depositorForm = new FormGroup({
@@ -37,16 +37,16 @@ export class DepositorDetailPage implements OnInit {
 
   submit(){
     // console.log(this.depositObj)
-    if(this.depositObj.multiDeposit || this.depositObj.selfdeposit == 'otheraccount'){
+    if(this.depositObj.selfdeposit == 'otheraccount'){
       if(!this.depositObj.depositorFullname || !this.depositObj.depositorPhoneNumber){
         this.shortcutService.showErrorToast('Please fill Fullname and Phone Number field')
       }else{
         this.depositService.store(this.depositObj)
-        this.router.navigateByUrl('/deposit/confirm', {queryParams: JSON.parse})
+        this.router.navigateByUrl('/chequeconfirm', {queryParams: JSON.parse})
       }
     }else{
       this.depositService.store(this.depositObj)
-      this.router.navigateByUrl('/deposit/confirm', {queryParams: JSON.parse})
+      this.router.navigateByUrl('/chequeconfirm', {queryParams: JSON.parse})
     }
     
   }

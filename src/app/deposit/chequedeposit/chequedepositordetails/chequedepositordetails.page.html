@@ -8,25 +8,26 @@
           <img src="assets/images/back_btn.png" style="width: 2rem;">    
         </ion-button>
       </ion-buttons>
-      <ion-title>Depositor's Details</ion-title>
+      <ion-title>Cheque Depositor's Details</ion-title>
     </ion-toolbar>
   </ion-header>
+
   <div class="page-wrapper" >
     <div >
   <form [formGroup]="depositorForm">
-    <div class="form-group" *ngIf="depositObj.multiDeposit || depositObj.selfdeposit == 'otheraccount'">
+    <div class="form-group" *ngIf="depositObj.selfdeposit == 'otheraccount'">
       <ion-label class="justifyCenter">
         Depositor Name *
       </ion-label>
       <ion-input placeholder="Full Name" formControlName="depositorFullname" [(ngModel)]="depositObj.depositorFullname" name="depositorFullname" id="depositorFullname" required></ion-input>
     </div>
-    <div class="form-group" *ngIf="depositObj.multiDeposit || depositObj.selfdeposit == 'otheraccount'">
+    <div class="form-group" *ngIf="depositObj.selfdeposit == 'otheraccount'">
       <ion-label class="justifyCenter">
         Depositor Phone number  *
       </ion-label>
       <ion-input type="tel" placeholder="Phone number" formControlName="depositorPhoneNumber" [(ngModel)]="depositObj.depositorPhoneNumber" name="depositorPhoneNumber" id="depositorPhoneNumber" required></ion-input>
     </div>
-    <div class="form-group" *ngIf="depositObj.multiDeposit || depositObj.selfdeposit == 'otheraccount'">
+    <div class="form-group" *ngIf="depositObj.selfdeposit == 'otheraccount'">
       <ion-label class="justifyCenter">
         Depositor Email
       </ion-label>
@@ -42,9 +43,7 @@
   <div style="padding: 10px;"></div>
 </div>
 </div>
-
-
-<ion-row *ngIf="depositObj.multiDeposit || depositObj.proceedChk">
+<ion-row >
   <ion-col size="12" style="padding:5px 20px 20px 20px">
     <ion-button (click)="submit()"  shape="round" fill="solid" expand="block" class="btnStyle">
   Proceed
@@ -53,4 +52,3 @@
   </ion-col>
 </ion-row>
 </ion-content>
-
