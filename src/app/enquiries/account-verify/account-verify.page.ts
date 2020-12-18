@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
-import { BankAccount, BankService, } from 'src/app/_services/bank.service';
-import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_services/deposit.service';
-import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
-import { ShortcutsService } from 'src/app/_services/shortcuts.service';
-
+import { NavController, LoadingController } from '@ionic/angular';
 @Component({
   selector: 'app-account-verify',
   templateUrl: './account-verify.page.html',
@@ -15,17 +9,27 @@ import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 export class AccountVerifyPage implements OnInit {
 
   constructor(private navCtrl: NavController,
-    private router: Router,
-    private inpVali: InputvalidationService,
-    private shortcutService: ShortcutsService,
-    private depositService: DepositService,
-    private bankService: BankService) { }
+    private loadingCtrl: LoadingController,private routes: Router) { }
 
+    ionViewWillEnter(){
+      setTimeout(this.goToSelfService.bind(this), 2000)
+    }
   ngOnInit() {
+    // setTimeout(this.goToSelfService, 2000)
   }
 
   goBack() {
     this.navCtrl.back()
+  }
+
+  async goToSelfService(){
+    const loading = await this.loadingCtrl.create({
+      cssClass: 'my-custom-class',
+      message: 'Verifying...',
+      duration: 3000
+    });
+    await loading.present();
+    this.routes.navigate(['/selfservice'])
   }
 
 }

@@ -1,0 +1,17 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Self Service</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-button routerLink="/selfservice/balance" expand="block" fill="clear" class="my-button">Balance Enquiries</ion-button>
+  <ion-button routerLink="/selfservice/bvn" expand="block" fill="clear" class="my-button">Check BVN</ion-button>
+  <ion-button routerLink="/selfservice/accountofficer" expand="block" fill="clear" class="my-button">Account Officer</ion-button>
+  <ion-button routerLink="/selfservice/generatestatement" expand="block" fill="clear" class="my-button">Generate Statement</ion-button>
+

@@ -16,8 +16,6 @@ import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 export class EnquiriesPage implements OnInit {
 
   constructor(private navCtrl: NavController,
-    private alertCtrl: AlertController,
-    private toastCtrl: ToastController,
     private router: Router,
     private inpVali: InputvalidationService,
     private shortcutService: ShortcutsService,

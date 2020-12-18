@@ -1,5 +1,4 @@
 <ion-content>
-  <form name="depositForm" id="depositForm" #depositForm="ngForm">
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -12,20 +11,15 @@
   </ion-header>
 
   <div  class="page-wrapper">
-    <ion-row style="position: relative;">
-      <ion-row>
+    <ion-row style="display: flexbox; justify-content: center; margin: 30px 10px;">
+      <ion-row style="margin-bottom: 20px;">
         <span style="text-align: center;">
           Place your thumb on the fingerprint scanner to verify your account
         </span>
-      </ion-row>
-      <ion-img src="assets/images/fingerprint.png"></ion-img>
-      <ion-row style="padding-top: 200px;">
-        <ion-icon name="finger-print-outline" style="font-size: 110px; position: absolute; top: 50%;
-        left: 50%; transform: translate(-50%, -50%);"></ion-icon>
+      </ion-row> 
+      <ion-row>
+        <ion-img routerLink="['/selfservice']" src="assets/images/fingerprint.png" class="icons" ></ion-img>
       </ion-row>
     </ion-row>
-    
-
-    
   
     </div>
