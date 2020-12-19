@@ -3,6 +3,7 @@ import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs';
 
 export interface FundTransfer{
+  transferType?: string,
   accountNo?: string,
   accountName?: string,
   balance?: number,

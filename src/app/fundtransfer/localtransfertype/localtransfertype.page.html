@@ -1,0 +1,47 @@
+
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Transfer Type</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <div style="padding: 40px;"></div>
+  <div class="page-wrapper" style="margin-top:5px">
+   
+    <ion-row>
+      <ion-col size="12" style="padding: 10px">
+        <ion-button (click)="gotolocaltrf('own')"  fill="clear" expand="block" style="color: #ffffff;">
+          <span style="font-size: 14px;font-weight:  bold;">Own Account</span>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+ 
+  </div>
+  <div style="padding: 40px;"></div>
+  <div class="page-wrapper" style="margin-top:5px">
+      
+    <ion-row>
+      <ion-col size="12" style="padding: 10px">
+        <ion-button (click)="gotolocaltrf('lotus')"  fill="clear" expand="block" style="color: #ffffff;">
+          <span style="font-size: 14px;font-weight: bold;">Lotus Bank</span>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+  <div style="padding: 40px;"></div>
+  <div class="page-wrapper" style="margin-top:5px">
+      
+    <ion-row>
+      <ion-col size="12" style="padding: 10px">
+        <ion-button (click)="gotolocaltrf('other')"  fill="clear" expand="block" style="color: #ffffff;">
+          <span style="font-size: 14px;font-weight: bold;">Other Bank</span>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

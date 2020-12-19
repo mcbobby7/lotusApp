@@ -38,7 +38,7 @@ export class FundtransferPage implements OnInit {
         balance: bank.balance
       }).then(data => {
         this.loadingBankAccount = false
-        this.router.navigate(['capturebiometric'], {queryParams: {nxtRoute: '/fundtransfer/amount'}})
+        this.router.navigate(['capturebiometric'], {queryParams: {nxtRoute: '/transfertype'}})
       })
     }, () => {
       this.loadingBankAccount = false

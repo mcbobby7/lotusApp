@@ -77,6 +77,14 @@ const routes: Routes = [
   {
     path: 'selfservice',
     loadChildren: () => import('./selfservice/selfservice.module').then(m => m.SelfservicePageModule)
+  },
+  {
+    path: 'transfertype',
+    loadChildren: () => import('./fundtransfer/transfertype/transfertype.module').then( m => m.TransfertypePageModule)
+  },
+  {
+    path: 'localtransfertype',
+    loadChildren: () => import('./fundtransfer/localtransfertype/localtransfertype.module').then( m => m.LocaltransfertypePageModule)
   }
 
 
