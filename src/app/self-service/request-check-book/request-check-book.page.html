@@ -21,14 +21,14 @@
           <!-- <ion-label class="justifyCenter">Select your preferred location</ion-label> -->
           <ion-button (click)="selectCheckType(1)" expand="block" class="my-input">
             <span style="flex: auto;"> 50 leaves cheque book </span>
-            <span *ngIf="details.selectedType==1">
-              <ion-icon name="checkmark-circle-outline" style="color: green;"></ion-icon>
+            <span [style.visibility]="details.selectedType==1 ? 'visible': 'hidden'">
+              <ion-icon name="checkmark-circle-outline" style="color: white;"></ion-icon>
             </span>
           </ion-button>
           <ion-button (click)="selectCheckType(2)" expand="block" class="my-input">
             <span style="flex: auto;">100 leaves cheque book</span>
-            <span *ngIf="details.selectedType==2">
-              <ion-icon name="checkmark-circle-outline" style="color: green;"></ion-icon>
+            <span [style.visibility]="details.selectedType==2 ? 'visible': 'hidden'">
+              <ion-icon name="checkmark-circle-outline" style="color: white;"></ion-icon>
             </span>
           </ion-button>
           <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
