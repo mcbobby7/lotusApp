@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, LoadingController } from '@ionic/angular';
 @Component({
   selector: 'app-account-verify',
@@ -9,10 +9,15 @@ import { NavController, LoadingController } from '@ionic/angular';
 export class AccountVerifyPage implements OnInit {
 
   constructor(private navCtrl: NavController,
+    private activatedRoute: ActivatedRoute,
     private loadingCtrl: LoadingController,private routes: Router) { }
 
+    toPage = ''
     ionViewWillEnter(){
-      setTimeout(this.goToSelfService.bind(this), 2000)
+      this.activatedRoute.queryParams.subscribe(data => {
+        this.toPage = data.toPage
+        setTimeout(this.goToSelfService.bind(this), 2000)
+      })
     }
   ngOnInit() {
     // setTimeout(this.goToSelfService, 2000)
@@ -29,7 +34,8 @@ export class AccountVerifyPage implements OnInit {
       duration: 3000
     });
     await loading.present();
-    this.routes.navigate(['/selfservice'])
+    // this.routes.navigate(['/selfservice'])
+    this.routes.navigateByUrl(this.toPage)
   }
 
 }

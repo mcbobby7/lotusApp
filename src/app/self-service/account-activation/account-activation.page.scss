@@ -47,29 +47,11 @@ ion-card-header{
     font-weight: bold;
 }
 
-.icons{
-    display: block;
-    align-self:center;
-    justify-self: center;
-    width: 120px;
-    height: 120px;
-    // padding-bottom: 50px;
-}
-
-.my-button{
-    display:block;
-    text-align: center;
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-    margin: 15px;
-    height: 60px;
-    text-transform: capitalize;
-    --background: rgb(0,0,0,0.38);
-}
-
-.self-div{
-    display: flexbox; 
+.main{
+    height: 70vh; 
+    display: flex; 
+    // justify-content: center; 
     align-items: center; 
-    justify-items: center;
+    flex-direction: column;
+
 }

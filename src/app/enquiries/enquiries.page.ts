@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { BankAccount, BankService, } from 'src/app/_services/bank.service';
 import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_services/deposit.service';
@@ -16,12 +16,14 @@ import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 export class EnquiriesPage implements OnInit {
 
   constructor(private navCtrl: NavController,
+    private activatedRouter: ActivatedRoute,
     private router: Router,
     private inpVali: InputvalidationService,
     private shortcutService: ShortcutsService,
     private depositService: DepositService,
     private bankService: BankService) { }
 
+  toPage = '';
   loadingBankAccount = false
   depositForm: FormGroup;
   intrusmntType: any = '';
@@ -29,6 +31,12 @@ export class EnquiriesPage implements OnInit {
   invalidAmount: boolean = false;
   depositObj: Deposit = {};
   depositMultpleObj: multiDeposit ={accountInfo:[]};
+
+  ionViewWillEnter(){
+    this.activatedRouter.queryParams.subscribe(data => {
+      this.toPage = data.toPage
+    })
+  }
 
   ngOnInit() {
   }
@@ -66,7 +74,7 @@ export class EnquiriesPage implements OnInit {
           console.log(bank)
           this.depositObj.bankName = bank.name
           this.depositService.store(this.depositObj).then(data => {
-            this.router.navigate(['/enquiries/account-verify'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
+            this.router.navigate(['/enquiries/account-verify'], { queryParams: { depositDetails: JSON.stringify(depositDetails), toPage: this.toPage } })
           })
         }, () => {
           this.loadingBankAccount = false

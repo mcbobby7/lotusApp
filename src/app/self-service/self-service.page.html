@@ -1,9 +1,17 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>self-service</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Self Service</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-</ion-content>
+  <ion-button routerLink="/self-service/request-debit-card" expand="block" fill="clear" class="my-button">Request debit card</ion-button>
+  <ion-button routerLink="/self-service/request-check-book" expand="block" fill="clear" class="my-button">Request Check Book</ion-button>
+  <ion-button routerLink="/self-service/request-token" expand="block" fill="clear" class="my-button">Request Token</ion-button>
+  <ion-button routerLink="/self-service/account-update" expand="block" fill="clear" class="my-button">Account Update</ion-button>
+  <ion-button routerLink="/self-service/account-activation" expand="block" fill="clear" class="my-button">Account Activation</ion-button>

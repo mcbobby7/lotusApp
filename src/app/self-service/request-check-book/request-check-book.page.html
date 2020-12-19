@@ -1,0 +1,164 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Request Cheque Book</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+  <div class="page-wrapper"  *ngIf="page == 0">
+  
+    <ion-row>
+      <ion-col size="12">
+        <ion-label class="justifyCenter">Check book type</ion-label>
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Select your preferred location</ion-label>
+          <ion-button (click)="selectCheckType(1)" expand="block" class="my-input">
+            <span style="flex: auto;"> 50 leaves cheque book </span>
+            <span *ngIf="details.selectedType==1">
+              <ion-icon name="checkmark-circle-outline" style="color: green;"></ion-icon>
+            </span>
+          </ion-button>
+          <ion-button (click)="selectCheckType(2)" expand="block" class="my-input">
+            <span style="flex: auto;">100 leaves cheque book</span>
+            <span *ngIf="details.selectedType==2">
+              <ion-icon name="checkmark-circle-outline" style="color: green;"></ion-icon>
+            </span>
+          </ion-button>
+          <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
+          </div>
+      </ion-col>
+      </ion-row>
+    <ion-row>
+      <ion-col size="12" style="padding: 20px">
+        <ion-button [disabled]="!details.selectedType" (click)="submitType()" shape="round" fill="solid" expand="block" class="btnStyle">
+          Next
+        </ion-button>
+        <div style="padding: 10px;"></div>
+      </ion-col>
+    </ion-row>
+    
+    </div>
+    <div class="page-wrapper"  *ngIf="page == 1">
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Select your preferred location</ion-label>
+          <ion-select [(ngModel)]="details.location">
+            <ion-select-option [value]="1">Ikeja</ion-select-option>
+            <ion-select-option [value]="2">Lekki</ion-select-option>
+            <ion-select-option [value]="3">Ikoyi</ion-select-option>
+          </ion-select>
+          <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
+          </div>
+      </ion-col>
+      </ion-row>
+    <ion-row>
+      <ion-col size="12" style="padding: 20px">
+        <ion-button [disabled]="!details.location" (click)="submitLocation()" shape="round" fill="solid" expand="block" class="btnStyle">
+          Next
+        </ion-button>
+        <div style="padding: 10px;"></div>
+      </ion-col>
+    </ion-row>
+    
+    </div>
+
+    <div class="page-wrapper"  *ngIf="page == 2">
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Select Account to debit from</ion-label>
+            <ion-select [(ngModel)]="details.account">
+              <ion-select-option [value]="1">Account 1</ion-select-option>
+              <ion-select-option [value]="2">Account 2</ion-select-option>
+              <ion-select-option [value]="3">Account 3</ion-select-option>
+            </ion-select>
+            <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
+            </div>
+        </ion-col>
+        </ion-row>
+      <ion-row>
+        <ion-col size="12" style="padding: 20px">
+          <ion-button [disabled]="!details.account" (click)="submitAccount()" shape="round" fill="solid" expand="block" class="btnStyle">
+            Next
+          </ion-button>
+          <div style="padding: 10px;"></div>
+        </ion-col>
+      </ion-row>
+      
+      </div>
+
+    <div class="page-wrapper"  *ngIf="page == 3">
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter" style="text-align: center;">A total amount of N1,020.00 will be deducted from your(John doe -0124122134: N30,000.000) account.</ion-label>
+            </div>
+        </ion-col>
+        </ion-row>
+      <ion-row>
+        <ion-col size="6" style="padding: 20px">
+          <ion-button [disabled]="!details.account" (click)="goBack()" shape="round" fill="solid" expand="block" class="btnStyle">
+            Back
+          </ion-button>
+          <div style="padding: 10px;"></div>
+        </ion-col>
+
+        <ion-col size="6" style="padding: 20px 0px;">
+          <ion-button [disabled]="!details.account" (click)="submitAgreement()" shape="round" fill="solid" expand="block" class="btnStyle">
+            Agree
+          </ion-button>
+          <div style="padding: 10px;"></div>
+        </ion-col>
+      </ion-row>
+</div>  
+<ng-template [ngIf]="page==4">
+  <div class="main">
+    <div  style="padding:20px"></div>
+    <div class="page-wrapper">
+      <ion-row>
+        <ion-col size="12" style="border-bottom:1px solid rgb(255,255,255,0.20);text-align: center;">
+        <span style="font-size: 16px; font-weight: normal; ">Done...</span>       
+        </ion-col>
+      </ion-row>
+      <div style="margin: 30px; display: flex;justify-content: center;" >
+        <div>
+          <img src="assets/images/trx_successful.png" style="width: 5rem;">    
+        </div>
+      
+      </div>
+      <div style="padding: 5px;"></div>
+
+      <span style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
+      Thank you for banking with us
+      </span>
+      <div style="padding: 10px;"></div>
+    </div>
+  </div>
+
+  <ion-row>
+    <ion-col style="display: flex;justify-content: center;">
+      <ion-button class="btnStyle" shape="round" (click)="newRequest()" style="color: #2487D0;width: 177px;" >
+        New Request
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col style="display: flex;justify-content: center;">
+      <ion-button   shape="round"  (click)="goHome()" style="color: #fff; font-weight: normal;--background: rgb(0,0,0,0.38);width: 177px;" >
+        <ion-icon name="home-outline"></ion-icon> &nbsp;Back to home
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ng-template>
+</ion-content>
