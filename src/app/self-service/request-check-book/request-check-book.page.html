@@ -78,10 +78,15 @@
 
     <div class="page-wrapper"  *ngIf="page == 2">
       <ion-row>
+        <ion-col>
+          <label class="justifyCenter">Select Account to debit from</label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
         <ion-col size="12">
           <div class="form-group">
             <div style="padding: 10px;"></div>
-            <ion-label class="justifyCenter">Select Account to debit from</ion-label>
+            <!-- <ion-label class="justifyCenter">Select Account to debit from</ion-label> -->
             <ion-select [(ngModel)]="details.account">
               <ion-select-option [value]="1">Account 1</ion-select-option>
               <ion-select-option [value]="2">Account 2</ion-select-option>
