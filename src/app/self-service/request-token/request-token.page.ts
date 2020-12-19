@@ -1,0 +1,51 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+
+@Component({
+  selector: 'app-request-token',
+  templateUrl: './request-token.page.html',
+  styleUrls: ['./request-token.page.scss'],
+})
+export class RequestTokenPage {
+
+
+  prefferedLocation: string;
+  page = 0
+  details: any = {}
+  constructor(
+    private router: Router,
+    private navController: NavController
+  ) { }
+
+  ionViewWillEnter() {
+    this.page = 0
+  }
+
+  submitLocation(){
+    this.page = 1
+  }
+  // submitBranch(){
+  //   this.page = 2
+  // }
+  submitAccount(){
+    this.page = 2
+  }
+  submitAgreement(){
+    this.page = 3
+  }
+  newRequest(){
+    this.page = 0
+    this.details = {}
+  }
+  goBack(){
+    if(this.page == 0){
+      this.navController.back()
+    } else {
+      this.page -= 1
+    }
+  }
+  goHome(){
+    this.router.navigateByUrl('/')
+  }
+}

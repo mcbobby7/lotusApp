@@ -1,0 +1,84 @@
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Account Activation</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+  <div class="page-wrapper"  *ngIf="page == 0" [formGroup]="profileForm">
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Inactivity Reason</ion-label>
+          <ion-textarea formControlName="inactivityReason"></ion-textarea>
+          <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
+        </div>
+      </ion-col>
+      </ion-row>
+      <ion-row >
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Inactivation Reason</ion-label>
+            <ion-textarea type="tel"  formControlName="inactivationReason"></ion-textarea>
+            <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
+          </div>
+        </ion-col>
+        </ion-row>
+    <ion-row>
+      <ion-col size="12" style="padding: 20px">
+        <ion-button [disabled]="!profileForm.valid" (click)="submitLocation()" shape="round" fill="solid" expand="block" class="btnStyle">
+          Next
+        </ion-button>
+        <div style="padding: 10px;"></div>
+      </ion-col>
+    </ion-row>
+    
+    </div>
+
+<ng-template [ngIf]="page==1">
+  <div class="main">
+    <div  style="padding:20px"></div>
+    <div class="page-wrapper">
+      <ion-row>
+        <ion-col size="12" style="border-bottom:1px solid rgb(255,255,255,0.20);text-align: center;">
+        <span style="font-size: 16px; font-weight: normal; ">Done...</span>       
+        </ion-col>
+      </ion-row>
+      <div style="margin: 30px; display: flex;justify-content: center;" >
+        <div>
+          <img src="assets/images/trx_successful.png" style="width: 5rem;">    
+        </div>
+      
+      </div>
+      <div style="padding: 5px;"></div>
+
+      <span style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
+      Thank you for banking with us
+      </span>
+      <div style="padding: 10px;"></div>
+    </div>
+  </div>
+
+  <ion-row>
+    <ion-col style="display: flex;justify-content: center;">
+      <ion-button class="btnStyle" shape="round" (click)="newRequest()" style="color: #2487D0;width: 177px;" >
+        New Request
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col style="display: flex;justify-content: center;">
+      <ion-button   shape="round"  (click)="goHome()" style="color: #fff; font-weight: normal;--background: rgb(0,0,0,0.38);width: 177px;" >
+        <ion-icon name="home-outline"></ion-icon> &nbsp;Back to home
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ng-template>
+</ion-content>

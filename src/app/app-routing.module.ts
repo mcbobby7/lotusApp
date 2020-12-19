@@ -20,7 +20,7 @@ const routes: Routes = [
   {
     path: 'self-service',
     loadChildren: () => import('./self-service/self-service.module').then( m => m.SelfServicePageModule),
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'customercare',
