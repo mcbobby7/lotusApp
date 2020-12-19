@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -7,7 +8,8 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./statement.page.scss'],
 })
 export class StatementPage implements OnInit {
-
+myForm:NgForm
+statementForm: FormGroup;
   constructor(private navCtrl: NavController) { }
 
   ngOnInit() {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { NavController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-summary',
@@ -8,12 +9,13 @@ import { NavController } from '@ionic/angular';
 })
 export class SummaryPage implements OnInit {
 
-  constructor(private navCtrl: NavController) { }
+  constructor(private navCtrl: NavController,
+    private loadingCtrl: LoadingController,private routes: Router) { }
 
   ngOnInit() {
   }
 
   goBack() {
-    this.navCtrl.back()
+    this.routes.navigate(['/dashbord'])
   }
 }

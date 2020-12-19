@@ -11,14 +11,17 @@
   </ion-header>
   <div  class="page-wrapper">
     <ion-row style="display: flexbox; justify-content: center; margin: 30px 10px;">
-
+      <form  #myForm="ngForm" name="myForm">
         <ion-label style="padding-bottom: 10px;">Enter email to send statement to:</ion-label>
-       <ion-input type="email" name="email" placeholder="Enter your email here"></ion-input>
-      </ion-row> 
-
+        <ion-input type="email" name="myemail" placeholder="Enter your email here" #myemail="ngModel" [(ngModel)]="statementForm" required></ion-input>
+        <div *ngIf="myemail.invalid && (myemail.dirty || myemail.touched)" class="error">
+          <div *ngIf="myemail.errors.required">Your email is required</div>
+          </div>
+      </form>
+    </ion-row>
     <div style="text-align:center;z-index:1000; width:100%;">
       <div style="padding-top:10px;"></div>
-      <ion-button routerLink="/selfservice/generatestatement/summary" color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+      <ion-button [disabled]="!myForm.valid" routerLink="/selfservice/generatestatement/summary" color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
         PROCEED
       </ion-button>
       </div>
