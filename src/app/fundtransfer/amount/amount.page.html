@@ -1,28 +1,17 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-circle" class="iconstyle1" style="color: #4895CE;
-        ;"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Funds Transfer</ion-title>
-  </ion-toolbar>
-</ion-header>
+
 
 <ion-content>
-  <!-- <ion-card>
-    <ion-card-content>
-      <div class="title-value">
-        <span class="title">Account Name</span>
-        <span class="value">Oreoluwa Uche H.</span>
-      </div>
-      <div class="title-value">
-        <span class="title">Account Number</span>
-        <span class="value">010101010101</span>
-      </div>
-    </ion-card-content>
-  </ion-card> -->
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>{{transferType}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+<!-- 
 
   <ion-card style="margin: 12px; background-color: #E0ECFF;">
     <ion-card-content>
@@ -43,8 +32,27 @@
         </ion-row>
       </ion-grid>
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
+
   <div class="form-group">
+    <ion-label>
+     Select Debit Account
+    </ion-label>
+    <div style="padding: 5px;"></div>
+    <ion-select placeholder="Select Account" [(ngModel)]="bankType">
+      <ion-select-option *ngFor="let acct of allacct" value="{{acct.number}}">{{acct.number}}</ion-select-option>
+    </ion-select>
+  </div>
+  <div class="form-group" *ngIf="transferType == 'Own Account Transfer'">
+    <ion-label>
+     Select Credit Account
+    </ion-label>
+    <div style="padding: 5px;"></div>
+    <ion-select placeholder="Select Account" [(ngModel)]="bankType">
+      <ion-select-option *ngFor="let acct of allacct" value="{{acct.number}}">{{acct.number}}</ion-select-option>
+    </ion-select>
+  </div>
+  <!-- <div class="form-group">
     <ion-label>
       Bank Name
     </ion-label>
@@ -59,24 +67,25 @@
     Account Number 
     </ion-label>
     <app-account-input [(value)]="bankAccount"></app-account-input>
-    <!-- <ion-input placeholder="Account Number"></ion-input> -->
+
   </div>
   
   <div class="form-group">
     <ion-label>
       Amount
     </ion-label>
-    <!-- <ion-input [(ngModel)]="amount" placeholder="Amount"></ion-input> -->
     <app-amount-input [(value)]="amount"></app-amount-input>
     <span *ngIf="amount > acctBal"><small class="error">Account balance is too low</small></span>
-  </div>
-
+  </div> -->
+  <ion-row>
+    <ion-col size="12" style="padding: 20px">
+      <ion-button [disabled]="disableSubmit || loadingBankAccount" (click)="submit()" shape="round" fill="solid" expand="block" class="btnStyle">
+      <span *ngIf="!loadingBankAccount">Next</span>
+      <span *ngIf="loadingBankAccount">Loading bank details ...</span>
+      </ion-button>
+      <div style="padding: 10px;"></div>
+    </ion-col>
+  </ion-row>
 </ion-content>
 
-<ion-footer class="ion-no-border">
-  <ion-button expand="block" [disabled]="disableSubmit || loadingBankAccount" (click)="submit()">
-    <span *ngIf="!loadingBankAccount">Proceed</span>
-    <span *ngIf="loadingBankAccount">Loading bank details...</span>
-  </ion-button>
-</ion-footer>
 

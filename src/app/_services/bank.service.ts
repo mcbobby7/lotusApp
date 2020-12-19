@@ -18,7 +18,9 @@ const banks: BankAccount[] = [
 export class BankService {
 
   constructor() { }
-
+getallaccount(){
+  return banks
+}
   getBankByAccountNumber(accountNo: string){
     const subject = new Subject<BankAccount>()
     const bank = banks.find((bank: BankAccount) => bank.number == accountNo)

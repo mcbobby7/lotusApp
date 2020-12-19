@@ -20,8 +20,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WithdrawalService } from './_services/withdrawal.service';
 import { BankService } from './_services/bank.service';
 import { TransferService } from './_services/transfer.service';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,IonicStorageModule.forRoot(),
     ReactiveFormsModule,

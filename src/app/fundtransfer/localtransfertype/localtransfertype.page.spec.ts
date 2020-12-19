@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { FundtransferPage } from './fundtransfer.page';
+import { LocaltransfertypePage } from './localtransfertype.page';
 
-describe('FundtransferPage', () => {
-  let component: FundtransferPage;
-  let fixture: ComponentFixture<FundtransferPage>;
+describe('LocaltransfertypePage', () => {
+  let component: LocaltransfertypePage;
+  let fixture: ComponentFixture<LocaltransfertypePage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FundtransferPage ],
+      declarations: [ LocaltransfertypePage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FundtransferPage);
+    fixture = TestBed.createComponent(LocaltransfertypePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
