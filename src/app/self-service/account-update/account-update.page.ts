@@ -1,7 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+
+export function phoneNumberValidator(): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    let phoneNo: string = control.value;
+    phoneNo = phoneNo.replace("+", "")
+    let forbidden = /\D/.test(phoneNo)
+    if(!forbidden){
+      if(phoneNo.length < 8){
+        forbidden = true
+      } else if(phoneNo.length > 13){
+        forbidden = true
+      }
+    }
+    return forbidden ? {phoneNo: {value: control.value}} : null 
+  };
+}
 
 @Component({
   selector: 'app-account-update',
@@ -18,10 +34,13 @@ export class AccountUpdatePage{
     ]),
     phoneNo: new FormControl('', [
       Validators.required,
-      Validators.minLength(10),
-      Validators.maxLength(13)
+      phoneNumberValidator()
     ]),
   });
+
+  get email() { return this.profileForm.get('email'); }
+
+  get phoneNo() { return this.profileForm.get('phoneNo'); }
 
   prefferedLocation: string;
   page = 0

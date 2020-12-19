@@ -19,6 +19,18 @@
           <div style="padding: 10px;"></div>
           <ion-label class="justifyCenter">Email Address</ion-label>
           <ion-input formControlName="email"></ion-input>
+          <div
+            *ngIf="email.invalid && (email.dirty || email.touched)"
+            class="error"
+          >
+            <div *ngIf="email.errors.required">
+              Email is required
+            </div>
+            <div *ngIf="email.errors.email">
+              Invalid mail
+            </div>
+          </div>
+
           <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
         </div>
       </ion-col>
@@ -29,6 +41,17 @@
             <div style="padding: 10px;"></div>
             <ion-label class="justifyCenter">Phone Number</ion-label>
             <ion-input type="tel"  formControlName="phoneNo"></ion-input>
+            <div
+            *ngIf="phoneNo.invalid && (phoneNo.dirty || phoneNo.touched)"
+            class="error"
+          >
+            <div *ngIf="phoneNo.errors.required">
+              Phone Number is required
+            </div>
+            <div *ngIf="phoneNo.errors.phoneNo">
+              Invalid Phone Number
+            </div>
+          </div>
             <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
           </div>
         </ion-col>

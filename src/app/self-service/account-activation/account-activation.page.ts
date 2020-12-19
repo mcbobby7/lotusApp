@@ -13,14 +13,18 @@ export class AccountActivationPage {
   formValid = false
   profileForm = new FormGroup({
     inactivationReason: new FormControl('', [
-      Validators.required,
-      Validators.minLength(10),
+      Validators.required
     ]),
     inactivityReason: new FormControl('', [
-      Validators.required,
-      Validators.minLength(10),
+      Validators.required
     ]),
   });
+  get inactivationReason(){
+    return this.profileForm.get('inactivationReason');
+  }
+  get inactivityReason(){
+    return this.profileForm.get('inactivityReason')
+  }
 
   prefferedLocation: string;
   page = 0

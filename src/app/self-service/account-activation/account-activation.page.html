@@ -17,6 +17,14 @@
           <div style="padding: 10px;"></div>
           <ion-label class="justifyCenter">Inactivity Reason</ion-label>
           <ion-textarea formControlName="inactivityReason"></ion-textarea>
+          <div
+          *ngIf="inactivityReason.invalid && (inactivityReason.dirty || inactivityReason.touched)"
+          class="error"
+        >
+          <div *ngIf="inactivityReason.errors.required">
+            This field is required
+          </div>
+        </div>
           <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
         </div>
       </ion-col>
@@ -27,6 +35,13 @@
             <div style="padding: 10px;"></div>
             <ion-label class="justifyCenter">Inactivation Reason</ion-label>
             <ion-textarea type="tel"  formControlName="inactivationReason"></ion-textarea>
+            <div
+            *ngIf="inactivationReason.invalid && (inactivationReason.dirty || inactivationReason.touched)"
+            class="error"
+          >
+            <div *ngIf="inactivationReason.errors.required">
+              This field is required
+            </div>
             <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
           </div>
         </ion-col>
