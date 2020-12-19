@@ -26,7 +26,7 @@ nextRoute: any = '';
  setTimeout(() => {
    this.startSpinner = true;
    this.verifiedcompleted();
- }, 3000);
+ }, 5000);
       }  
       verifiedcompleted(){
         setTimeout(() => {

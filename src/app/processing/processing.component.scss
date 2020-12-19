@@ -5,7 +5,7 @@
     background-size: cover;
 }
 .main{
-    height: 100vh; 
+    height: 80vh; 
     display: flex; 
     // justify-content: center; 
     align-items: center; 
@@ -14,5 +14,6 @@
 }
 ion-spinner {
     transform: scale(3);
+    color:#ffff
 }
 
