@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-request-debit-card',
@@ -37,6 +36,7 @@ export class RequestDebitCardPage {
   newRequest(){
     this.page = 0
     this.details = {}
+    this.router.navigateByUrl('/self-service')
   }
   goBack(){
     if(this.page == 0){
@@ -46,6 +46,6 @@ export class RequestDebitCardPage {
     }
   }
   goHome(){
-    this.router.navigateByUrl('/')
+    this.router.navigateByUrl('/dashbord')
   }
 }

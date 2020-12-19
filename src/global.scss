@@ -65,7 +65,10 @@ ion-input{
     font-size: 18px;
     font-weight: normal;
     width: 15rem;
-    background-color:rgba(0,0,0, 0.38);
+    background-color:rgba(0,0,0, 0.38) !important;
+}
+ion-textarea{
+    background-color:rgba(0,0,0, 0.38) !important;
 }
 ion-select{
     border-radius: 4px !important;

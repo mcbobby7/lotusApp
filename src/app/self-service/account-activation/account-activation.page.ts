@@ -49,6 +49,7 @@ export class AccountActivationPage {
   newRequest(){
     this.page = 0
     this.details = {}
+    this.router.navigateByUrl('/self-service')
   }
   goBack(){
     if(this.page == 0){
@@ -58,6 +59,6 @@ export class AccountActivationPage {
     }
   }
   goHome(){
-    this.router.navigateByUrl('/')
+    this.router.navigateByUrl('/dashbord')
   }
 }

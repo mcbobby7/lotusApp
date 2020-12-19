@@ -39,6 +39,7 @@ export class RequestCheckBookPage {
   newRequest(){
     this.page = 0
     this.details = {}
+    this.router.navigateByUrl('/self-service')
   }
   goBack(){
     if(this.page == 0){
@@ -48,6 +49,6 @@ export class RequestCheckBookPage {
     }
   }
   goHome(){
-    this.router.navigateByUrl('/')
+    this.router.navigateByUrl('/dashbord')
   }
 }

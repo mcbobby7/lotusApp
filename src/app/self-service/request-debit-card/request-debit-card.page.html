@@ -12,13 +12,18 @@
 
 <ion-content>
   <div class="page-wrapper"  *ngIf="page == 0">
+    <ion-row>
+      <ion-col>
+        <label class="justifyCenter">Choose Pick up branch</label>
+      </ion-col>
+    </ion-row>
   
     <ion-row>
       <ion-col size="12">
         <div class="form-group">
           <div style="padding: 10px;"></div>
-          <ion-label class="justifyCenter">Select your preferred location</ion-label>
-          <ion-select [(ngModel)]="prefferedLocation">
+          <ion-label class="justifyCenter" style="padding-bottom: 5px;">Select your preferred location</ion-label>
+          <ion-select placeholder="select branch" [(ngModel)]="prefferedLocation">
             <ion-select-option [value]="1">Ikeja</ion-select-option>
             <ion-select-option [value]="2">Lekki</ion-select-option>
             <ion-select-option [value]="3">Ikoyi</ion-select-option>
@@ -38,12 +43,17 @@
     
     </div>
     <div class="page-wrapper"  *ngIf="page == 1">
+      <ion-row>
+        <ion-col>
+          <label class="justifyCenter">Select Account to debit from</label>
+        </ion-col>
+      </ion-row>
     <ion-row>
       <ion-col size="12">
         <div class="form-group">
           <div style="padding: 10px;"></div>
-          <ion-label class="justifyCenter">Select Account to debit from</ion-label>
-          <ion-select [(ngModel)]="details.account">
+          <!-- <ion-label class="justifyCenter">Select Account to debit from</ion-label> -->
+          <ion-select placeholder="Select Account" [(ngModel)]="details.account">
             <ion-select-option [value]="1">Account 1</ion-select-option>
             <ion-select-option [value]="2">Account 2</ion-select-option>
             <ion-select-option [value]="3">Account 3</ion-select-option>
