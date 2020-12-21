@@ -28,7 +28,7 @@
   <ion-col size="12" style="padding: 20px">
     <ion-button [disabled]="depositForm.invalid || loadingBankAccount" (click)="submitRequest(depositObj)" shape="round" fill="solid" expand="block" class="btnStyle">
     <span *ngIf="!loadingBankAccount">Next</span>
-    <span *ngIf="loadingBankAccount">Loading bank details ...</span>
+    <span *ngIf="loadingBankAccount">Loading...</span>
     </ion-button>
     <div style="padding: 10px;"></div>
   </ion-col>

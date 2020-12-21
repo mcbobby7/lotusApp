@@ -21,11 +21,13 @@ export class AmountInputComponent implements OnInit {
     private currencyPipe: DecimalPipe,
     private inputValidation: InputvalidationService
   ) { }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.inputValidation.amountChanged.subscribe(amount => {
       this.valueChange.emit(amount)
     })
+  }
+  ngOnInit() {
+ 
   }
 
   getCurrency(amount: string) {

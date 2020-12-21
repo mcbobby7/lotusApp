@@ -17,9 +17,11 @@ export class ReceiptPage implements OnInit {
     private router: Router
   ) { }
   deposit: Deposit = {}
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.depositService.get().subscribe(data => this.deposit = data)
+  }
+  ngOnInit() {
+
   }
   goBack(){
 this.router.navigate(['dashbord'])

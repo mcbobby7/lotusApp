@@ -19,7 +19,20 @@ const routes: Routes = [
   {
     path: 'receipt',
     loadChildren: () => import('./receipt/receipt.module').then( m => m.ReceiptPageModule)
+  },  {
+    path: 'intltrfdetails',
+    loadChildren: () => import('./intltrfdetails/intltrfdetails.module').then( m => m.IntltrfdetailsPageModule)
+  },
+  {
+    path: 'foreigntransfer',
+    loadChildren: () => import('./foreigntransfer/foreigntransfer.module').then( m => m.ForeigntransferPageModule)
+  },
+  {
+    path: 'foreigntransfer-correspondent',
+    loadChildren: () => import('./foreigntransfer-correspondent/foreigntransfer-correspondent.module').then( m => m.ForeigntransferCorrespondentPageModule)
   }
+
+
 
 
 ];

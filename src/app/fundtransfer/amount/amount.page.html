@@ -35,22 +35,30 @@
   </ion-card> -->
 
   <div class="form-group">
-    <ion-label>
+    <ion-label style="display: flex;justify-content: center;">
      Select Debit Account
     </ion-label>
     <div style="padding: 5px;"></div>
-    <ion-select placeholder="Select Account" [(ngModel)]="bankType">
-      <ion-select-option *ngFor="let acct of allacct" value="{{acct.number}}">{{acct.number}}</ion-select-option>
+    <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="bankAccount">
+      <ion-select-option *ngFor="let acct of allacct" value="{{acct.number}}">{{acct.number}} - Savings</ion-select-option>
     </ion-select>
   </div>
   <div class="form-group" *ngIf="transferType == 'Own Account Transfer'">
-    <ion-label>
+    <ion-label style="display: flex;justify-content: center;">
      Select Credit Account
     </ion-label>
     <div style="padding: 5px;"></div>
-    <ion-select placeholder="Select Account" [(ngModel)]="bankType">
-      <ion-select-option *ngFor="let acct of allacct" value="{{acct.number}}">{{acct.number}}</ion-select-option>
+    <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="tobankAccount">
+      <ion-select-option *ngFor="let acct of allacct" value="{{acct.number}}">{{acct.number}} - Savings</ion-select-option>
     </ion-select>
+  </div>
+  <div class="form-group" *ngIf="transferType == 'Lotus Bank'">
+    <ion-label style="display: flex;justify-content: center;">
+     Input Beneficiary Account
+    </ion-label>
+    <div style="padding: 5px;"></div>
+    <ion-input style="color: #fff;" type="tel" [(ngModel)]="tobankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+    <span *ngIf="inpVali.invalidAccount"><small class="error" >Invalid Account Number</small></span>
   </div>
   <!-- <div class="form-group">
     <ion-label>
@@ -79,7 +87,7 @@
   </div> -->
   <ion-row>
     <ion-col size="12" style="padding: 20px">
-      <ion-button [disabled]="disableSubmit || loadingBankAccount" (click)="submit()" shape="round" fill="solid" expand="block" class="btnStyle">
+      <ion-button  (click)="submit()" shape="round" fill="solid" expand="block" class="btnStyle">
       <span *ngIf="!loadingBankAccount">Next</span>
       <span *ngIf="loadingBankAccount">Loading bank details ...</span>
       </ion-button>

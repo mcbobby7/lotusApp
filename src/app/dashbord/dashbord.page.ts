@@ -47,12 +47,15 @@ export class DashbordPage implements OnInit {
       modal.dismiss()
       if(val){
     if(val == "cash")this.router.navigate(['withdrawal']);
-    if(val == "cheque")this.router.navigate(['chequewithdrawal']);
+    if(val == "cheque")this.router.navigate(['/withdrawal/cheque-withdrawal']);
       } else {
        modal.dismiss()
       }
     })
     return await modal.present();
+  }
+  ionViewWillEnter(){
+    
   }
   ngOnInit() {
   }

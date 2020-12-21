@@ -17,16 +17,18 @@ export class ConfirmPage implements OnInit {
     private navCtrl: NavController,
     private depositService: DepositService
   ) { }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.depositService.get().subscribe(data => {
       this.depositObj = data
     })
   }
+  ngOnInit() {
+   
+  }
 
   submit(){
     this.showProcessing = true
-    window.setTimeout(()=>{this.processCompleted = true}, 5000)
+    window.setTimeout(()=>{this.processCompleted = true;this.depositService.store({})}, 5000)
   }
 
   processingButtonClicked(){

@@ -1,0 +1,54 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>FX Transfer </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <div class="page-wrapper" >
+    <small style="display: flex; justify-content: center;">Beneficiary details:</small>
+    <div class="form-group" style="padding: 0px;">
+      <div style="padding: 10px;"></div>
+      <ion-label style="display: flex;justify-content: center;">Beneficiary Bank</ion-label>
+      <ion-select [(ngModel)]="transfer.tobank" name="tobank" id="tobank" #tobank="ngModel" placeholder="select bank">
+        <ion-select-option> Wells Fargo</ion-select-option>
+        <ion-select-option> BOA</ion-select-option>
+        <ion-select-option> Citibank</ion-select-option>
+        <ion-select-option> Capital One</ion-select-option>
+      </ion-select>
+
+   
+      </div>
+      <div class="form-group" style="padding: 0px;">
+        <div style="padding: 10px;"></div>
+        <ion-label style="display: flex;justify-content: center;">IBAN/Beneficiary Account Number</ion-label>
+        <ion-input type="tel" [(ngModel)]="transfer.toAccountNo" name="toAccountNo" id="toAccountNo" #toAccountNo="ngModel" placeholder="Enter Number"></ion-input>
+        
+        </div>
+        <div class="form-group" style="padding: 0px;">
+          <div style="padding: 10px;"></div>
+          <ion-label style="display: flex;justify-content: center;">BIC/Swift Code </ion-label>
+          <ion-input type="tel" [(ngModel)]="transfer.swiftCode" name="swiftCode" id="swiftCode" #swiftCode="ngModel" placeholder="Enter code" ></ion-input>
+
+          </div>
+          <div class="form-group" style="padding: 0px;">
+            <div style="padding: 10px;"></div>
+            <ion-label style="display: flex;justify-content: center;">Routing Number/Sort Code</ion-label>
+            <ion-input type="tel" [(ngModel)]="transfer.routingNumber" name="routingNumber" id="routingNumber" #routingNumber="ngModel" placeholder="Enter code"></ion-input>
+    
+            </div>
+            <ion-row>
+              <ion-col size="12" style="padding: 20px">
+                <ion-button  (click)="submit()" shape="round" fill="solid" expand="block" class="btnStyle">
+                <span *ngIf="!loadingBankAccount">Next</span>
+                <span *ngIf="loadingBankAccount">Loading ...</span>
+                </ion-button>
+                <div style="padding: 10px;"></div>
+              </ion-col>
+            </ion-row>
+  </div>
+</ion-content>

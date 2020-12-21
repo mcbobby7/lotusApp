@@ -108,9 +108,12 @@ if(this.inpVali.invalidAmount) {
         this.router.navigate(['chequedepositordetails'])
       })
   }
-  ngOnInit() {
+  ionViewWillEnter(){
     this.depositService.get().subscribe((data: any) => {
       this.depositObj = {...data}
     })
+  }
+  ngOnInit() {
+  
   }
 }

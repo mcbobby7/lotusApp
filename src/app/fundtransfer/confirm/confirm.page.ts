@@ -18,11 +18,13 @@ export class ConfirmPage implements OnInit {
     private navCtrl: NavController,
     private transferService: TransferService
   ) { }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.transferService.get().subscribe(data => {
       this.transfer = data
     })
+  }
+  ngOnInit() {
+  
   }
 
   processingButtonClicked(){
@@ -31,7 +33,7 @@ export class ConfirmPage implements OnInit {
   }
   submit(){
     this.showProcessing = true
-    window.setTimeout(()=>{this.processCompleted = true}, 3000)
+    window.setTimeout(()=>{this.processCompleted = true;this.transferService.store({})}, 3000)
   }
 
   goBack(){

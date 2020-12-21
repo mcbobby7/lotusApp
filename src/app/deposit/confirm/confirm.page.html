@@ -78,14 +78,16 @@
       </ion-grid>
     </ion-card-content>
   </ion-card>
+
+  <ion-row>
+    <ion-col size="12">
+      <ion-button (click)="submit()"  shape="round" fill="solid" expand="block" class="btnStyle">
+        Proceed
+      </ion-button>
+    </ion-col>
+  </ion-row>
 </ion-content>
 
-<ion-footer class="ion-no-border">
-  <ion-button (click)="submit()"  shape="round" fill="solid" expand="block" class="btnStyle">
-    Proceed
-  </ion-button>
-
-</ion-footer>
 
 <app-processing *ngIf="showProcessing" (buttonClick)="processingButtonClicked()" (click)="processingClicked()" [processCompleted]="processCompleted">
   <span processed-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">

@@ -18,11 +18,13 @@ export class ConfirmPage implements OnInit {
     private navCtrl: NavController,
     private withdrawalService: WithdrawalService
   ) { }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.withdrawalService.get().subscribe(data => {
       this.withdrawal = data
     })
+  }
+  ngOnInit() {
+
   }
 
   processingButtonClicked(){
@@ -31,7 +33,7 @@ export class ConfirmPage implements OnInit {
   }
   submit(){
     this.showProcessing = true
-    window.setTimeout(()=>{this.processCompleted = true}, 3000)
+    window.setTimeout(()=>{this.processCompleted = true;this.withdrawalService.store({})}, 3000)
   }
 
   goBack(){

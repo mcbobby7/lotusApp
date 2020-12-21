@@ -85,7 +85,12 @@ const routes: Routes = [
   {
     path: 'localtransfertype',
     loadChildren: () => import('./fundtransfer/localtransfertype/localtransfertype.module').then( m => m.LocaltransfertypePageModule)
-  }
+  },
+  {
+    path: 'localtransferdetails',
+    loadChildren: () => import('./fundtransfer/localtransferdetails/localtransferdetails.module').then( m => m.LocaltransferdetailsPageModule)
+  },
+
 
 
 

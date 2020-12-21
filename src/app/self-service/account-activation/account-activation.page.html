@@ -1,3 +1,6 @@
+
+
+<ion-content>
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -8,8 +11,6 @@
       <ion-title>Account Activation</ion-title>
     </ion-toolbar>
   </ion-header>
-
-<ion-content>
   <div class="page-wrapper"  *ngIf="page == 0" [formGroup]="profileForm">
     <ion-row>
       <ion-col size="12">
@@ -42,7 +43,9 @@
             <div *ngIf="inactivationReason.errors.required">
               This field is required
             </div>
+          
             <!-- <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
+          </div>
           </div>
         </ion-col>
         </ion-row>

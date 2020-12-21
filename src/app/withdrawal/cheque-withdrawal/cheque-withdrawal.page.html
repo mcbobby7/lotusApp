@@ -1,3 +1,5 @@
+
+
 <ion-content>
   <ion-header class="ion-no-border">
     <ion-toolbar>
@@ -9,9 +11,7 @@
       <ion-title>Cheque Withdrawal</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <div class="page-wrapper" [formGroup]="formGroup">
-  
     <ion-row>
       <ion-col size="12">
         <div class="form-group">
@@ -26,28 +26,12 @@
   <ion-row>
     <ion-col size="12" style="padding: 20px">
       <ion-button  [disabled]="formGroup.invalid || loadingAccountName" (click)="submit()" shape="round" fill="solid" expand="block" class="btnStyle">
-        <span *ngIf="!loadingAccountName">Proceed</span>
-        <span *ngIf="loadingAccountName">Loading ...</span>
+        <span >Proceed</span>
+      
       </ion-button>
       <div style="padding: 10px;"></div>
     </ion-col>
   </ion-row>
   
   </div>
-
-  <!-- <div class="form-group" [formGroup]="formGroup">
-    <ion-label>
-      Account Number
-    </ion-label>
-    <app-account-input [(value)]="accountNo" formControlName="accountNo"></app-account-input>
- <ion-input [(ngModel)]="accountNo" placeholder="Account Number" style="border: 1px solid black; border-radius: 2px;"></ion-input> 
-  </div> -->
-
 </ion-content>
-
-<!-- <ion-footer class="ion-no-border">
-  <ion-button expand="block" [disabled]="formGroup.invalid || loadingAccountName" (click)="submit()">
-    <span *ngIf="!loadingAccountName">Proceed</span>
-    <span *ngIf="loadingAccountName">Checking account number ...</span>
-  </ion-button>
-</ion-footer> -->

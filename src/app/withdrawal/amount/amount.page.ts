@@ -23,12 +23,14 @@ export class AmountPage implements OnInit {
   get disableSubmit(){
     return !(Number(this.amount) > 0)?true:(this.amount > this.acctBal?true:false)
   }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.withdrawalService.get().subscribe(data => {
       this.withdrawal = data
       this.acctBal = this.withdrawal.balance
     })
+  }
+  ngOnInit() {
+  
   }
 
   submit(){

@@ -50,11 +50,13 @@ export class ChequedepositordetailsPage implements OnInit {
     }
     
   }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.depositService.get().subscribe((data: any) => {
       this.depositObj = {...data}
     })
+  }
+  ngOnInit() {
+ 
   }
 
   goBack() {

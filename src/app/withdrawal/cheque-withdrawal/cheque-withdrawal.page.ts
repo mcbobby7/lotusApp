@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
 import { BankAccount, BankService } from '../../_services/bank.service';
 import { ShortcutsService } from '../../_services/shortcuts.service';
 import { Withdrawal, WithdrawalService } from '../../_services/withdrawal.service';
 
 @Component({
-  selector: 'app-chequewithdrawal',
-  templateUrl: './chequewithdrawal.page.html',
-  styleUrls: ['./chequewithdrawal.page.scss'],
+  selector: 'app-cheque-withdrawal',
+  templateUrl: './cheque-withdrawal.page.html',
+  styleUrls: ['./cheque-withdrawal.page.scss'],
 })
-export class ChequewithdrawalPage implements OnInit {
-
+export class ChequeWithdrawalPage implements OnInit {
   formGroup = new FormGroup({
     accountNo: new FormControl('')
   })
@@ -24,7 +24,8 @@ export class ChequewithdrawalPage implements OnInit {
     private navCtrl: NavController,
     private bankService: BankService,
     private shortcuts: ShortcutsService,
-    private withdrawalService: WithdrawalService
+    private withdrawalService: WithdrawalService,
+    private inpVali: InputvalidationService,
   ) { }
   accountNo = ""
   ngOnInit() {}
@@ -42,7 +43,7 @@ export class ChequewithdrawalPage implements OnInit {
       withdrawalForm.balance = bank.balance
       this.withdrawalService.store(withdrawalForm).then(data => {
         this.accountNo = '';
-        this.router.navigate(['chequewithdrawalconfirm'], {queryParams: {nxtRoute: '/withdrawal/amount'}})
+        this.router.navigate(['withdrawal/cheque-withdrawal-confirm'], {queryParams: {nxtRoute: '/withdrawal/amount'}})
       })
     }, err => {
       this.loadingAccountName = false

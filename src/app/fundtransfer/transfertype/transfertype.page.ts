@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-transfertype',
@@ -8,14 +9,17 @@ import { Router } from '@angular/router';
 })
 export class TransfertypePage implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private navCtrl: NavController) { }
   gotolocaltrf(){
     this.router.navigate(['localtransfertype'])
   }
-  gotoIntl(){
-    this.router.navigate([''])
+  gotoIntl(trftype){
+    this.router.navigate(['fundtransfer/amount'],{queryParams:{trftype: trftype}})
+    
   }
   ngOnInit() {
   }
-
+  goBack(){
+    this.navCtrl.back()
+  }
 }

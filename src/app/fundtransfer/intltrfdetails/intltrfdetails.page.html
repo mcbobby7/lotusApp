@@ -1,0 +1,73 @@
+
+
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Other Banks</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <div class="form-group">
+    <ion-label style="display: flex;justify-content: center;">
+     Select Bank
+    </ion-label>
+    <div style="padding: 5px;"></div>
+    <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="bankType">
+      <ion-select-option >FCMB</ion-select-option>
+      <ion-select-option>FBN</ion-select-option>
+      <ion-select-option>GT Bank</ion-select-option>
+      <ion-select-option>Zenith Bank</ion-select-option>
+    </ion-select>
+  </div>
+
+  <div class="form-group" >
+    <ion-label style="display: flex;justify-content: center;">
+     Input Beneficiary Account
+    </ion-label>
+    <div style="padding: 5px;"></div>
+    <ion-input style="color: #fff;" type="tel" [(ngModel)]="tobankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+    <span *ngIf="inpVali.invalidAccount"><small class="error" >Invalid Account Number</small></span>
+  </div>
+  <!-- <div class="form-group">
+    <ion-label>
+      Bank Name
+    </ion-label>
+    <ion-select placeholder="Bank Name" [(ngModel)]="bankType">
+      <ion-select-option value="Lotus Bank">Lotus Bank</ion-select-option>
+      <ion-select-option value="First Bank of Nigeria">First Bank of Nigeria</ion-select-option>
+      <ion-select-option value="Zenith Bank">Zenith Bank</ion-select-option>
+    </ion-select>
+  </div>
+  <div class="form-group">
+    <ion-label>
+    Account Number 
+    </ion-label>
+    <app-account-input [(value)]="bankAccount"></app-account-input>
+
+  </div>
+  
+  <div class="form-group">
+    <ion-label>
+      Amount
+    </ion-label>
+    <app-amount-input [(value)]="amount"></app-amount-input>
+    <span *ngIf="amount > acctBal"><small class="error">Account balance is too low</small></span>
+  </div> -->
+  <ion-row>
+    <ion-col size="12" style="padding: 20px">
+      <ion-button  (click)="submit()" shape="round" fill="solid" expand="block" class="btnStyle">
+      <span *ngIf="!loadingBankAccount">Next</span>
+      <span *ngIf="loadingBankAccount">Loading bank details ...</span>
+      </ion-button>
+      <div style="padding: 10px;"></div>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+

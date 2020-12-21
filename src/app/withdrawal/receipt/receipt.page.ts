@@ -28,7 +28,7 @@ export class ReceiptPage implements OnInit {
       modal.dismiss()
       if(val){
     if(val == "cash")this.router.navigate(['withdrawal']);
-    if(val == "cheque")this.router.navigate(['chequewithdrawal']);
+    if(val == "cheque")this.router.navigate(['/withdrawal/cheque-withdrawal']);
       } else {
        modal.dismiss()
       }
@@ -38,8 +38,11 @@ export class ReceiptPage implements OnInit {
   goBack(){
     this.router.navigate(['dashbord'])
       }
+      ionViewWillEnter(){
+        this.withdrawalService.get().subscribe(data => this.withdrawal = data)
+      }
   ngOnInit() {
-    this.withdrawalService.get().subscribe(data => this.withdrawal = data)
+
   }
 
 }

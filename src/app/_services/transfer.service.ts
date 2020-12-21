@@ -9,8 +9,16 @@ export interface FundTransfer{
   balance?: number,
   toAccountNo?: string,
   toAccountName?: string,
-  amount?: number,
-  bank?: string
+  tobank?: string,
+  amount?: any,
+  bank?: string,
+  correspondingBank?: string,
+  narration?: string,
+  swiftCode?: string,
+  routingNumber?: string,
+
+  correspondentSwiftCode?: string,
+  correspondentRoutingNumber?: string,
 }
 
 const storageKey = 'fund-transfer'

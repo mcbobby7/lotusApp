@@ -40,11 +40,13 @@ export class SingledepositPage implements OnInit {
     this.depositService.store(this.depositObj)
     this.router.navigateByUrl('/deposit/confirm', {queryParams: JSON.parse})
   }
-
-  ngOnInit() {
+  ionViewWillEnter(){
     this.depositService.get().subscribe((data: any) => {
       this.depositObj = {...data}
     })
+  }
+  ngOnInit() {
+   
   }
   getdepositdetails() {
     this.activatedroute.queryParams.subscribe(data => {

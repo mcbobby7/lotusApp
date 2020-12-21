@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FundTransfer, TransferService } from 'src/app/_services/transfer.service';
 
 @Component({
@@ -10,11 +11,19 @@ export class ReceiptPage implements OnInit {
 
   transfer: FundTransfer = {}
   constructor(
+    private router: Router,
     private fundTransferService: TransferService
   ) { }
-
-  ngOnInit() {
+  gototransfer(){
+this.router.navigate(['fundtransfer'])
+  }
+  ionViewWillEnter(){
     this.fundTransferService.get().subscribe(data => this.transfer = data)
   }
-
+  ngOnInit() {
+   
+  }
+  goBack(){
+    this.router.navigate(['dashbord'])
+  }
 }
