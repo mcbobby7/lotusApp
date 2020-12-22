@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 
 const routes: Routes = [
-  {path:'', redirectTo:'home', pathMatch: 'full'},
+  {path:'', redirectTo:'dashbord', pathMatch: 'full'},
 
   {
     path: 'withdrawal',

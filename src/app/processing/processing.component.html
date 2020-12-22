@@ -13,7 +13,7 @@
 </ion-header>
 <div class="main">
 <div *ngIf="!processCompleted" style="padding:60px"></div>
-<div *ngIf="processCompleted" style="padding:20px"></div>
+<!-- <div *ngIf="processCompleted" style="padding:10px"></div> -->
   <div class="page-wrapper">
     <ion-row>
       <ion-col size="12" style="border-bottom:1px solid rgb(255,255,255,0.20);text-align: center;">
@@ -46,6 +46,8 @@
     <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Email</ion-button>
     <div style="padding: 5px;"></div>
     <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Whatsapp</ion-button>
+    <div style="padding: 5px;"></div>
+    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Skip</ion-button>
   </div>
 </div>
 </div>

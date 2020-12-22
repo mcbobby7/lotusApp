@@ -35,8 +35,14 @@ export class AmountPage implements OnInit {
     return !(Number(this.amount) > 0)?true:(this.amount > this.acctBal?true:false)
   }
   ionViewWillEnter(){
-this.allacct = this.bankService.getallaccount()
-    console.log(this.bankService.getallaccount())
+    this.transferService.get().subscribe((data) => {
+      this.transfer = data;
+      this.bankService.getBankByAccountNumber(this.transfer.accountNo).subscribe((bank: BankAccount) => {
+        this.allacct = bank.otherAccount;
+      })
+    })
+// this.allacct = this.bankService.getallaccount()
+//     console.log(this.bankService.getallaccount())
 this.activatedroute.queryParams.subscribe(data=>{
 
   if(data.trftype){

@@ -3,12 +3,12 @@
     <ion-toolbar style="display: flexbox; justify-content: center;">
       <ion-buttons slot="start">
         <ion-button (click)="goBack()">
-          <ion-icon name="home-outline" style="border-radius: 50%; margin-right: 55px; background: #fff; font-size: 25px; padding: 5px;"></ion-icon>          
+          <img src="assets/images/home_btn.png" style="width: 2rem;">   
         </ion-button>
       </ion-buttons>
-      <div style="display: flexbox; align-items: center; justify-content: center; border: 5px red;">
-        <ion-img routerLink="['/dashbord']" src="assets/images/bank_logo.png" style="width: 60px; height: 60px;"></ion-img>
-      </div>
+      <ion-title>
+        <img src="assets/images/dashboard_upper_logo.png" style="width: 7rem;">
+      </ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -33,7 +33,9 @@
     <ion-button routerLink="/selfservice" color="light" class="my-button" shape="round" style="color: #000000; font-weight: bold;">
       New Enquiry
     </ion-button>
-    <ion-button fill="clear" routerLink="/dashbord" shape="round" expand="block" class="my-button"><ion-icon name="home-outline" style="font-size: 16px; padding: 3px;"></ion-icon>
+    <div style="padding: 5px;"></div>
+    <ion-button fill="clear" routerLink="/dashbord" shape="round" expand="block" class="my-button">
+      <ion-icon name="home-outline" style="font-size: 16px; padding: 3px;"></ion-icon>
       Back to Home
     </ion-button>
     </div>

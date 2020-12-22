@@ -63,10 +63,19 @@
           </ion-col>
        
         </ion-row>  
+        <ion-row>
+          <ion-col size="12" >
+           
+            <span style="font-size: 14px; font-weight: normal;">{{transfer.narration}}</span> 
+          </ion-col>
+       
+        </ion-row>
         
       </ion-grid>
     </ion-card-content>
   </ion-card>
+
+
   <ion-card *ngIf="transfer.transferType != 'Funds Transfer'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
       <ion-grid>
@@ -111,6 +120,13 @@
           </ion-col>
        
         </ion-row>  
+        <ion-row>
+          <ion-col size="12" >
+           
+            <span style="font-size: 14px; font-weight: normal;">{{transfer.narration}}</span> 
+          </ion-col>
+       
+        </ion-row>  
         
       </ion-grid>
     </ion-card-content>
@@ -152,6 +168,6 @@
     <!-- Request Submitted -->
   </span>
   <span processing-detail style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    Your Transaction is beign processed
+    Your Transaction is being processed
   </span>
 </app-processing>
