@@ -63,3 +63,4 @@ export interface inwardchqPostbody{
   currency:string,
   narration: string
 }
+
