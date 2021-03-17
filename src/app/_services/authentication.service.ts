@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { IUser, User} from './service-proxies';
-
+import { Storage } from '@ionic/storage';
 
 
 @Injectable()
@@ -13,18 +13,20 @@ export class AuthenticationService {
     users: IUser[] = [];
     public globalUser = new BehaviorSubject<IUser>(new User().clone());
 
-    constructor(private router: Router) { }
+    constructor(private router: Router,private storage: Storage) { }
 
     getuser() {
         this.users = [];
         return new Promise((resolve) => {
-          this.users= JSON.parse(localStorage.getItem('user'));
-            if (this.users) {
-                if(this.users.length > 0){
-                this.globalUser.next(this.users[0]);
-           } }
-            resolve(this.users);
-
+            this.storage.get('user').then(usersdata => {
+                this.users = usersdata;
+                if (this.users) {
+                    if (this.users.length > 0) {
+                        this.globalUser.next(this.users[0]);
+                    }
+                }
+                resolve(this.users);
+            });
         });
 
 
@@ -34,20 +36,20 @@ export class AuthenticationService {
     addUser(user) {
         this.users = [];
         this.users.push(user);
-        localStorage.setItem('user', JSON.stringify(this.users));
+        this.storage.set('user', this.users);
     }
 
     updateuser(user:User) {
         this.users = [];
         this.users.push(user);
-        localStorage.setItem('user', JSON.stringify(this.users));
+        this.storage.set('user', this.users);
 
     }
 
     clearusers() {
         this.users = [];
-        localStorage.removeItem('user');
-        this.router.navigate(['auth'])
+        this.storage.remove('user');
+        this.router.navigate(['home'])
     }
 
 }

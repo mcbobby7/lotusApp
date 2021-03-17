@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuardService as AuthGuard } from './_services/auth-guard.service';
 
 const routes: Routes = [
-  {path:'', redirectTo:'dashbord', pathMatch: 'full'},
+  {path:'', redirectTo:'home', pathMatch: 'full'},
 
   {
     path: 'withdrawal',
@@ -89,10 +89,23 @@ const routes: Routes = [
   {
     path: 'localtransferdetails',
     loadChildren: () => import('./fundtransfer/localtransferdetails/localtransferdetails.module').then( m => m.LocaltransferdetailsPageModule)
-  },  {
+  },
+  {
     path: 'otpvalidation',
     loadChildren: () => import('./otpvalidation/otpvalidation.module').then( m => m.OtpvalidationPageModule)
+  },  {
+    path: 'loginpage',
+    loadChildren: () => import('./loginpage/loginpage.module').then( m => m.LoginpagePageModule)
   },
+  {
+    path: 'registerpage',
+    loadChildren: () => import('./registerpage/registerpage.module').then( m => m.RegisterpagePageModule)
+  },
+  {
+    path: 'openaccount',
+    loadChildren: () => import('./openaccount/openaccount.module').then( m => m.OpenaccountPageModule)
+  },
+
 
 
 

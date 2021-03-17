@@ -48,7 +48,7 @@ export class AuthService {
 
   logout() {
     this.authServ.clearusers();
-    this.navCtrl.navigate(['auth']);
+    this.navCtrl.navigate(['home']);
   }
 
    private handleError<T>(operation = 'operation', result?: T) {
