@@ -29,6 +29,7 @@ export class LocaltransferdetailsPage implements OnInit {
     private bankService: BankService,
     private shortcuts: ShortcutsService,
     private transferService: TransferService) { }
+  
     avalidate(event,fieldelement){
       var inputentry =  event.target.value;
    var valRes =  this.inpVali.validate(event,fieldelement);

@@ -89,7 +89,11 @@ const routes: Routes = [
   {
     path: 'localtransferdetails',
     loadChildren: () => import('./fundtransfer/localtransferdetails/localtransferdetails.module').then( m => m.LocaltransferdetailsPageModule)
+  },  {
+    path: 'otpvalidation',
+    loadChildren: () => import('./otpvalidation/otpvalidation.module').then( m => m.OtpvalidationPageModule)
   },
+
 
 
 

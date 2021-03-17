@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
+import { ApiProvider } from 'src/app/_services/api.service';
 import { BankAccount, BankService, } from 'src/app/_services/bank.service';
 import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_services/deposit.service';
 import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
@@ -29,7 +30,8 @@ export class MultidepositPage implements OnInit {
     private inpVali: InputvalidationService,
     private shortcutService: ShortcutsService,
     private depositService: DepositService,
-    private bankService: BankService) { }
+    private bankService: BankService,
+    private apiService: ApiProvider) { }
   goBack(){
 this.navCtrl.back()
   }
@@ -37,26 +39,15 @@ this.navCtrl.back()
     var inputentry =  arg[0].target.value;
    
  var valRes =  this.inpVali.validate(arg[0],arg[1]);
- console.log(arg[2])
- if(valRes && arg[1] == "amount" ){
-  var amt = inputentry.replace(/,/g, "");
-  var newamt = amt.replace('.', "");
-  this.depositMultpleObj.accountInfo[arg[2]].amount = this.inpVali.getCurrency(newamt);
- }
-if(this.inpVali.invalidAccount) {
-  this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
-}else{
-  this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = false 
-  const subject = this.bankService.getBankByAccountNumber(this.depositMultpleObj.accountInfo[arg[2]].accountNumber);
-  subject.subscribe((bank: BankAccount) => {
-    this.depositMultpleObj.accountInfo[arg[2]].accountName = bank.name;
-    this.depositMultpleObj.accountInfo[arg[2]].bankName = bank.bankName;         
-    this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = false 
-  }, () => {
-    this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
-  })
-  
-};
+    console.log(arg[2])
+    if (arg[1] == "amount") {
+      if(valRes && arg[1] == "amount" ){
+        var amt = inputentry.replace(/,/g, "");
+        var newamt = amt.replace('.', "");
+        this.depositMultpleObj.accountInfo[arg[2]].amount = this.inpVali.getCurrency(newamt);
+      }
+           
+
 if(this.inpVali.invalidAmount) {
   this.depositMultpleObj.accountInfo[arg[2]].erroramount = true
 }else{
@@ -65,6 +56,29 @@ if(this.inpVali.invalidAmount) {
     this.depositMultpleObj.accountInfo[arg[2]].erroramount = false
   }
 };
+    }
+    if (arg[1] == "accountNumber") { 
+      if(this.inpVali.invalidAccount) {
+        this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
+      } else {
+        this.apiService.getAllAccountDetails(inputentry).subscribe((data: any) => { 
+          if (!data.error) {
+            let acctDet = data.body[0];
+            this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = false 
+            this.depositMultpleObj.accountInfo[arg[2]].accountName = acctDet.accountName; 
+            this.depositMultpleObj.accountInfo[arg[2]].bankName =   "Lotus Bank";    
+          } else {
+            this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
+            this.shortcutService.showErrorToast('Invalid account number')
+          }
+        }, (error) => {
+          console.log(error)
+          this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
+          this.shortcutService.showErrorToast('Invalid account number')
+        })
+        
+      };
+    }
 
   }
 

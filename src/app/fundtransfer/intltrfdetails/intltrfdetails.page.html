@@ -19,10 +19,7 @@
     </ion-label>
     <div style="padding: 5px;"></div>
     <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="bankType">
-      <ion-select-option >FCMB</ion-select-option>
-      <ion-select-option>FBN</ion-select-option>
-      <ion-select-option>GT Bank</ion-select-option>
-      <ion-select-option>Zenith Bank</ion-select-option>
+      <ion-select-option  *ngFor="let bnk of allbanks" value="{{bnk.institutionCode}}" >{{bnk.institutionName}}</ion-select-option>
     </ion-select>
   </div>
 

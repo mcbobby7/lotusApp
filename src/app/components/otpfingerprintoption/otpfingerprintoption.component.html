@@ -1,0 +1,16 @@
+<div class="wrapper">
+  <div style="text-align: center;width: 100%; padding:20px;color: #ffff;border-bottom: 1px solid #ffff;">
+   Authorize with:
+    <span style="float: right;" (click)="selectdeposittype('')">
+      <ion-icon name="close-outline"></ion-icon>
+    </span>
+  </div>
+
+<div style="display: flex;justify-content: center;padding: 20px;color: #fff;" (click)="selectdeposittype('fingerprint')"> 
+FINGERPRINT
+</div>
+<div style="display: flex;justify-content: center;padding: 20px;color: #fff;" (click)="selectdeposittype('otp')">
+  One-Time Password
+</div>
+<div style="padding: 10px;"></div>
+</div>

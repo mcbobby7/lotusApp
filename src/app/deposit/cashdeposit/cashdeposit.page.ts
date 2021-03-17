@@ -6,6 +6,7 @@ import { BankAccount, BankService, } from 'src/app/_services/bank.service';
 import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_services/deposit.service';
 import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
+import { ApiProvider } from 'src/app/_services/api.service';
 
 @Component({
   selector: 'app-cashdeposit',
@@ -29,7 +30,8 @@ export class CashdepositPage implements OnInit {
     private inpVali: InputvalidationService,
     private shortcutService: ShortcutsService,
     private depositService: DepositService,
-    private bankService: BankService) { }
+    private bankService: BankService,
+    private apiService: ApiProvider) { }
   goBack(){
 this.navCtrl.back()
   }
@@ -40,7 +42,10 @@ this.navCtrl.back()
   var amt = inputentry.replace(/,/g, "");
   var newamt = amt.replace('.', "");
   this.depositObj.amount = this.inpVali.getCurrency(newamt);
- }
+    }
+    if (valRes && fieldelement == "accountNumber") { 
+ 
+    }
   }
   validateForm() {
     if (this.depositObj.accountNumber) {
@@ -52,23 +57,44 @@ this.navCtrl.back()
   addDeposit(){
     this.router.navigate(['/multideposit'])
   }
+
   
+ 
+ 
   submitRequest(depositDetails) {
     if (this.validateForm()) {
       this.loadingBankAccount = true
-      const subject = this.bankService.getBankByAccountNumber(this.depositObj.accountNumber)
-      subject.subscribe((bank: BankAccount) => {
-        this.loadingBankAccount = false
-        console.log(bank)
-        this.depositObj.bankName = bank.bankName;
-        this.depositObj.accountName = bank.name;
-        this.depositService.store(this.depositObj).then(data => {
-          this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
-        })
-      }, () => {
-        this.loadingBankAccount = false
-        this.shortcutService.showErrorToast('Invalid account number')
-      })
+      this.apiService.getAllAccountDetails(this.depositObj.accountNumber).subscribe((data:any) => {
+        if (!data.error) {
+          this.loadingBankAccount = false
+          let acctDet = data.body[0];
+          this.depositObj.bankName = "Lotus Bank";
+          this.depositObj.accountName = acctDet.accountName;
+          this.depositService.store(this.depositObj).then(data => {
+            this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
+          })
+        } else {
+          this.shortcutService.showErrorToast('Invalid account number')
+        }
+  
+        
+},() => {
+  this.loadingBankAccount = false
+  this.shortcutService.showErrorToast('Invalid account number')
+})
+      // const subject = this.bankService.getBankByAccountNumber(this.depositObj.accountNumber)
+      // subject.subscribe((bank: BankAccount) => {
+      //   this.loadingBankAccount = false
+      //   console.log(bank)
+      //   this.depositObj.bankName = bank.bankName;
+      //   this.depositObj.accountName = bank.name;
+      //   this.depositService.store(this.depositObj).then(data => {
+      //     this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
+      //   })
+      // }, () => {
+      //   this.loadingBankAccount = false
+      //   this.shortcutService.showErrorToast('Invalid account number')
+      // })
     } else {
       this.shortcutService.showErrorToast('Please fill all required fields')
     }

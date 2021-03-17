@@ -22,7 +22,9 @@
             <div style="padding: 10px;"></div>
             <ion-label>Account Number</ion-label>
             <ion-input style="text-align: left;"  type="tel" [(ngModel)]="dep.accountNumber" name="accountNumber"  placeholder="Enter account number here" (keyup)="avalidate($event,'accountNumber',i)" required></ion-input>
-            <span *ngIf="dep.erroraccountNumber"><small class="error">Invalid Account Number</small></span>
+            <span *ngIf="dep.erroraccountNumber"><small class="error" style="font-size:16px">Invalid Account Number</small></span>
+            <div *ngIf="!dep.erroraccountNumber" style="padding:5px"></div>
+            <span *ngIf="!dep.erroraccountNumber" ><small style="font-size:16px;color: #ffff;">{{dep.accountName}}</small></span>
             </div>
         </ion-col>
       </ion-row>
@@ -32,7 +34,7 @@
             <div style="padding: 10px;"></div>
             <ion-label>Amount</ion-label>
             <ion-input style="text-align: left;"  type="tel" [(ngModel)]="dep.amount" name="amount"  placeholder="Enter amount" (keyup)="avalidate($event,'amount',i)" required></ion-input>
-            <span *ngIf="dep.erroramount"><small class="error">Invalid Amount</small></span>
+            <span *ngIf="dep.erroramount"><small class="error" style="font-size:16px">Invalid Amount</small></span>
             </div>
         </ion-col>
       </ion-row>

@@ -1,0 +1,22 @@
+{
+  "name": "proxy-example",
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://10.55.15.55:9042/api/LotusBank/NIP/doNameEnquiry"
+    },
+     {
+      "path": "/LOTUS/api/v1.0.0/party",
+      "proxyUrl": "http://10.55.15.50:9895/LOTUS/api/v1.0.0/party/createSingleGenericTransfer"
+    },
+     {
+      "path": "/LOTUS/api/v1.0.0/party",
+      "proxyUrl": "http://10.55.15.50:9895/LOTUS/api/v1.0.0/party/NIPTransfer"
+    },
+     {
+      "path": "/LOTUS/api/v1.0.0/party",
+      "proxyUrl": "http://10.55.15.50:9895/LOTUS/api/v1.0.0/party/tellerCashDeposit"
+    }
+  ]
+}

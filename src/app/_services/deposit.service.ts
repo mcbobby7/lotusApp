@@ -18,6 +18,10 @@ export interface Deposit{
   singleDeposit?: boolean;
   selfdeposit?: string;
   proceedChk?: boolean;
+  balance?: any;
+  bookbalance?: any;
+  accountbvn?: any;
+  currencyCode?: string
 }
 
 export interface multiDeposit{

@@ -1,27 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate,ActivatedRoute } from '@angular/router';
-import { Storage } from '@ionic/storage';
+import { Router, CanActivate, ActivatedRoute, CanLoad, Route } from '@angular/router';
 import { AuthService } from './auth.service';
-
-export const POST_LOGIN_LINK_STORAGE_KEY = 'post_login_link'
+import { AuthenticationService } from '../_services/authentication.service';
+import { IUser, User } from './service-proxies';
 
 @Injectable()
-export class AuthGuardService implements CanActivate {
+export class AuthGuardService implements CanLoad {
   constructor(public auth: AuthService, public router: Router,
-    private storage: Storage) {}
-  canActivate(): boolean {
-    
-    this.auth.isAuthenticated().then(data=>{  
-     console.log(this.router.url);
-      if(!data){      
-        this.storage.set(POST_LOGIN_LINK_STORAGE_KEY, this.router.url).then(data => {
-          this.router.navigate(['customercare']);
-        })
-        return false;
-      }else{
+    private AuthenService: AuthenticationService) { }
+  canLoad(routes: Route): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.auth.isAuthenticated().then(data => {
+        localStorage.setItem('returnUrl', this.router.url);  
+        if (!data) {
+          this.router.navigate(['auth']);
+          resolve(false);
+        } else {
+          this.AuthenService.getuser().then((usersdata: IUser[]) => {
+            if (usersdata.length > 0) {
+              const route = this.router.url.split('?')[0];
+              if (usersdata[0]) {
+                resolve(true);
+              } else {
+                this.router.navigate(['auth']);
+                resolve(false);
+                
+              }
+            } else {
+              this.router.navigate(['auth']);
+              resolve(false);
+            }
+          });
 
-      }
-    })
-    return true;
+        }
+      });
+    });
   }
 }

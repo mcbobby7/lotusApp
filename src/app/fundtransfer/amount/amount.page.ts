@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { ApiProvider } from 'src/app/_services/api.service';
 import { BankAccount, BankService } from 'src/app/_services/bank.service';
 import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
@@ -29,6 +30,7 @@ export class AmountPage implements OnInit {
     private transferService: TransferService,
     private shortcuts: ShortcutsService,
     private inpVali: InputvalidationService,
+    private apiService: ApiProvider
   ) { }
 
   get disableSubmit(){
@@ -37,9 +39,20 @@ export class AmountPage implements OnInit {
   ionViewWillEnter(){
     this.transferService.get().subscribe((data) => {
       this.transfer = data;
-      this.bankService.getBankByAccountNumber(this.transfer.accountNo).subscribe((bank: BankAccount) => {
-        this.allacct = bank.otherAccount;
-      })
+      this.apiService.getAllAccountDetails(this.transfer.accountNo).subscribe((data:any) => {
+        if (!data.error) {
+          this.allacct = data.body;
+          } else {
+          this.loadingBankAccount = false
+          this.shortcuts.showErrorToast('Invalid account number')
+        }
+  
+        
+},() => {
+  this.loadingBankAccount = false
+  this.shortcuts.showErrorToast('Invalid account number')
+})
+
     })
 // this.allacct = this.bankService.getallaccount()
 //     console.log(this.bankService.getallaccount())
@@ -65,49 +78,121 @@ if(data.trftype == 'FX'){this.transferType = "Funds Transfer"}
         return false;
       }else{
         this.loadingBankAccount = true
-        this.bankService.getBankByAccountNumber(this.bankAccount).subscribe((bank: BankAccount) => {
-      
-          this.transfer.accountNo = this.bankAccount;
-         this.transfer.accountName = bank.name;
-          this.transfer.transferType = this.transferType;
-          this.bankService.getBankByAccountNumber(this.tobankAccount).subscribe((tobank: BankAccount) => {
-            this.transfer.toAccountNo = this.tobankAccount;
-            this.transfer.toAccountName = tobank.name
-            this.loadingBankAccount = false;
-            this.transferService.store(this.transfer).then(() => {
-              this.router.navigateByUrl('localtransferdetails')
-            })
-          }, () => {
+        this.apiService.getAllAccountDetails(this.bankAccount).subscribe((data:any) => {
+          if (!data.error) {
             this.loadingBankAccount = false
-            this.shortcuts.showErrorToast('Error fetching Debit account details')
-          })
-        }, () => {
-          this.loadingBankAccount = false
-          this.shortcuts.showErrorToast('Error fetching Credit account details')
-        })
+            let acctDet = data.body[0];
+
+
+            this.transfer.accountNo = this.bankAccount;
+            this.transfer.accountName = acctDet.accountName;
+             this.transfer.transferType = this.transferType;
+          this.transfer.balance = acctDet.accountBalance
+            this.apiService.getAllAccountDetails(this.tobankAccount).subscribe((data:any) => {
+              if (!data.error) {
+                this.loadingBankAccount = false
+                let acctDet = data.body[0];
+                this.transfer.toAccountNo = this.tobankAccount;
+                this.transfer.toAccountName = acctDet.accountName;
+                this.transferService.store(this.transfer).then(() => {
+                  this.router.navigateByUrl('localtransferdetails')
+                })
+              
+              } else {
+                this.loadingBankAccount = false
+                this.shortcuts.showErrorToast('Invalid Credit account number')
+              }
+        
+              
+      },() => {
+        this.loadingBankAccount = false
+        this.shortcuts.showErrorToast('Invalid Credit account number')
+      })
+         
+          } else {
+            this.loadingBankAccount = false
+            this.shortcuts.showErrorToast('Invalid Debit account number')
+          }
+    
+          
+  },() => {
+    this.loadingBankAccount = false
+    this.shortcuts.showErrorToast('Invalid Debit account number')
+  })
+
+        // this.bankService.getBankByAccountNumber(this.bankAccount).subscribe((bank: BankAccount) => {
+      
+        //   this.transfer.accountNo = this.bankAccount;
+        //  this.transfer.accountName = bank.name;
+        //   this.transfer.transferType = this.transferType;
+        //   this.bankService.getBankByAccountNumber(this.tobankAccount).subscribe((tobank: BankAccount) => {
+        //     this.transfer.toAccountNo = this.tobankAccount;
+        //     this.transfer.toAccountName = tobank.name
+        //     this.loadingBankAccount = false;
+        //     this.transferService.store(this.transfer).then(() => {
+        //       this.router.navigateByUrl('localtransferdetails')
+        //     })
+        //   }, () => {
+        //     this.loadingBankAccount = false
+        //     this.shortcuts.showErrorToast('Error fetching Debit account details')
+        //   })
+        // }, () => {
+        //   this.loadingBankAccount = false
+        //   this.shortcuts.showErrorToast('Error fetching Credit account details')
+        // })
       }
     }else{
       if(!this.bankAccount){
         this.shortcuts.showErrorToast('Please Supply Debit Account')
         return false;
       }else{
-        this.loadingBankAccount = true
-        this.bankService.getBankByAccountNumber(this.bankAccount).subscribe((bank: BankAccount) => {
+        this.loadingBankAccount = true        
+        this.apiService.getAllAccountDetails(this.bankAccount).subscribe((data:any) => {
+          if (!data.error) {
+            this.loadingBankAccount = false
+            let acctDet = data.body[0];
+
+            this.transfer.accountNo = this.bankAccount;
+            this.transfer.accountName = acctDet.accountName;
+            this.transfer.transferType = this.transferType;
+            this.transfer.balance = acctDet.accountBalance
+             this.loadingBankAccount = false;
+             this.transferService.store(this.transfer).then(() => {
+               if(this.transferType == "Funds Transfer"){
+                 this.router.navigate(['/fundtransfer/foreigntransfer'])
+               }else{
+                 this.router.navigateByUrl('/fundtransfer/intltrfdetails')
+               }
+               
+             })
+             return true;
+         
+          } else {
+            this.loadingBankAccount = false
+            this.shortcuts.showErrorToast('Invalid Debit account number')
+          }
+    
+          
+  },() => {
+    this.loadingBankAccount = false
+    this.shortcuts.showErrorToast('Invalid Debit account number')
+  })
+        // this.bankService.getBankByAccountNumber(this.bankAccount).subscribe((bank: BankAccount) => {
       
-          this.transfer.accountNo = this.bankAccount;
-         this.transfer.accountName = bank.name;
-          this.transfer.transferType = this.transferType;
-          this.loadingBankAccount = false;
-          this.transferService.store(this.transfer).then(() => {
-            if(this.transferType == "Funds Transfer"){
-              this.router.navigate(['/fundtransfer/foreigntransfer'])
-            }else{
-              this.router.navigateByUrl('/fundtransfer/intltrfdetails')
-            }
+        //   this.transfer.accountNo = this.bankAccount;
+        //  this.transfer.accountName = bank.name;
+        //   this.transfer.transferType = this.transferType;
+        //   this.loadingBankAccount = false;
+        //   this.transferService.store(this.transfer).then(() => {
+        //     if(this.transferType == "Funds Transfer"){
+        //       this.router.navigate(['/fundtransfer/foreigntransfer'])
+        //     }else{
+        //       this.router.navigateByUrl('/fundtransfer/intltrfdetails')
+        //     }
             
-          })
-          return true;
-        });
+        //   })
+        //   return true;
+        // });
       }
     }
 

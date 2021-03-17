@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { CashdepositPageRoutingModule } from './cashdeposit-routing.module';
 
 import { CashdepositPage } from './cashdeposit.page';
+import { ApiProvider } from 'src/app/_services/api.service';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { CashdepositPage } from './cashdeposit.page';
     IonicModule,
     CashdepositPageRoutingModule
   ],
-  declarations: [CashdepositPage]
+  declarations: [CashdepositPage],
+  providers:[ApiProvider]
 })
 export class CashdepositPageModule {}

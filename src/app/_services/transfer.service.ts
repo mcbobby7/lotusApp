@@ -10,13 +10,15 @@ export interface FundTransfer{
   toAccountNo?: string,
   toAccountName?: string,
   tobank?: string,
+  tobankCode?:any,
   amount?: any,
   bank?: string,
   correspondingBank?: string,
   narration?: string,
   swiftCode?: string,
   routingNumber?: string,
-
+  NameEnquiryRef?: string,
+  beneficiaryaccountbvn?: string,
   correspondentSwiftCode?: string,
   correspondentRoutingNumber?: string,
 }

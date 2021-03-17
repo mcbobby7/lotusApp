@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpResponse,HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { intratransferM, nipenquiry,niptransfer,cashdepositM,inwardchqPost } from '../_models/bankModel';
+import { intratransferM, nipenquiry, niptransfer, cashdepositM, inwardchqPost } from '../_models/bankModel';
+
 import { getAllAccountDetailsResult } from '../_models/bankapiresult/getAllAccountDetailsResult';
 import { doNameEnquiryResult } from '../_models/bankapiresult/doNameEnquiryResult';
 import { getBanksListResult } from '../_models/bankapiresult/getBanksListResult'; 
@@ -13,12 +14,15 @@ import { tellerCashDepositResult } from '../_models/bankapiresult/tellerCashDepo
 import { inwardchqpostResult } from '../_models/bankapiresult/inwardchqpostResult';
 import { authorizeinwardchqResult } from '../_models/bankapiresult/authorizeinwardchqResult';
 
+import { HTTP } from '@ionic-native/http/ngx';
+import { from } from 'rxjs';
 @Injectable()
 export class ApiProvider {
   Urlbase: string = "http://10.55.15.50:9895/LOTUS/api/v1.0.0/";
   urlbaseSec: string = "http://10.55.15.55:9042/api/LotusBank/";
+  newUrlBase: string = "http://20.77.40.129/lotus/"
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, private nativhttp: HTTP) {}
  
   sentOTP(otp:number, phone:string) {
     let options = {headers: new HttpHeaders(
@@ -30,11 +34,12 @@ export class ApiProvider {
   }
 
 
-  getAllAccountDetails(accountnumber?:number):Observable<getAllAccountDetailsResult> {
+  getAllAccountDetails(accountnumber?:any):Observable<getAllAccountDetailsResult> {
     let options = {headers: new HttpHeaders(
     {'Content-Type': 'application/json'})}
-    let endPoint: string = 'party/getAllAccountDetails/'+ accountnumber;
-    var _result = this.http.get<getAllAccountDetailsResult>(this.Urlbase + endPoint,options);
+    let endPoint: string = 'party/getAllAccountDetails/' + accountnumber;
+    var newSubject = new Subject<getAllAccountDetailsResult>();
+    var _result = this.http.get<getAllAccountDetailsResult>(this.Urlbase + endPoint, options)
     return _result;
   }
   getBanksList():Observable<getBanksListResult> {
@@ -45,23 +50,27 @@ export class ApiProvider {
     return _result;
   }
 
-  postIntraTransfer(transferDetails: intratransferM) : Observable<postIntraTransferResult> {
+  postIntraTransfer(transferDetails: intratransferM): Observable<postIntraTransferResult> {
+    console.log('details', transferDetails)
     let options = {headers: new HttpHeaders(
       {"appID": "OzayConsulting",
     "authID": "89514faa-e2ad-4d92-8004-52ecccd88f05",
     "Content-Type": "application/json"})}  
-    let endPoint: string = 'party/createSingleGenericTransfer';     
-    return this.http.post<postIntraTransferResult>(this.Urlbase + endPoint,transferDetails, options)
-    .pipe(catchError(this.handleError<any>('intraTransfer')));
+    let endPoint: string = 'api/lotus/single'; 
+    return this.http.post(this.newUrlBase + endPoint, JSON.stringify(transferDetails), options)
+    .pipe(catchError(this.handleError<any>('niptransfer')));
   }
 
   nipNameEnquiry(enquiryDetails:nipenquiry) : Observable<doNameEnquiryResult> {
     let options = {headers: new HttpHeaders(
       {"appID": "OzayConsulting",
     "authID": "89514faa-e2ad-4d92-8004-52ecccd88f05",
-    "Content-Type": "application/json"})}  
-    let endPoint: string = 'NIP/doNameEnquiry';     
-    return this.http.post<doNameEnquiryResult>(this.urlbaseSec + endPoint,enquiryDetails, options)
+        "Content-Type": "application/json"
+      })
+    }  
+    
+    let endPoint: string = 'api/lotus/nameenquiry';     
+    return this.http.post<doNameEnquiryResult>(this.newUrlBase + endPoint,enquiryDetails, options)
     .pipe(catchError(this.handleError<any>('nipenquiry')));
   }
 
@@ -70,8 +79,8 @@ export class ApiProvider {
       {"appID": "OzayConsulting",
     "authID": "89514faa-e2ad-4d92-8004-52ecccd88f05",
     "Content-Type": "application/json"})}  
-    let endPoint: string = 'party/NIPTransfer';     
-    return this.http.post<nipTransferResult>(this.Urlbase + endPoint,transferDetails, options)
+    let endPoint: string = 'api/lotus/nipTransfer';     
+    return this.http.post<nipTransferResult>(this.newUrlBase + endPoint,transferDetails, options)
     .pipe(catchError(this.handleError<any>('niptransfer')));
   }
 
@@ -81,8 +90,8 @@ export class ApiProvider {
       {'Content-Type': 'application/json', 
     "credentials":"CHANNEL1/123456"
     })}  
-    let endPoint: string = 'party/tellerCashDeposit';     
-    return this.http.post<tellerCashDepositResult>(this.Urlbase + endPoint,depositDetails, options)
+    let endPoint: string = 'api/lotus/tellerCashDep';     
+    return this.http.post<tellerCashDepositResult>(this.newUrlBase + endPoint,depositDetails, options)
     .pipe(catchError(this.handleError<any>('cashdeposit')));
   }
 
@@ -92,7 +101,7 @@ export class ApiProvider {
     "credentials":"CHANNEL1/123456"
     })}  
     let endPoint: string = 'party/inwardChequePost';     
-    return this.http.post<inwardchqpostResult>(this.Urlbase + endPoint,chqDetails, options)
+    return this.http.post<inwardchqpostResult>(this.newUrlBase + endPoint,chqDetails, options)
     .pipe(catchError(this.handleError<any>('inwardchq')));
   }
 
