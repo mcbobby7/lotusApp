@@ -11,7 +11,7 @@ export class HomePage implements OnInit {
 
   constructor(private router: Router,private navCtrl: NavController) { }
   gotostart(){
- this.router.navigate(['dashbord'])
+ this.router.navigate(['loginpage'])
   }
   ngOnInit() {
   }

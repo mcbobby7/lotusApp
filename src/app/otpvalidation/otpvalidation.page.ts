@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController,ToastController,AlertController, LoadingController } from '@ionic/angular';
+import { GlobalalertservicesService } from '../_services/globalalertservices.service';
+import { AuthServiceProxy } from '../_services/service-proxies';
 
 @Component({
   selector: 'app-otpvalidation',
@@ -17,12 +19,15 @@ export class OtpvalidationPage implements OnInit {
   startSpinner: boolean = false;
 processCompleted: boolean = false;
   nextRoute: any = '';
-  toPage = ''
+  toPage = '';
+  username: any = '';
   constructor(private navCtrl: NavController,
     private activatedroute: ActivatedRoute,
     private toastCtrl: ToastController,
     private router: Router,
-    private loading: LoadingController,) { }
+    private loading: LoadingController,
+    private GalertService: GlobalalertservicesService,
+    private loginService: AuthServiceProxy,) { }
   
   ionViewWillEnter() {
     this.activatedroute.queryParams.subscribe(data => {
@@ -33,6 +38,12 @@ processCompleted: boolean = false;
       if (data.toPage) {
         this.toPage = data.toPage;
 
+      }
+      if (data.useraccount) {
+        this.username = data.useraccount;
+        this.GalertService.gdismissLoading();
+ 
+        
       }
 
     })
@@ -59,55 +70,48 @@ processCompleted: boolean = false;
    if(codeElement == "code3") this.code3 = "";
    if(codeElement == "code4") this.code4 = "";
    if(codeElement == "code5") this.code5 = "";
-   if(codeElement == "code6") this.code6 = "";
-   const toast = await this.toastCtrl.create({
-    duration: 3000,
-    message: 'Input Number Only',
-    color: "danger"
-  });
-  toast.present();
+      if (codeElement == "code6") this.code6 = "";
+      this.GalertService.gPresentToast("Input Number Only", "danger");
     }
   }
- async sendOTP() {
-    const loading = await this.loading.create({
-      message: "please wait...",
-      translucent: true,
-      spinner: "bubbles", cssClass: 'my-loading-class'
-    });
-    loading.present();
-   
-    let receivedotp = this.code1 + this.code2 + this.code3 + this.code4 + this.code5 + this.code6;
-   if (receivedotp) { 
-    setTimeout(async() => {
-      const toast = await this.toastCtrl.create({
-        duration: 3000,
-        message: 'OTP Sent successfully',
-        color: "success"
-      });
-      toast.present();
-      loading.dismiss();      
-    }, 2000);
+  async sendOTP() {
+    this.GalertService.gPresentLoading('Please wait...');   
+   if (this.username) { 
+     this.loginService.sendOTP(this.username, "").subscribe(data => {
+       if (!data.hasError) {
+        this.GalertService.gdismissLoading();
+        this.GalertService.gPresentToast(data.message, "success");  
+       } else {
+        this.GalertService.gdismissLoading();
+        this.GalertService.gPresentToast(data.message, "danger");  
+  }
+     });
     
-    }
+   } else {
+    this.GalertService.gdismissLoading();
+     this.GalertService.gPresentToast("Invalid User Details", "danger");
+     this.router.navigate(['loginpage']);
+   }
   }
   async verifyOTP() {
-    const loading = await this.loading.create({
-      message: "please wait...",
-      translucent: true,
-      spinner: "bubbles", cssClass: 'my-loading-class'
-    });
-    loading.present();
-    setTimeout(async() => {
-      const toast = await this.toastCtrl.create({
-        duration: 3000,
-        message: 'OTP Validated successfully',
-        color: "success"
+    this.GalertService.gPresentLoading('Please wait...');
+    let receivedotp = this.code1 + this.code2 + this.code3 + this.code4 + this.code5 + this.code6;
+    if (receivedotp) {
+      this.loginService.verifyOTP(this.username, '', Number(receivedotp), '').subscribe(dataResp => {
+        if (!dataResp.hasError) {
+          this.GalertService.gdismissLoading();
+          this.GalertService.gPresentToast(dataResp.message, "success");
+          this.router.navigate(['dashbord']);
+        } else {
+          this.GalertService.gdismissLoading();
+          this.GalertService.gPresentToast(dataResp.message, "danger");  
+        }
+
       });
-      toast.present();
-      loading.dismiss();
-      let nRoute = this.nextRoute? this.nextRoute : this.toPage
-      this.router.navigate([nRoute])
-    }, 2000);
+    }else {
+      this.GalertService.gdismissLoading();
+      this.GalertService.gPresentToast("Please input otp code received", "danger");
+     }   
   }
  
   ngOnInit() {}

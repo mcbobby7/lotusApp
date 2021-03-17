@@ -22,12 +22,12 @@ export class AuthGuardService implements CanLoad {
                 if (!dataResp.hasError) {
                   resolve(true);
                 } else {
-                  this.router.navigate(['home']);
+                  this.AuthenService.clearusers();
                   resolve(false);
                 }
               });             
             } else {
-              this.router.navigate(['home']);
+              this.AuthenService.clearusers();
               resolve(false);
             }
           });

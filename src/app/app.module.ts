@@ -24,6 +24,8 @@ import { ApiProvider } from './_services/api.service';
 import { HTTP } from '@ionic-native/http/ngx';
 import { IonicFingerPrintReader } from '@ionic-native/ionic-finger-print-reader/ngx';
 import { JwtInterceptor } from './_services/jwt.interceptor';
+import { AuthServiceProxy } from './_services/service-proxies';
+import {GlobalalertservicesService } from './_services/globalalertservices.service';
 @NgModule({
   declarations: [AppComponent,],
   entryComponents: [],
@@ -52,7 +54,9 @@ import { JwtInterceptor } from './_services/jwt.interceptor';
     ApiProvider,
     HttpClient,
     IonicFingerPrintReader,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    AuthServiceProxy,
+    GlobalalertservicesService
   ],
   bootstrap: [AppComponent]
 })

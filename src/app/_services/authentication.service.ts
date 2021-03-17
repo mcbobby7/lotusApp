@@ -15,7 +15,7 @@ export class AuthenticationService {
 
     constructor(private router: Router,private storage: Storage) { }
 
-    getuser() {
+    getuser(): Promise<IUser[]> {
         this.users = [];
         return new Promise((resolve) => {
             this.storage.get('user').then(usersdata => {
