@@ -7,7 +7,8 @@ const routes: Routes = [
 
   {
     path: 'withdrawal',
-    loadChildren: () => import('./withdrawal/withdrawal.module').then( m => m.WithdrawalPageModule),
+    loadChildren: () => import('./withdrawal/withdrawal.module').then(m => m.WithdrawalPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'deposit',
@@ -20,19 +21,22 @@ const routes: Routes = [
   {
     path: 'self-service',
     loadChildren: () => import('./self-service/self-service.module').then( m => m.SelfServicePageModule),
-    // canActivate: [AuthGuard]
+    canLoad: [AuthGuard]
   },
   {
     path: 'customercare',
-    loadChildren: () => import('./customercare/customercare.module').then( m => m.CustomercarePageModule),
+    loadChildren: () => import('./customercare/customercare.module').then(m => m.CustomercarePageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'fundtransfer',
-    loadChildren: () => import('./fundtransfer/fundtransfer.module').then( m => m.FundtransferPageModule)
+    loadChildren: () => import('./fundtransfer/fundtransfer.module').then(m => m.FundtransferPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'capturebiometric',
-    loadChildren: () => import('./capturebiometric/capturebiometric.module').then( m => m.CapturebiometricPageModule)
+    loadChildren: () => import('./capturebiometric/capturebiometric.module').then(m => m.CapturebiometricPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'home',
@@ -72,28 +76,34 @@ const routes: Routes = [
   },
   {
     path: 'enquiries',
-    loadChildren: () => import('./enquiries/enquiries.module').then(m => m.EnquiriesPageModule)
+    loadChildren: () => import('./enquiries/enquiries.module').then(m => m.EnquiriesPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'selfservice',
-    loadChildren: () => import('./selfservice/selfservice.module').then(m => m.SelfservicePageModule)
+    loadChildren: () => import('./selfservice/selfservice.module').then(m => m.SelfservicePageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'transfertype',
-    loadChildren: () => import('./fundtransfer/transfertype/transfertype.module').then( m => m.TransfertypePageModule)
+    loadChildren: () => import('./fundtransfer/transfertype/transfertype.module').then(m => m.TransfertypePageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'localtransfertype',
-    loadChildren: () => import('./fundtransfer/localtransfertype/localtransfertype.module').then( m => m.LocaltransfertypePageModule)
+    loadChildren: () => import('./fundtransfer/localtransfertype/localtransfertype.module').then(m => m.LocaltransfertypePageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'localtransferdetails',
-    loadChildren: () => import('./fundtransfer/localtransferdetails/localtransferdetails.module').then( m => m.LocaltransferdetailsPageModule)
+    loadChildren: () => import('./fundtransfer/localtransferdetails/localtransferdetails.module').then(m => m.LocaltransferdetailsPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'otpvalidation',
-    loadChildren: () => import('./otpvalidation/otpvalidation.module').then( m => m.OtpvalidationPageModule)
-  },  {
+    loadChildren: () => import('./otpvalidation/otpvalidation.module').then(m => m.OtpvalidationPageModule),
+  },
+  {
     path: 'loginpage',
     loadChildren: () => import('./loginpage/loginpage.module').then( m => m.LoginpagePageModule)
   },

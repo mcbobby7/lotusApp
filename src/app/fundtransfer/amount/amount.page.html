@@ -40,7 +40,7 @@
     </ion-label>
     <div style="padding: 5px;"></div>
     <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="bankAccount">
-      <ion-select-option *ngFor="let acct of allacct" value="{{acct.shortAccount}}">{{acct.shortAccount}} - {{acct.categoryDescription}}</ion-select-option>
+      <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option>       
     </ion-select>
   </div>
   <div class="form-group" *ngIf="transferType == 'Own Account Transfer'">
@@ -49,7 +49,8 @@
     </ion-label>
     <div style="padding: 5px;"></div>
     <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="tobankAccount">
-      <ion-select-option *ngFor="let acct of allacct" value="{{acct.shortAccount}}">{{acct.shortAccount}} - {{acct.categoryDescription}}</ion-select-option>
+      <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option> 
+     
     </ion-select>
   </div>
   <div class="form-group" *ngIf="transferType == 'Lotus Bank'">
@@ -57,10 +58,10 @@
      Input Beneficiary Account
     </ion-label>
     <div style="padding: 5px;"></div>
-    <ion-input style="color: #fff;" type="tel" [(ngModel)]="tobankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
-    <span *ngIf="inpVali.invalidAccount"><small class="error" >Invalid Account Number</small></span>
-    <div *ngIf="transfer.toAccountName" style="padding: 5px;"></div>
-    <span *ngIf="transfer.toAccountName"><small style="color: #fff;" >{{transfer.toAccountName}}</small></span>
+    <ion-input style="color: #fff;" type="tel" [(ngModel)]="tobankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber');valbeneficiaryAccount()" required></ion-input>
+    <span *ngIf="inpVali.invalidAccount "><small class="error" >Invalid Account Number</small></span>
+    <div *ngIf="transfer.toAccountName" style="padding: 3px;"></div>
+    <span *ngIf="transfer.toAccountName"><small style="color: #fff;font-size: 18px;" >{{transfer.toAccountName}}</small></span>
   </div>
   <!-- <div class="form-group">
     <ion-label>

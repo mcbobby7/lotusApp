@@ -4,9 +4,10 @@ import { AuthService } from './auth.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { AuthServiceProxy, IUser, User } from './service-proxies';
 import { Storage } from '@ionic/storage';
+import { GlobalalertservicesService } from './globalalertservices.service';
 @Injectable()
 export class AuthGuardService implements CanLoad {
-  constructor(public auth: AuthService, public router: Router,
+  constructor(public auth: AuthService, public router: Router,private GalertService: GlobalalertservicesService,
     private AuthenService: AuthenticationService, private storage: Storage, private loginService: AuthServiceProxy) { }
   canLoad(routes: Route): Promise<boolean> {
     return new Promise((resolve, reject) => {
@@ -18,6 +19,7 @@ export class AuthGuardService implements CanLoad {
         } else {
           this.AuthenService.getuser().then((usersdata: IUser[]) => {      
             if (usersdata.length > 0) {
+              this.GalertService.gPresentLoading('Please wait...');
               this.loginService.validateToken(usersdata[0].sessionToken).subscribe(dataResp => {
                 if (!dataResp.hasError) {
                   resolve(true);
@@ -25,6 +27,7 @@ export class AuthGuardService implements CanLoad {
                   this.AuthenService.clearusers();
                   resolve(false);
                 }
+                this.GalertService.gdismissLoading();
               });             
             } else {
               this.AuthenService.clearusers();

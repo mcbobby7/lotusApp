@@ -5,6 +5,8 @@ import { Deposit, DepositService, multiDeposit } from 'src/app/_services/deposit
 import { ApiProvider } from 'src/app/_services/api.service';
 import { intratransferM, nipenquiry, niptransfer, cashdepositM, inwardchqPost,denomination } from '../../_models/bankModel';
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
+import { LotusServiceProxy,CtRoot,CtBody,DenominationValue, } from 'src/app/_services/service-proxies';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 @Component({
   selector: 'app-confirm',
   templateUrl: './confirm.page.html',
@@ -13,23 +15,26 @@ import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 export class ConfirmPage implements OnInit {
   showProcessing = false
   processCompleted = false
-  depositObj: Deposit = {}
-  cashdeposit: cashdepositM = {body:{}};
+  depositObj: Deposit = {};
+
+  cashdeposit = new CtRoot().clone();
+  bodyCashDeposit = new CtBody().clone();
   multideposit: multiDeposit = {}
-  cashdenomination: denomination = {
-    denomination: 'NGN5',
-    unit: 2
-  };
+  cashdenomination: DenominationValue[]=[];
+  denomination = new DenominationValue().clone();
   constructor(
     private router: Router,
     private navCtrl: NavController,
     private depositService: DepositService,
     private apiService: ApiProvider,
-    private shortcutService: ShortcutsService
+    private shortcutService: ShortcutsService,
+    private LotusService: LotusServiceProxy,
+    private AuthenService: AuthenticationService,
   ) { }
   ionViewWillEnter() {
     
-    this.depositService.get().subscribe((data:any) => {
+    this.depositService.get().subscribe((data: any) => {
+      console.log(data)
       if (data.multiDeposit) {
         this.multideposit = data;
         this.depositObj = data
@@ -44,67 +49,88 @@ export class ConfirmPage implements OnInit {
   ngOnInit() {
    
   }
-  postDeposit(depositObj) {
-  
-}
+
   submit() {
     
     this.showProcessing = true;
-    var i = 0;
-    if (this.multideposit.multiDeposit) {
-      this.multideposit.accountInfo.forEach(depValue => {    
-        let cshdem = [];
-        var amt = depValue.amount.replace(/,/g, "");
-        this.cashdeposit.body.depositAmount = Number(amt);
-        this.cashdenomination.unit = this.cashdeposit.body.depositAmount / 5;
-        cshdem.push(this.cashdenomination);
-        this.cashdeposit.body.denominationValues = cshdem;        
-        this.cashdeposit.body.creditAccount = Number(depValue.accountNumber);
-        this.cashdeposit.body.narrative = this.multideposit.narration;
-        this.cashdeposit.body.documentNo = Math.ceil(Math.random() * 10e10) ;
-        this.cashdeposit.body.channel = "OzayConsulting";
-        this.apiService.tellerCashDeposit(this.cashdeposit).subscribe((data:any) => {       
-          if (!data.error) {
-            this.shortcutService.showToast(`Deposit Number ${i} Posted Successfully`, 'success')
-            window.setTimeout(()=>{this.processCompleted = true;this.depositService.store({})}, 5000)
+    this.AuthenService.getuser().then(userData => {
+      var i = 0;
+      if (this.multideposit.multiDeposit) {
+        this.multideposit.accountInfo.forEach(depValue => {
+          let cshdem = [];
+          var amt = depValue.amount.replace(/,/g, "");
+          this.bodyCashDeposit.depositAmount = amt;
+          this.denomination.denomination = 'NGN5';
+          this.denomination.unit = String(Number(amt) / 5);
+          this.cashdenomination.push( this.denomination);
+          this.bodyCashDeposit.denominationValues = this.cashdenomination;
+          this.bodyCashDeposit.creditAccount = depValue.accountNumber;
+          this.bodyCashDeposit.narrative = this.multideposit.narration;
+          this.bodyCashDeposit.documentNo = String(Math.ceil(Math.random() * 10e10));
+          this.bodyCashDeposit.channel = "OzayConsulting";
+         
+          if (this.depositObj.selfdeposit == "otheraccount") {
+            this.bodyCashDeposit.narrative = this.multideposit.depositorFullname + "," + this.multideposit.depositorPhoneNumber + "," + this.multideposit.depositorEmail + "," + this.multideposit.narration;
           } else {
+            this.bodyCashDeposit.narrative = "Cash Dep by Self - " + this.multideposit.narration;
+          }
+          this.cashdeposit.body = this.bodyCashDeposit;
+          this.LotusService.tellerCashDep(this.cashdeposit,userData[0].sessionToken).subscribe((data) => {
+            if (!data.hasError) {
+              
+              window.setTimeout(() => {
+                this.processCompleted = true; this.depositService.store({});
+                this.shortcutService.showToast(`Deposit Number ${i} Posted Successfully`, 'success');
+              }, 5000)
+            } else {
+              this.showProcessing = false;
+              this.shortcutService.showErrorToast(`Error While Posting Deposit Number ${i} Transaction`)
+            }
+           
+          }, (error) => {
             this.showProcessing = false;
             this.shortcutService.showErrorToast(`Error While Posting Deposit Number ${i} Transaction`)
+            console.log(error);
+          })
+          i++
+        });
+      } else {
+        let cshdem = [];
+        var amt = this.depositObj.amount.replace(/,/g, "");
+        this.bodyCashDeposit.depositAmount = amt;
+        this.denomination.denomination = 'NGN5';
+        this.denomination.unit = String(Number(amt) / 5);
+        this.cashdenomination.push( this.denomination);
+        this.bodyCashDeposit.denominationValues = this.cashdenomination;      
+        this.bodyCashDeposit.creditAccount = this.depositObj.accountNumber;
+        this.bodyCashDeposit.narrative = this.depositObj.narration;
+        this.bodyCashDeposit.documentNo = String(Math.ceil(Math.random() * 10e10)) ;
+        this.bodyCashDeposit.channel = "OzayConsulting";
+        
+        if (this.depositObj.selfdeposit == "otheraccount") {
+          this.bodyCashDeposit.narrative = this.depositObj.depositorFullname + "," + this.depositObj.depositorPhoneNumber + "," + this.depositObj.depositorEmail + "," + this.depositObj.narration;
+        } else {
+          this.bodyCashDeposit.narrative = "Cash Dep by Self - " + this.depositObj.narration;
+        }
+        this.cashdeposit.body = this.bodyCashDeposit;
+        this.LotusService.tellerCashDep(this.cashdeposit,userData[0].sessionToken).subscribe((data) => {         
+          if (!data.hasError) {
+            
+            window.setTimeout(() => {
+              this.processCompleted = true; this.depositService.store({});
+              this.shortcutService.showToast('Deposit Posted Successfully', 'success');
+            }, 5000)
+          } else {
+            this.showProcessing = false;
+            this.shortcutService.showErrorToast('Error While Posting Deposit')
           }
          
         }, (error) => {
-          this.showProcessing = false;
-          this.shortcutService.showErrorToast(`Error While Posting Deposit Number ${i} Transaction`)
             console.log(error);
     })
-      i++
-      })
-    } else {
-      let cshdem = [];
-      var amt = this.depositObj.amount.replace(/,/g, "");
-      this.cashdeposit.body.depositAmount = Number(amt);
-      this.cashdenomination.unit = this.cashdeposit.body.depositAmount / 5;
-      cshdem.push(this.cashdenomination);
-      this.cashdeposit.body.denominationValues = cshdem;
-      
-      this.cashdeposit.body.creditAccount = Number(this.depositObj.accountNumber);
-      this.cashdeposit.body.narrative = this.depositObj.narration;
-      this.cashdeposit.body.documentNo = Math.ceil(Math.random() * 10e10) ;
-      this.cashdeposit.body.channel = "OzayConsulting";
-      this.apiService.tellerCashDeposit(this.cashdeposit).subscribe((data:any) => {
-       
-        if (!data.error) {
-          this.shortcutService.showToast('Deposit Posted Successfully', 'success')
-          window.setTimeout(()=>{this.processCompleted = true;this.depositService.store({})}, 5000)
-        } else {
-          this.showProcessing = false;
-          this.shortcutService.showErrorToast('Error While Posting Deposit')
-        }
-       
-      }, (error) => {
-          console.log(error);
-  })
-    }
+      }
+    })
+
  
    
   }
@@ -114,7 +140,18 @@ export class ConfirmPage implements OnInit {
     this.router.navigateByUrl('/deposit/receipt')
     // this.router.navigateByUrl('/')
   }
-
+  goedit() {
+    var isEmpty = false;
+    for (var a in this.multideposit) {
+      isEmpty = true;
+    }
+    if (isEmpty) {
+     this.router.navigate(['/multideposit']);
+    } else {
+      this.router.navigateByUrl('/cashdeposit');
+    }
+    
+}
   goBack(){
     this.navCtrl.back()
   }

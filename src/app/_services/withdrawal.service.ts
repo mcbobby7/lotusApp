@@ -8,7 +8,8 @@ export interface Withdrawal{
   accountNo?: string,
   accountName?: string,
   amount?: number,
-  balance?: number
+  balance?: number,
+  currencyCode?: string
 }
 
 @Injectable({

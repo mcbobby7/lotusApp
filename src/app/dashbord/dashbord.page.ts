@@ -8,6 +8,8 @@ import { IonicFingerPrintReader } from '@ionic-native/ionic-finger-print-reader/
 import { AuthServiceProxy } from '../_services/service-proxies';
 import { AuthenticationService } from '../_services/authentication.service';
 import { GlobalalertservicesService } from '../_services/globalalertservices.service';
+import { DepositService } from '../_services/deposit.service';
+import { WithdrawalService } from '../_services/withdrawal.service';
 
 declare var window:any;
 @Component({
@@ -24,7 +26,9 @@ export class DashbordPage implements OnInit {
     public popoverController: PopoverController,
     private router: Router,
     private fingerservice: IonicFingerPrintReader,
-    private GalertService: GlobalalertservicesService
+    private GalertService: GlobalalertservicesService,
+    private depositService: DepositService,
+    private withdrawalService: WithdrawalService
   ) {
     this.initializeApp();
      }
@@ -61,9 +65,27 @@ export class DashbordPage implements OnInit {
     });
     subject.subscribe(async val => {
       modal.dismiss()
-      if(val){
-    if(val == "cash")this.router.navigate(['withdrawal']);
-    if(val == "cheque")this.router.navigate(['/withdrawal/cheque-withdrawal']);
+      if (val) {
+        this.AuthenService.getuser().then(userdata => {
+          if (userdata) {
+            if (userdata.length > 0) {
+              this.loggedinUserfullName = userdata[0].fullName;
+              if (this.loggedinUserfullName) {
+                if (val == "cash") this.router.navigate(['/withdrawal']);
+                if (val == "cheque") this.router.navigate(['/withdrawal/cheque-withdrawal']);                
+              } else {
+                if(val == "cheque")this.router.navigate(['/loginpage'],{queryParams:{nxtRoute:'/withdrawal/cheque-withdrawal'}});
+                if (val == "cash") this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: 'withdrawal' } });
+              }
+            }
+          }else {
+            if(val == "cheque")this.router.navigate(['/loginpage'],{queryParams:{nxtRoute:'/withdrawal/cheque-withdrawal'}});
+            if (val == "cash") this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: 'withdrawal' } });
+          }
+      
+        })
+      
+    
       } else {
        modal.dismiss()
       }
@@ -105,9 +127,68 @@ export class DashbordPage implements OnInit {
   }
   ionViewWillEnter() {
     this.AuthenService.getuser().then(userdata => {
-      this.loggedinUserfullName = userdata[0].fullName;
-
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.loggedinUserfullName = userdata[0].fullName;
+        }
+      }
+  
     })
+    this.depositService.store({});
+    this.withdrawalService.store({});
+    this.withdrawalService.store({});
+  }
+
+  gotofundstrf() {
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.loggedinUserfullName = userdata[0].fullName;
+          if (this.loggedinUserfullName) {
+            this.router.navigate(['transfertype']);
+                     
+          } else {
+            this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: 'transfertype' } });
+          }
+         }
+      } else {
+        this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: 'transfertype' } });
+      }
+     });
+  }
+  gotoenquiry() {
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.loggedinUserfullName = userdata[0].fullName;
+          if (this.loggedinUserfullName) {
+            this.router.navigate(['/selfservice']);
+                     
+          } else {
+            this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: '/selfservice' } });
+          }
+         }
+      } else {
+        this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: '/selfservice' } });
+      }
+     });
+  }
+  gotoselfService() {
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.loggedinUserfullName = userdata[0].fullName;
+          if (this.loggedinUserfullName) {
+            this.router.navigate(['/self-service']);
+                     
+          } else {
+            this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: '/self-service' } });
+          }
+         }
+      } else {
+        this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: '/self-service' } });
+      }
+     });
   }
   ngOnInit() {
   }

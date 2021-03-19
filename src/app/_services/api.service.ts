@@ -16,12 +16,13 @@ import { authorizeinwardchqResult } from '../_models/bankapiresult/authorizeinwa
 
 import { HTTP } from '@ionic-native/http/ngx';
 import { from } from 'rxjs';
+import { ApiResultOfCtRRoot } from './service-proxies';
 @Injectable()
 export class ApiProvider {
   Urlbase: string = "http://10.55.15.50:9895/LOTUS/api/v1.0.0/";
   urlbaseSec: string = "http://10.55.15.55:9042/api/LotusBank/";
   newUrlBase: string = "http://20.77.40.129/lotus/"
-
+  baseUrl ="http://10.55.15.98";
   constructor(public http: HttpClient, private nativhttp: HTTP) {}
  
   sentOTP(otp:number, phone:string) {
@@ -122,6 +123,13 @@ export class ApiProvider {
         return of(error);
     }
 }
-
+  tellerCashDep(payload, session_token: string): Observable<ApiResultOfCtRRoot>{
+    let url_ = this.baseUrl + "/api/lotus/tellerCashDep";
+    let options = {headers: new HttpHeaders(
+      {'Content-Type': 'application/json', 
+    })}  
+    return this.http.post<ApiResultOfCtRRoot>(url_ ,payload, options)
+    .pipe(catchError(this.handleError<any>('authorizeinwardchq')));
+} 
 
 }

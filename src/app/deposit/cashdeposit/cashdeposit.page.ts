@@ -7,6 +7,9 @@ import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_se
 import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 import { ApiProvider } from 'src/app/_services/api.service';
+import { AuthServiceProxy, IGetAccountDetailsResponse, LotusServiceProxy } from 'src/app/_services/service-proxies';
+import { GlobalalertservicesService } from 'src/app/_services/globalalertservices.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 
 @Component({
   selector: 'app-cashdeposit',
@@ -21,7 +24,8 @@ export class CashdepositPage implements OnInit {
   invalidAmount: boolean = false;
   depositObj: Deposit = {singleDeposit: true,proceedChk: false};
   depositMultpleObj: multiDeposit ={accountInfo:[], multiDeposit: true};
-
+  multideposit: multiDeposit = {}
+  customerAccountResp: IGetAccountDetailsResponse;
   constructor(    
     private navCtrl: NavController,
     private alertCtrl: AlertController,
@@ -31,7 +35,10 @@ export class CashdepositPage implements OnInit {
     private shortcutService: ShortcutsService,
     private depositService: DepositService,
     private bankService: BankService,
-    private apiService: ApiProvider) { }
+    private apiService: ApiProvider,
+    private LotusService: LotusServiceProxy,
+    private GalertService: GlobalalertservicesService,
+    private AuthenService: AuthenticationService,) { }
   goBack(){
 this.navCtrl.back()
   }
@@ -63,43 +70,53 @@ this.navCtrl.back()
  
   submitRequest(depositDetails) {
     if (this.validateForm()) {
-      this.loadingBankAccount = true
-      this.apiService.getAllAccountDetails(this.depositObj.accountNumber).subscribe((data:any) => {
-        if (!data.error) {
+      this.GalertService.gPresentLoading('Please wait...');
+      this.loadingBankAccount = true;
+      this.AuthenService.getuser().then(userDetails => {
+        this.LotusService.getAccountDetails(this.depositObj.accountNumber,userDetails[0].sessionToken).subscribe((data) => {
+          this.customerAccountResp = data.result;
+          if (!data.hasError && this.customerAccountResp.body) {
+            this.GalertService.gPresentToast(data.message, "success");
+            this.loadingBankAccount = false;           
+            let acctDet = this.customerAccountResp.body;
+            this.depositObj.singleDeposit = true;
+            this.depositObj.bankName = "Lotus Bank";
+            this.depositObj.accountName = acctDet[0].accountName;
+            this.depositService.store(this.depositObj).then(data => {
+              this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
+            })
+          } else {
+            this.loadingBankAccount = false;
+            this.GalertService.gPresentToast(data.message, "danger");
+          }
+          this.GalertService.gdismissLoading();
+          
+  },() => {
           this.loadingBankAccount = false
-          let acctDet = data.body[0];
-          this.depositObj.bankName = "Lotus Bank";
-          this.depositObj.accountName = acctDet.accountName;
-          this.depositService.store(this.depositObj).then(data => {
-            this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
-          })
-        } else {
-          this.shortcutService.showErrorToast('Invalid account number')
-        }
-  
-        
-},() => {
-  this.loadingBankAccount = false
-  this.shortcutService.showErrorToast('Invalid account number')
-})
-      // const subject = this.bankService.getBankByAccountNumber(this.depositObj.accountNumber)
-      // subject.subscribe((bank: BankAccount) => {
-      //   this.loadingBankAccount = false
-      //   console.log(bank)
-      //   this.depositObj.bankName = bank.bankName;
-      //   this.depositObj.accountName = bank.name;
-      //   this.depositService.store(this.depositObj).then(data => {
-      //     this.router.navigate(['/singledeposit'], { queryParams: { depositDetails: JSON.stringify(depositDetails) } })
-      //   })
-      // }, () => {
-      //   this.loadingBankAccount = false
-      //   this.shortcutService.showErrorToast('Invalid account number')
-      // })
+          this.GalertService.gdismissLoading();
+    this.shortcutService.showErrorToast('Invalid account number')
+  })
+      });
+ 
     } else {
-      this.shortcutService.showErrorToast('Please fill all required fields')
+      this.GalertService.gPresentToast('Please fill all required fields', "danger");
     }
   }
-
+  ionViewWillEnter() {    
+    this.depositService.get().subscribe((data:any) => {
+      if (data) {
+        if (data.multiDeposit) {
+          this.multideposit = data;
+          this.depositObj = data
+    
+        } else {
+          this.depositObj = data 
+        }
+}
+      
+      
+    })
+  }
   ngOnInit() {
   }
 

@@ -9,6 +9,7 @@ export interface FundTransfer{
   balance?: number,
   toAccountNo?: string,
   toAccountName?: string,
+  currencyCode?: string,
   tobank?: string,
   tobankCode?:any,
   amount?: any,

@@ -826,6 +826,58 @@ export class LotusServiceProxy {
         }
         return _observableOf<ApiResultOfRoot>(<any>null);
     }
+
+    /**
+     * @return OK
+     */
+    fetchBanks(session_token: string): Observable<ApiResultOfBankResponseModel> {
+        let url_ = this.baseUrl + "/api/lotus/fetchBanks";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFetchBanks(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFetchBanks(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfBankResponseModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfBankResponseModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFetchBanks(response: HttpResponseBase): Observable<ApiResultOfBankResponseModel> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfBankResponseModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfBankResponseModel>(<any>null);
+    }
 }
 
 @Injectable()
@@ -842,7 +894,7 @@ export class ApiServiceProxy {
     /**
      * @return OK
      */
-    valuesGet(session_token: string): Observable<string[]> {
+    valuesGetSession(session_token: string): Observable<string[]> {
         let url_ = this.baseUrl + "/api/Values";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -856,11 +908,11 @@ export class ApiServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processValuesGet(response_);
+            return this.processValuesGetvaluesGetSession(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processValuesGet(<any>response_);
+                    return this.processValuesGetvaluesGetSession(<any>response_);
                 } catch (e) {
                     return <Observable<string[]>><any>_observableThrow(e);
                 }
@@ -869,7 +921,7 @@ export class ApiServiceProxy {
         }));
     }
 
-    protected processValuesGet(response: HttpResponseBase): Observable<string[]> {
+    protected processValuesGetvaluesGetSession(response: HttpResponseBase): Observable<string[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -950,7 +1002,7 @@ export class ApiServiceProxy {
     /**
      * @return OK
      */
-    valuesGetid(id: number, session_token: string): Observable<string> {
+    valuesGet(id: number, session_token: string): Observable<string> {
         let url_ = this.baseUrl + "/api/Values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -967,11 +1019,11 @@ export class ApiServiceProxy {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processValuesGetid(response_);
+            return this.processValuesGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processValuesGetid(<any>response_);
+                    return this.processValuesGet(<any>response_);
                 } catch (e) {
                     return <Observable<string>><any>_observableThrow(e);
                 }
@@ -980,7 +1032,7 @@ export class ApiServiceProxy {
         }));
     }
 
-    protected processValuesGetid(response: HttpResponseBase): Observable<string> {
+    protected processValuesGet(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2006,6 +2058,7 @@ export class GetAccountDetailsResponseBody implements IGetAccountDetailsResponse
     accountBalance: string | undefined;
     bookBalance: string | undefined;
     currencyCode: string | undefined;
+    customerPhone: string | undefined;
 
     constructor(data?: IGetAccountDetailsResponseBody) {
         if (data) {
@@ -2033,6 +2086,7 @@ export class GetAccountDetailsResponseBody implements IGetAccountDetailsResponse
             this.accountBalance = _data["accountBalance"];
             this.bookBalance = _data["bookBalance"];
             this.currencyCode = _data["currencyCode"];
+            this.customerPhone = _data["customerPhone"];
         }
     }
 
@@ -2060,6 +2114,7 @@ export class GetAccountDetailsResponseBody implements IGetAccountDetailsResponse
         data["accountBalance"] = this.accountBalance;
         data["bookBalance"] = this.bookBalance;
         data["currencyCode"] = this.currencyCode;
+        data["customerPhone"] = this.customerPhone;
         return data; 
     }
 
@@ -2087,6 +2142,7 @@ export interface IGetAccountDetailsResponseBody {
     accountBalance: string | undefined;
     bookBalance: string | undefined;
     currencyCode: string | undefined;
+    customerPhone: string | undefined;
 }
 
 export class Audit implements IAudit {
@@ -3526,6 +3582,226 @@ export interface ICtAudit {
     responseParse_time: number | undefined;
     requestParse_time: number | undefined;
     versionNumber: string | undefined;
+}
+
+export class ApiResultOfBankResponseModel implements IApiResultOfBankResponseModel {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: BankResponseModel | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfBankResponseModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? BankResponseModel.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfBankResponseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfBankResponseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfBankResponseModel {
+        const json = this.toJSON();
+        let result = new ApiResultOfBankResponseModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfBankResponseModel {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: BankResponseModel | undefined;
+    totalCount: number | undefined;
+}
+
+export class BankResponseModel implements IBankResponseModel {
+    header: BankResponseModelHeader | undefined;
+    body: BankResponseModelBody[] | undefined;
+
+    constructor(data?: IBankResponseModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? BankResponseModelHeader.fromJS(_data["header"]) : <any>undefined;
+            if (Array.isArray(_data["body"])) {
+                this.body = [] as any;
+                for (let item of _data["body"])
+                    this.body.push(BankResponseModelBody.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): BankResponseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new BankResponseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        if (Array.isArray(this.body)) {
+            data["body"] = [];
+            for (let item of this.body)
+                data["body"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): BankResponseModel {
+        const json = this.toJSON();
+        let result = new BankResponseModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IBankResponseModel {
+    header: BankResponseModelHeader | undefined;
+    body: BankResponseModelBody[] | undefined;
+}
+
+export class BankResponseModelHeader implements IBankResponseModelHeader {
+    audit: Audit | undefined;
+    page_start: number | undefined;
+    page_token: string | undefined;
+    total_size: number | undefined;
+    page_size: number | undefined;
+    status: string | undefined;
+
+    constructor(data?: IBankResponseModelHeader) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.audit = _data["audit"] ? Audit.fromJS(_data["audit"]) : <any>undefined;
+            this.page_start = _data["page_start"];
+            this.page_token = _data["page_token"];
+            this.total_size = _data["total_size"];
+            this.page_size = _data["page_size"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): BankResponseModelHeader {
+        data = typeof data === 'object' ? data : {};
+        let result = new BankResponseModelHeader();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["audit"] = this.audit ? this.audit.toJSON() : <any>undefined;
+        data["page_start"] = this.page_start;
+        data["page_token"] = this.page_token;
+        data["total_size"] = this.total_size;
+        data["page_size"] = this.page_size;
+        data["status"] = this.status;
+        return data; 
+    }
+
+    clone(): BankResponseModelHeader {
+        const json = this.toJSON();
+        let result = new BankResponseModelHeader();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IBankResponseModelHeader {
+    audit: Audit | undefined;
+    page_start: number | undefined;
+    page_token: string | undefined;
+    total_size: number | undefined;
+    page_size: number | undefined;
+    status: string | undefined;
+}
+
+export class BankResponseModelBody implements IBankResponseModelBody {
+    institutionCode: string | undefined;
+    institutionName: string | undefined;
+
+    constructor(data?: IBankResponseModelBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.institutionCode = _data["institutionCode"];
+            this.institutionName = _data["institutionName"];
+        }
+    }
+
+    static fromJS(data: any): BankResponseModelBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new BankResponseModelBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["institutionCode"] = this.institutionCode;
+        data["institutionName"] = this.institutionName;
+        return data; 
+    }
+
+    clone(): BankResponseModelBody {
+        const json = this.toJSON();
+        let result = new BankResponseModelBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IBankResponseModelBody {
+    institutionCode: string | undefined;
+    institutionName: string | undefined;
 }
 
 export class ApiException extends Error {

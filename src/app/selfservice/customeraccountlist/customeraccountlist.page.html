@@ -1,0 +1,25 @@
+
+
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>My Accounts</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="page-wrapper" >
+
+      <ion-item style="--background: transparent;--color:#fff; cursor: pointer;" *ngFor="let acct of currentUser.userAccounts">
+       <a routerLink="/selfservice/balance" [queryParams]="{accountNumber: acct.accountNo}" style="color: #fff;">
+        {{acct.accountNo}} - {{acct.accountType}}
+      </a> 
+      </ion-item>
+
+    
+  </div>
+</ion-content>

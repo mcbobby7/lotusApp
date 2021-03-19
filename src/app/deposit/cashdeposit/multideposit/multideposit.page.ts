@@ -3,9 +3,12 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { ApiProvider } from 'src/app/_services/api.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { BankAccount, BankService, } from 'src/app/_services/bank.service';
 import { Deposit, DepositService,multiDeposit,accountDetails } from 'src/app/_services/deposit.service';
+import { GlobalalertservicesService } from 'src/app/_services/globalalertservices.service';
 import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
+import { IGetAccountDetailsResponse, LotusServiceProxy } from 'src/app/_services/service-proxies';
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 
 @Component({
@@ -22,6 +25,7 @@ export class MultidepositPage implements OnInit {
   depositObj: Deposit = {singleDeposit: true,proceedChk: false};
   depositMultpleObj: multiDeposit ={accountInfo:[{accountNumber:'',amount:''}], multiDeposit: true};
   tranxError: boolean = false;
+  customerAccountResp: IGetAccountDetailsResponse;
   constructor(    
     private navCtrl: NavController,
     private alertCtrl: AlertController,
@@ -31,7 +35,10 @@ export class MultidepositPage implements OnInit {
     private shortcutService: ShortcutsService,
     private depositService: DepositService,
     private bankService: BankService,
-    private apiService: ApiProvider) { }
+    private apiService: ApiProvider,
+    private LotusService: LotusServiceProxy,
+    private GalertService: GlobalalertservicesService,
+    private AuthenService: AuthenticationService,) { }
   goBack(){
 this.navCtrl.back()
   }
@@ -61,21 +68,40 @@ if(this.inpVali.invalidAmount) {
       if(this.inpVali.invalidAccount) {
         this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
       } else {
-        this.apiService.getAllAccountDetails(inputentry).subscribe((data: any) => { 
-          if (!data.error) {
-            let acctDet = data.body[0];
-            this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = false 
+        this.AuthenService.getuser().then(userDetails => {
+          this.LotusService.getAccountDetails(inputentry, userDetails[0].sessionToken).subscribe((data) => {
+            this.customerAccountResp = data.result;
+            if (!data.hasError && this.customerAccountResp.body) {              
+              let acctDet = this.customerAccountResp.body.find(x=>x.longAccount == inputentry);
+              this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = false 
             this.depositMultpleObj.accountInfo[arg[2]].accountName = acctDet.accountName; 
-            this.depositMultpleObj.accountInfo[arg[2]].bankName =   "Lotus Bank";    
-          } else {
+            this.depositMultpleObj.accountInfo[arg[2]].bankName =   "Lotus Bank"; 
+             } else {
+              this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
+              this.shortcutService.showErrorToast('Invalid account number')
+            }
+          }, (error) => {
+            console.log(error)
             this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
             this.shortcutService.showErrorToast('Invalid account number')
-          }
-        }, (error) => {
-          console.log(error)
-          this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
-          this.shortcutService.showErrorToast('Invalid account number')
-        })
+          })
+         });
+       
+        // this.apiService.getAllAccountDetails(inputentry).subscribe((data: any) => { 
+        //   if (!data.error) {
+        //     let acctDet = data.body[0];
+        //     this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = false 
+        //     this.depositMultpleObj.accountInfo[arg[2]].accountName = acctDet.accountName; 
+        //     this.depositMultpleObj.accountInfo[arg[2]].bankName =   "Lotus Bank";    
+        //   } else {
+        //     this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
+        //     this.shortcutService.showErrorToast('Invalid account number')
+        //   }
+        // }, (error) => {
+        //   console.log(error)
+        //   this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
+        //   this.shortcutService.showErrorToast('Invalid account number')
+        // })
         
       };
     }

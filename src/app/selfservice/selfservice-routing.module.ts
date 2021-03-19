@@ -23,7 +23,11 @@ const routes: Routes = [
   {
     path: 'generatestatement',
     loadChildren: () => import('./generatestatement/generatestatement.module').then( m => m.GeneratestatementPageModule)
+  },  {
+    path: 'customeraccountlist',
+    loadChildren: () => import('./customeraccountlist/customeraccountlist.module').then( m => m.CustomeraccountlistPageModule)
   }
+
 ];
 
 @NgModule({

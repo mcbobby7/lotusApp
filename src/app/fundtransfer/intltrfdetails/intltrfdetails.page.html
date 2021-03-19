@@ -28,8 +28,10 @@
      Input Beneficiary Account
     </ion-label>
     <div style="padding: 5px;"></div>
-    <ion-input style="color: #fff;" type="tel" [(ngModel)]="tobankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+    <ion-input style="color: #fff;" type="tel" [(ngModel)]="tobankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber');valbeneficiaryAccount()" required></ion-input>
     <span *ngIf="inpVali.invalidAccount"><small class="error" >Invalid Account Number</small></span>
+    <div *ngIf="transfer.toAccountName" style="padding: 5px;"></div>
+    <span *ngIf="transfer.toAccountName"><small style="color: #fff;font-size: 18px;" >{{transfer.toAccountName}}</small></span>
   </div>
   <!-- <div class="form-group">
     <ion-label>

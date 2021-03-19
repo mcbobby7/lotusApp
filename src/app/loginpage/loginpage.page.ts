@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { AuthenticationService } from '../_services/authentication.service';
 import { AuthServiceProxy, User, UserLoginPayload } from '../_services/service-proxies';
@@ -16,7 +16,8 @@ export class LoginpagePage implements OnInit {
   LoginResource = new UserLoginPayload().clone();
   newUser = new User().clone();
   loading: any;
-  ForgotPasswordViewModel:any = "";
+  ForgotPasswordViewModel: any = "";
+  nxtRoute: string = "";
   constructor(
     private navCtrl: NavController,
     public loadingController: LoadingController,
@@ -26,6 +27,7 @@ export class LoginpagePage implements OnInit {
     private loginService: AuthServiceProxy,
     private AuthenService: AuthenticationService,
     private router: Router,
+    private activatedroute: ActivatedRoute,
     private GalertService: GlobalalertservicesService
   ) { }
   viewpassword() {
@@ -43,7 +45,7 @@ export class LoginpagePage implements OnInit {
         this.AuthenService.addUser(this.newUser);
         this.GalertService.gPresentToast(data.message, "success");     
         this.GalertService.gdismissLoading();
-        this.router.navigate(['dashbord']);
+        this.router.navigate([this.nxtRoute]);
       } else {
         this.GalertService.gPresentToast(data.message, "danger");   
         this.GalertService.gdismissLoading();
@@ -119,7 +121,7 @@ export class LoginpagePage implements OnInit {
           handler: async (data) => {
             if (data.fuseraccount) {
               this.GalertService.gPresentLoading('Please wait...');
-              this.router.navigate(['otpvalidation'], { queryParams: { useraccount: data.fuseraccount } });              
+              this.router.navigate(['otpvalidation'], { queryParams: { useraccount: data.fuseraccount,nxtRoute: this.nxtRoute } });              
               // this.loginService.sendOTP(data.fuseraccount, "").subscribe(dataResp => {
               //   if (!dataResp.hasError) {
               //     this.GalertService.gdismissLoading();
@@ -141,5 +143,30 @@ export class LoginpagePage implements OnInit {
   }
   ngOnInit() {
   }
+  ionViewWillEnter() {
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.router.navigate(['dashbord'])
+        } else {
+          this.activatedroute.queryParams.subscribe(routedata => {
+            if (routedata) {
+              if (routedata.nxtRoute) {
+                this.nxtRoute = routedata.nxtRoute;
+          }
+        }
+      })
+        }
+      } else {
+        this.activatedroute.queryParams.subscribe(routedata => {
+          if (routedata) {
+            if (routedata.nxtRoute) {
+              this.nxtRoute = routedata.nxtRoute;
+        }
+      }
+    })
+      }
+    })
 
+   }
 }

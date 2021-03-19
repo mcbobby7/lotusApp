@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { IonicStorageModule  } from '@ionic/storage';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 
+import { Camera } from '@ionic-native/camera/ngx';
+
 import { AuthGuardService} from './_services/auth-guard.service';
 import { AuthService} from './_services/auth.service';
 import { AuthenticationService} from './_services/authentication.service';
@@ -25,7 +27,8 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { IonicFingerPrintReader } from '@ionic-native/ionic-finger-print-reader/ngx';
 import { JwtInterceptor } from './_services/jwt.interceptor';
 import { AuthServiceProxy } from './_services/service-proxies';
-import {GlobalalertservicesService } from './_services/globalalertservices.service';
+import { GlobalalertservicesService } from './_services/globalalertservices.service';
+import { LotusServiceProxy } from 'src/app/_services/service-proxies';
 @NgModule({
   declarations: [AppComponent,],
   entryComponents: [],
@@ -56,7 +59,9 @@ import {GlobalalertservicesService } from './_services/globalalertservices.servi
     IonicFingerPrintReader,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     AuthServiceProxy,
-    GlobalalertservicesService
+    GlobalalertservicesService,
+    LotusServiceProxy,
+    Camera
   ],
   bootstrap: [AppComponent]
 })

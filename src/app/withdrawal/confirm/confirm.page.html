@@ -51,7 +51,7 @@
   </div>
   <ion-row>
     <ion-col size="6">
-      <ion-button style="color: #fff;"   shape="round" expand="block" (click)="goBack()"  fill="outline">
+      <ion-button style="color: #fff;"   shape="round" expand="block" (click)="goEdit()"  fill="outline">
         Edit
       </ion-button>
       </ion-col>
@@ -66,6 +66,7 @@
 
 
 <app-processing 
+[cashWithdrawal]="cashtoggleWithdrawal"
   *ngIf="showProcessing"
   (buttonClick)="processingButtonClicked()"
   [processCompleted]="processCompleted"

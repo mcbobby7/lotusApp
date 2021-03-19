@@ -2,7 +2,7 @@
   <ion-header class="ion-no-border">
     <ion-toolbar>
       <ion-title>{{loggedinUserfullName}}</ion-title>
-      <ion-buttons slot="end">
+      <ion-buttons slot="end" *ngIf="loggedinUserfullName">
         <ion-button (click)="logout()">
           <ion-icon name="power-outline" style="font-size: 35px;font-weight: bolder;color: #fff;"></ion-icon>
         </ion-button>
@@ -32,14 +32,14 @@
       </ion-row>
       <ion-row class="dashboard-menu">
         <ion-col col-6 class="menu-item " >
-          <a routerLink="/fundtransfer" style="color: #ffffff;">
+          <a (click)="gotofundstrf()" style="color: #ffffff;cursor: pointer;">
         
           <img src="assets/images/funds_icon.png">
       
         </a>
         </ion-col>
         <ion-col col-6 class="menu-item " >
-          <a routerLink="/enquiries" [queryParams]="{toPage: '/self-service'}" style="color: #ffffff;">
+          <a (click)="gotoselfService()"  style="color: #ffffff;cursor: pointer;">
         
             <img src="assets/images/selfservice_icon.png">
         
@@ -48,7 +48,7 @@
         </ion-row>
         <ion-row class="dashboard-menu">
           <ion-col size="5.3" class="menu-item " >
-            <a routerLink="/enquiries" [queryParams]="{toPage: '/selfservice'}" style="color: #ffffff;">
+            <a (click)="gotoenquiry()"  style="color: #ffffff;cursor: pointer;">
           
             <img src="assets/images/enquiries_icon.png">
         

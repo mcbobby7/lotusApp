@@ -21,6 +21,7 @@ processCompleted: boolean = false;
   nextRoute: any = '';
   toPage = '';
   username: any = '';
+  nxtRoute: string = '';
   constructor(private navCtrl: NavController,
     private activatedroute: ActivatedRoute,
     private toastCtrl: ToastController,
@@ -42,7 +43,7 @@ processCompleted: boolean = false;
       if (data.useraccount) {
         this.username = data.useraccount;
         this.GalertService.gdismissLoading();
- 
+        this.nxtRoute = data.nxtRoute;
         
       }
 
@@ -101,7 +102,7 @@ processCompleted: boolean = false;
         if (!dataResp.hasError) {
           this.GalertService.gdismissLoading();
           this.GalertService.gPresentToast(dataResp.message, "success");
-          this.router.navigate(['dashbord']);
+          this.router.navigate([this.nxtRoute]);
         } else {
           this.GalertService.gdismissLoading();
           this.GalertService.gPresentToast(dataResp.message, "danger");  
