@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { GlobalalertservicesService } from 'src/app/_services/globalalertservices.service';
+import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
 
 @Component({
   selector: 'app-customeraccountlist',
@@ -9,7 +12,10 @@ import { AuthenticationService } from 'src/app/_services/authentication.service'
 })
 export class CustomeraccountlistPage implements OnInit {
   currentUser: any = "";
-  constructor(private navCtrl: NavController, private AuthenService: AuthenticationService) { }
+  bankAccount?: string = '';
+
+  constructor(private navCtrl: NavController, private AuthenService: AuthenticationService,
+    private inpVali: InputvalidationService, private router: Router) { }
   goBack() {
     this.navCtrl.back()
   }
@@ -24,5 +30,14 @@ export class CustomeraccountlistPage implements OnInit {
         }
       }
     })
+  }
+  goHome() {
+    this.router.navigate(['/dashbord'])
+  }
+  valbeneficiaryAccount() {
+    if (!this.inpVali.invalidAccount && this.bankAccount.length == 10) {      
+      this.router.navigate(['/selfservice/balance'], { queryParams: { accountNumber: this.bankAccount } });
+    }
+    return false;
   }
 }

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { AuthenticationService } from '../_services/authentication.service';
-import { AuthServiceProxy, User, UserLoginPayload } from '../_services/service-proxies';
+import { AuthServiceProxy, User, UserLoginPayload,LotusServiceProxy,IGetAccountDetailsResponse  } from '../_services/service-proxies';
 import {GlobalalertservicesService } from '../_services/globalalertservices.service';
 @Component({
   selector: 'app-loginpage',
@@ -18,6 +18,7 @@ export class LoginpagePage implements OnInit {
   loading: any;
   ForgotPasswordViewModel: any = "";
   nxtRoute: string = "";
+    customerAccountResp: IGetAccountDetailsResponse;
   constructor(
     private navCtrl: NavController,
     public loadingController: LoadingController,
@@ -28,7 +29,8 @@ export class LoginpagePage implements OnInit {
     private AuthenService: AuthenticationService,
     private router: Router,
     private activatedroute: ActivatedRoute,
-    private GalertService: GlobalalertservicesService
+    private GalertService: GlobalalertservicesService,
+    private LotusService: LotusServiceProxy,
   ) { }
   viewpassword() {
     this.show = !this.show;
@@ -39,13 +41,13 @@ export class LoginpagePage implements OnInit {
   async loginUser(){
     this.GalertService.gPresentLoading('Please wait...');
     this.LoginResource.authMode = "pin";
-    this.loginService.login(this.LoginResource,"").subscribe(async (data)=>{
+    this.loginService.login(this.LoginResource,"",'').subscribe(async (data)=>{
       if(!data.hasError){
         this.newUser = data.result;
         this.AuthenService.addUser(this.newUser);
         this.GalertService.gPresentToast(data.message, "success");     
-        this.GalertService.gdismissLoading();
         this.router.navigate([this.nxtRoute]);
+        this.GalertService.gdismissLoading();
       } else {
         this.GalertService.gPresentToast(data.message, "danger");   
         this.GalertService.gdismissLoading();
@@ -120,16 +122,30 @@ export class LoginpagePage implements OnInit {
           text: 'Send OTP',          
           handler: async (data) => {
             if (data.fuseraccount) {
+              var uAccountNumber = data.fuseraccount;
               this.GalertService.gPresentLoading('Please wait...');
-              this.router.navigate(['otpvalidation'], { queryParams: { useraccount: data.fuseraccount,nxtRoute: this.nxtRoute } });              
-              // this.loginService.sendOTP(data.fuseraccount, "").subscribe(dataResp => {
-              //   if (!dataResp.hasError) {
-              //     this.GalertService.gdismissLoading();
-              //      this.router.navigate(['otpvalidation'], { queryParams: { useraccount: data.fuseraccount } });
-              //   } else {
-                  
-              //   }
-              // });
+    this.LotusService.getAccountDetails(data.fuseraccount,'','').subscribe((data) => {
+          this.customerAccountResp = data.result;
+           if (!data.hasError && this.customerAccountResp.body) {
+                   this.loginService.sendOTP(uAccountNumber, "",'').subscribe(dataResp => {
+                if (!dataResp.hasError) {
+                  this.GalertService.gdismissLoading();
+                 this.router.navigate(['otpvalidation'], { queryParams: { useraccount: uAccountNumber,nxtRoute: this.nxtRoute } }); 
+                } else {
+                  this.GalertService.gPresentToast("Error - something went wrong while sending OTP, kindly update your account phone Number", "danger",6000);
+                   this.GalertService.gdismissLoading();
+                }
+                 // this.router.navigate(['otpvalidation'], { queryParams: { useraccount: uAccountNumber,nxtRoute: this.nxtRoute } }); 
+              });
+ 
+           }else {
+  
+            this.GalertService.gPresentToast(data.message, "danger");
+          }
+    });
+                          
+             
+        
             } else {
               this.GalertService.gPresentToast("Please Input User Details", "danger");
             }

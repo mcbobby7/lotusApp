@@ -10,7 +10,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <div class="page-wrapper" [formGroup]="formGroup">
+
   
     <ion-row>
       <ion-col size="12">
@@ -18,10 +18,12 @@
           <div style="padding: 10px;"></div>
           <ion-label class="justifyCenter">Select Account</ion-label>
           <div style="padding: 5px;"></div>
-          <ion-select placeholder="Account Number" [(ngModel)]="accountNo" formControlName="accountNo">
+          <!-- <ion-select placeholder="Account Number" [(ngModel)]="accountNo" formControlName="accountNo">
             <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option>       
-          </ion-select>
-          <!-- <app-account-input [(value)]="accountNo" formControlName="accountNo"></app-account-input>  -->
+          </ion-select> -->
+          <ion-input type="tel" style="color: #fff;"  [(ngModel)]="accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+          <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+         
         </div>
       </ion-col>
     </ion-row>
@@ -36,7 +38,7 @@
     </ion-col>
   </ion-row>
   
-  </div>
+
 
   <!-- <div class="form-group" [formGroup]="formGroup">
     <ion-label>

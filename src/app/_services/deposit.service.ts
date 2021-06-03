@@ -42,13 +42,17 @@ export interface multiChqDeposit{
   depositorEmail?: string,
   narration?: string,
   selfdeposit?: string;
+  currency?: string;
 }
 
 export interface chqDetails{
   issuingBank?: string,
-  chqNumber?: string,  
+  chequeNo?: string,  
   amount?: string,
   erroramount?: boolean,
+  debitAccount?: string,
+  currency?: string,
+  narration?:string
 }
 
 

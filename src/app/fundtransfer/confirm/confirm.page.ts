@@ -60,13 +60,13 @@ export class ConfirmPage implements OnInit {
         this.bodyfundtransferPayload.currency =this.transfer.currencyCode;
         this.bodyfundtransferPayload.amount  = String(Math.round(amt));
         this.bodyfundtransferPayload.nameEnquiryRef  = this.transfer.NameEnquiryRef;
-        this.bodyfundtransferPayload.channelCode = "";
+        this.bodyfundtransferPayload.channelCode = "1";
         this.bodyfundtransferPayload.channel = "OzayConsulting";
         this.bodyfundtransferPayload.beneficiaryBVN = this.transfer.beneficiaryaccountbvn;
         this.bodyfundtransferPayload.narration = this.transfer.narration;
         this.bodyfundtransferPayload.originatorAccountNumber = this.transfer.accountNo;
         this.fundtransferPayload.body = this.bodyfundtransferPayload;
-        this.lotusService.nipTransfer(this.fundtransferPayload, userDetails[0].sessionToken).subscribe(data => {
+        this.lotusService.nipTransfer(this.fundtransferPayload, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe(data => {
           if (!data.hasError) {
             this.shortcutService.showToast(`Tranfer Posted Successfully`, 'success')
             window.setTimeout(() => { this.processCompleted = true; this.transferService.store({}) }, 5000)
@@ -88,7 +88,7 @@ export class ConfirmPage implements OnInit {
         this.bodylotusSingle.channel = "OzayConsulting";
         this.bodylotusSingle.narration = this.transfer.narration;
         this.lotusSingle.body = this.bodylotusSingle;
-        this.lotusService.singlePost(this.lotusSingle, userDetails[0].sessionToken).subscribe(data => {
+        this.lotusService.single(this.lotusSingle, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe(data => {
           if (!data.hasError) {
             this.shortcutService.showToast(`Tranfer Posted Successfully`, 'success')
             window.setTimeout(()=>{this.processCompleted = true;this.transferService.store({})}, 5000)

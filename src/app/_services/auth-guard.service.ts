@@ -17,17 +17,19 @@ export class AuthGuardService implements CanLoad {
           this.router.navigate(['auth']);
           resolve(false);
         } else {
-          this.AuthenService.getuser().then((usersdata: IUser[]) => {      
-            if (usersdata.length > 0) {
-              this.GalertService.gPresentLoading('Please wait...');
-              this.loginService.validateToken(usersdata[0].sessionToken).subscribe(dataResp => {
+          console.log('am auth')
+          this.AuthenService.getuser().then((usersdata: IUser[]) => {           
+            if (usersdata.length > 0) {              
+             // this.GalertService.gPresentLoading('Please wait...');
+              this.loginService.validateToken(usersdata[0].sessionToken,this.AuthenService.imei.value).subscribe(dataResp => {                
                 if (!dataResp.hasError) {
+                  this.GalertService.gdismissLoading();
                   resolve(true);
                 } else {
                   this.AuthenService.clearusers();
                   resolve(false);
                 }
-                this.GalertService.gdismissLoading();
+      
               });             
             } else {
               this.AuthenService.clearusers();

@@ -41,10 +41,29 @@
       <div style="padding: 10px;"></div>
       <ion-label style="display: flex;justify-content: center;">Amount</ion-label>
       <div style="padding: 5px;"></div>
-      <app-amount-input [(value)]="amount"></app-amount-input>
+      <ion-input type="tel" placeholder="Enter Amount here" (keyup)="avalidate($event,'accountNumber')" [(ngModel)]="innerValue" required ></ion-input>
+      
       <span *ngIf="amount > acctBal"><small class="error" style="font-size: 14px;">Account balance is too low</small></span>
       </div>
       <div style="padding: 10px;"></div>
+      <div *ngIf="withdrawal.withdrawaltype == 'Cheque'">
+        <div class="form-group" style="padding: 0px;">
+          <div style="padding: 10px;"></div>
+          <ion-label style="display: flex;justify-content: center;">Cheque Number</ion-label>
+          <div style="padding: 5px;"></div>
+          <ion-input type="text" placeholder="Enter Cheque Number"  [(ngModel)]="chequeNo" required ></ion-input>        
+        
+          </div>
+          <div style="padding: 10px;"></div>
+          <div class="form-group" style="padding: 0px;">
+            <div style="padding: 10px;"></div>
+            <ion-label style="display: flex;justify-content: center;">Narration</ion-label>
+            <div style="padding: 5px;"></div>
+            <ion-input type="text" placeholder="Enter Narration"  [(ngModel)]="narration" required ></ion-input>          
+           
+            </div>
+            <div style="padding: 10px;"></div>
+      </div>
     </div>
   </div>
 

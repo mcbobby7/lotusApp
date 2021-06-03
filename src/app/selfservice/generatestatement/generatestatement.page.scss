@@ -76,3 +76,25 @@ ion-card-header{
     --border-color: white;
     font-weight: 800;
 }
+ion-datetime{
+    font-size: 18px;
+    color: #fff;
+}
+
+ion-item{
+    --background: transparent;
+    color: #fff;
+    border-bottom: 1px solid #fff
+
+}
+
+.detailsdiv{
+    padding-right: 5px;
+    font-weight: normal;
+    color: #fff;
+}
+.valdetailsdiv{
+    color: rgb(21, 21, 21);
+    font-weight: normal;
+    padding-left: 5px;
+}

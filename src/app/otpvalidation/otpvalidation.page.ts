@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController,ToastController,AlertController, LoadingController } from '@ionic/angular';
+import { AuthenticationService } from '../_services/authentication.service';
 import { GlobalalertservicesService } from '../_services/globalalertservices.service';
-import { AuthServiceProxy } from '../_services/service-proxies';
+import { AuthServiceProxy, IGetAccountDetailsResponse, LotusServiceProxy, User,UserLoginPayload } from '../_services/service-proxies';
 
 @Component({
   selector: 'app-otpvalidation',
@@ -22,15 +23,28 @@ processCompleted: boolean = false;
   toPage = '';
   username: any = '';
   nxtRoute: string = '';
+  newUser = new User().clone();
+  customerAccountResp: IGetAccountDetailsResponse;
+  LoginResource = new UserLoginPayload().clone();
+  regUser = new User().clone();
   constructor(private navCtrl: NavController,
     private activatedroute: ActivatedRoute,
+    private alertController: AlertController,
     private toastCtrl: ToastController,
     private router: Router,
     private loading: LoadingController,
+    private AuthenService: AuthenticationService,
     private GalertService: GlobalalertservicesService,
-    private loginService: AuthServiceProxy,) { }
+    private loginService: AuthServiceProxy,
+    private LotusService: LotusServiceProxy,) { }
   
   ionViewWillEnter() {
+  this.code1 = '';
+  this.code2 = '';
+  this.code3 = '';
+  this.code4 = '';
+  this.code5 = '';
+  this.code6 = '';
     this.activatedroute.queryParams.subscribe(data => {
       console.log(data)
       if (data.nxtRoute) {
@@ -42,12 +56,36 @@ processCompleted: boolean = false;
       }
       if (data.useraccount) {
         this.username = data.useraccount;
+        this.loginService.getAllUsers(this.username, false, undefined, '', '').subscribe(data => {
+          console.log(data.result)
+        })
+
         this.GalertService.gdismissLoading();
         this.nxtRoute = data.nxtRoute;
         
       }
+      if (data.newUser) {
+        this.regUser = JSON.parse(data.newUser);
+        console.log(this.regUser)
+      }
 
     })
+  }
+  saveUser() {
+    this.loginService.saveUser(this.regUser,"","").subscribe(async (data)=>{
+      if(!data.hasError){  
+        this.GalertService.gPresentToast(data.message, "success");       
+        this.GalertService.gdismissLoading();
+        this.router.navigate([this.nxtRoute]);
+      } else {
+        this.GalertService.gPresentToast(data.message, "danger");   
+        this.GalertService.gdismissLoading();
+      }
+     
+    }, async error => {
+      this.GalertService.gPresentToast("Oops! something went wrong", "danger");   
+      this.GalertService.gdismissLoading();
+            });  
   }
   async goToSelfService(){
     const loading = await this.loading.create({
@@ -78,13 +116,13 @@ processCompleted: boolean = false;
   async sendOTP() {
     this.GalertService.gPresentLoading('Please wait...');   
    if (this.username) { 
-     this.loginService.sendOTP(this.username, "").subscribe(data => {
+     this.loginService.sendOTP(this.username, "",this.AuthenService.imei.value).subscribe(data => {
        if (!data.hasError) {
         this.GalertService.gdismissLoading();
         this.GalertService.gPresentToast(data.message, "success");  
        } else {
         this.GalertService.gdismissLoading();
-        this.GalertService.gPresentToast(data.message, "danger");  
+        this.GalertService.gPresentToast("Error - something went wrong while sending OTP, kindly update your account phone Number", "danger",6000); 
   }
      });
     
@@ -98,11 +136,18 @@ processCompleted: boolean = false;
     this.GalertService.gPresentLoading('Please wait...');
     let receivedotp = this.code1 + this.code2 + this.code3 + this.code4 + this.code5 + this.code6;
     if (receivedotp) {
-      this.loginService.verifyOTP(this.username, '', Number(receivedotp), '').subscribe(dataResp => {
+      this.loginService.verifyOTP(this.username,Number(receivedotp), '', this.AuthenService.imei.value).subscribe(dataResp => {
         if (!dataResp.hasError) {
+          this.newUser = dataResp.result;
+          this.AuthenService.addUser(this.newUser);
           this.GalertService.gdismissLoading();
           this.GalertService.gPresentToast(dataResp.message, "success");
-          this.router.navigate([this.nxtRoute]);
+          if (this.regUser) {
+            this.saveUser();
+          } else {
+            this.router.navigate([this.nxtRoute]);
+          }
+       
         } else {
           this.GalertService.gdismissLoading();
           this.GalertService.gPresentToast(dataResp.message, "danger");  
@@ -115,6 +160,78 @@ processCompleted: boolean = false;
      }   
   }
  
+  async otherAuthOption() {
+    await this.loginService.refreshCustomerInfo(this.username, '', '').toPromise();
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      backdropDismiss: false,
+      header: 'Authentication',
+      message: 'Please input your Date of Birth',
+      inputs: [
+        {
+          name: 'dob',
+          type: 'date',
+          placeholder: '',
+          
+        }],
+      buttons:  [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Verify',          
+          handler: async (data) => {
+            if (data.dob) {
+              var userdateofBirth = data.dob;
+              this.GalertService.gPresentLoading('Please wait...');            
+    this.LotusService.getAccountDetails(this.username,'','').subscribe((data) => {
+      this.customerAccountResp = data.result;      
+      if (!data.hasError && this.customerAccountResp.body) {
+        this.LoginResource.username = "dob";
+        this.LoginResource.pIN = "dob";
+        this.LoginResource.authMode = "dob";
+        this.LoginResource.dOB = userdateofBirth;
+        this.loginService.login(this.LoginResource, "",'').subscribe(dataResp => {
+          if (!dataResp.hasError) {
+            this.newUser = dataResp.result;
+            this.AuthenService.addUser(this.newUser);
+                  this.GalertService.gdismissLoading();
+                  this.GalertService.gPresentToast(dataResp.message, "success");
+                  if (this.regUser) {
+                    this.saveUser();
+                  } else {
+                    this.router.navigate([this.nxtRoute]);
+                  }
+                } else {
+                  this.GalertService.gPresentToast("Error - something went wrong while verifying DOB, kindly update Date of Birth on your Account", "danger",6000);
+                   this.GalertService.gdismissLoading();
+                }
+                 
+              });
+ 
+           }else {
+  
+            this.GalertService.gPresentToast(data.message, "danger");
+          }
+    });
+                          
+             
+        
+            } else {
+              this.GalertService.gPresentToast("Please Input User Details", "danger");
+            }
+          
+           
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
   ngOnInit() {}
   goback(){
     this.navCtrl.back();

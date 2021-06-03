@@ -10,11 +10,19 @@ const TOAST_CSS_CLASSES = {
   providedIn: 'root'
 })
 export class ShortcutsService {
-
+  months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   constructor(
     private toastCtrl: ToastController
   ) { }
-
+//format DAte 01 APR 2021
+  formatDAte(date: Date): string{
+    var newDate = "";
+    var dateday = date.getDay();
+    var datemnth = this.months[date.getMonth()];
+    var dateYr = date.getFullYear();
+    newDate = dateday + " " + datemnth + " " + dateYr;
+    return newDate;
+}
   async showToast(message, cssClass){
     const toast = await this.toastCtrl.create({
       message,

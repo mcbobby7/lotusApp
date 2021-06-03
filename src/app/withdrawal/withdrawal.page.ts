@@ -8,16 +8,13 @@ import { ShortcutsService } from '../_services/shortcuts.service';
 import { Withdrawal, WithdrawalService } from '../_services/withdrawal.service';
 import { IUser, LotusServiceProxy,IGetAccountDetailsResponse } from '../_services/service-proxies';
 import { GlobalalertservicesService } from '../_services/globalalertservices.service';
+import { InputvalidationService } from '../_services/inputvalidation.service';
 @Component({
   selector: 'app-withdrawal',
   templateUrl: './withdrawal.page.html',
   styleUrls: ['./withdrawal.page.scss'],
 })
 export class WithdrawalPage implements OnInit {
-  formGroup = new FormGroup({
-    accountNo: new FormControl('')
-  })
-
   withdrawal: Withdrawal = {}
   loadingAccountName = false;
   currentUser: any = "";
@@ -32,6 +29,7 @@ export class WithdrawalPage implements OnInit {
     private AuthenService: AuthenticationService,
     private lotusService: LotusServiceProxy,
     private GalertService: GlobalalertservicesService,
+    public inpVali: InputvalidationService,
   ) { }
   accountNo = "";
   ngOnInit() {}
@@ -44,7 +42,7 @@ export class WithdrawalPage implements OnInit {
       this.GalertService.gPresentLoading('Please wait...');
       this.loadingAccountName = true;
       this.AuthenService.getuser().then(userDetails => {
-        this.lotusService.getAccountDetails(this.accountNo, userDetails[0].sessionToken).subscribe((data) => {
+        this.lotusService.getAccountDetails(this.accountNo, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
           if (!data.hasError) {
             this.GalertService.gPresentToast(data.message, "success");
             this.loadingAccountName = false;
@@ -77,11 +75,13 @@ export class WithdrawalPage implements OnInit {
     this.navCtrl.back()
   }
   ionViewWillEnter() {
+    
     this.AuthenService.getuser().then(userdata => {
       if (userdata) {
         if (userdata.length > 0) {
           this.currentUser = userdata[0];
           console.log(this.currentUser)
+          this.GalertService.gdismissLoading();
         }
       }
     })

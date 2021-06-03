@@ -29,12 +29,15 @@ import { JwtInterceptor } from './_services/jwt.interceptor';
 import { AuthServiceProxy } from './_services/service-proxies';
 import { GlobalalertservicesService } from './_services/globalalertservices.service';
 import { LotusServiceProxy } from 'src/app/_services/service-proxies';
+
+import { ComponentsModule} from '../app/components/components.module';
 @NgModule({
   declarations: [AppComponent,],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,IonicStorageModule.forRoot(),
     ReactiveFormsModule,
     FormsModule,
+    ComponentsModule,
     HttpClientModule],
   providers: [
     HTTP,

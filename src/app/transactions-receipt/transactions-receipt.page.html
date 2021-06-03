@@ -1,0 +1,71 @@
+
+<ion-content>
+    <div style="position: absolute;top: 50px; display: flex; width: 100%; flex-direction: column;">
+<div style="display: flex;justify-content:flex-end;width: 100%;flex-direction:column; align-items:flex-end">
+    <img src="assets/images/newLotus.png" style="width:4rem;"  (click)="getfingers()">
+    <h6 style="color: #000;"><b>Lotus Bank</b></h6>
+</div>
+
+<div style="border-bottom: 1px solid rgb(90, 88, 88);display:flex;justify-content:center;align-items:center;width:100%; padding: 5px;">
+    <small style="color: #000;"><b>Transaction Reciept</b></small>
+</div>
+<div style="display:flex;flex-direction:row; padding-top: 5px;">
+<div class="detailsdiv"><small>Transaction Date:</small></div>
+<div class="valdetailsdiv"><small>{{tdate | date :'medium'}}</small></div>
+</div>
+
+<div style="display:flex;flex-direction:row; padding-top: 5px;">
+    <div class="detailsdiv"><small>Refernce Number:</small></div>
+    <div class="valdetailsdiv"><small>REF-2452528410000001200002</small></div>
+    </div>
+
+    <div style="display:flex;flex-direction:row; padding-top: 5px;">
+        <div class="detailsdiv"><small>Sender:</small></div>
+        <div class="valdetailsdiv"><small>BADMUS TEMITOPE</small></div>
+        </div>
+  
+        <div style="display:flex;flex-direction:row; padding-top: 5px;">
+            <div class="detailsdiv"><small>Transaction Amount:</small></div>
+            <div class="valdetailsdiv"><small>12,000 NGN</small></div>
+            </div>
+
+            <div style="display:flex;flex-direction:row; padding-top: 5px;">
+                <div class="detailsdiv"><small>Amount In Words:</small></div>
+                <div class="valdetailsdiv"><small>Twelve Thousand Naira Only</small></div>
+            </div>
+
+            <div style="display:flex;flex-direction:row; padding-top: 5px;">
+                <div class="detailsdiv"><small>Beneficiary:</small></div>
+                <div class="valdetailsdiv"><small>OGUNGBENRO, PHILIP MUYIWA - 0121988727 - GTB</small></div>
+            </div>
+            <div style="display:flex;flex-direction:row; padding-top: 5px;">
+                <div class="detailsdiv"><small>Account Number:</small></div>
+                <div class="valdetailsdiv"><small>0121988727</small></div>
+            </div>
+            <div style="display:flex;flex-direction:row; padding-top: 5px;">
+                <div class="detailsdiv"><small>Receiving Bank:</small></div>
+                <div class="valdetailsdiv"><small>GUARANTY TRUST BANK </small></div>
+            </div>
+
+            <div style="display:flex;flex-direction:row; padding-top: 5px;">
+                <div class="detailsdiv"><small>Narration:</small></div>
+                <div class="valdetailsdiv"><small>Trf</small></div>
+            </div>
+
+
+   
+    </div>
+    <div style="position: absolute;bottom: 30px;width:100%;">
+        <div style="display:flex;justify-content:center;align-items:center;width:100%; padding: 5px;">
+            <small style="color: #000;text-align: justify;"><b>Disclaimer</b></small>
+        </div>
+    
+        <div style="display:flex;justify-content:center;align-items:center;width:100%; ">
+            <small style="color: #000; ">Yours transfer has been successful and the beneficiary's account will be credited. However, this does not serve as confirmation of the credit into the beneficiary account.</small>
+        </div>
+    
+        <div style="display:flex;justify-content:center;align-items:center;width:100%; padding: 5px;">
+            <small style="color: #000;"><b>Generated from Lotus Bank</b></small>
+        </div>
+       </div>
+</ion-content>

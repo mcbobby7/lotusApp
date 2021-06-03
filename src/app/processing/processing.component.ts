@@ -24,8 +24,7 @@ this.router.navigate(['dashbord'])
   ionViewWillEnter() {
    }
   confirmCashCollected() {
-    this.cashColleted = !this.cashColleted;
-    this.cashWithdrawal = !this.cashWithdrawal;
+
     const cameraOptions: CameraOptions = {
       quality: 10,
       destinationType: this.camera.DestinationType.FILE_URI,
@@ -34,6 +33,8 @@ this.router.navigate(['dashbord'])
     };
     this.camera.getPicture(cameraOptions).then((imageData) => {
       console.log(imageData);
+      this.cashColleted = !this.cashColleted;
+      this.cashWithdrawal = !this.cashWithdrawal;
     })
 
    

@@ -9,34 +9,86 @@
       <ion-title>Select Period</ion-title>
     </ion-toolbar>
   </ion-header>
-
+  <form id="statementForm" name="statementForm" #statementForm="ngForm">
   <div  class="page-wrapper" style="display: flexbox; align-items: center; justify-items: center; background-color: rgb(0,0,0,.2);">
-    <!-- <div style="width: 100%;border: 1px solid rgba(255, 255, 255, .3);;border-radius: 4px; padding:5px;margin-top:10px;"> -->
-      <span style="font-size: 14px; text-align: center;">Select the duration of your statement</span><br>
-        <ion-button fill="clear" routerLink="statement" shape="round" expand="block" class="my-button">
-          Past 3 Months
-        </ion-button>
-        <div style="margin: 13px;"></div>
-        <ion-button fill="clear" routerLink="statement" shape="round" expand="block" class="my-button">
-          Past 6 Months
-        </ion-button>
-      <!-- </div> -->
+    <span style="font-size: 22px; text-align: center;">{{user?.fullName}}</span><br>
       </div>
     <div class="page-wrapper" style="display: flexbox; align-items: center; justify-items: center; background-color: rgb(0,0,0,.2);">
-      <span style="font-size: 14px; text-align: center;">Or choose custom dates:</span><br>
-      <ion-button fill="clear" shape="round" expand="block" class="my-button">
-       From
-      </ion-button>
-      <div style="margin: 13px;"></div>
-      <ion-button fill="clear" shape="round" expand="block" class="my-button">
-       To
-      </ion-button>
+
+      <ion-input type="tel" style="color: #fff;" name="accountNo" id="accountNo" #accountNo="ngModel"  [(ngModel)]="GetAccountStatement.accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+      <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+      <div style="padding: 10px;"></div>
+      <ion-list style="background: transparent;">
+      <ion-item>
+        <ion-label  style="font-size: 18px;">From</ion-label>
+        <ion-datetime displayFormat="DD/MM/YYYY"  name="startdate" id="startdate" #startdate="ngModel" [(ngModel)]="GetAccountStatement.startdate" placeholder="Select Date" required></ion-datetime>
+        <div *ngIf="startdate.invalid && (startdate.dirty || startdate.touched)" class="error">
+          <div *ngIf="startdate.errors.required">Start Date is required</div>
+          </div> 
+      </ion-item>
+      <ion-item>
+        <ion-label  style="font-size: 18px;">To</ion-label>
+        <ion-datetime displayFormat="DD/MM/YYYY" name="enddate" id="enddate" #enddate="ngModel" [(ngModel)]="GetAccountStatement.enddate"  placeholder="Select Date" required></ion-datetime>
+        <div *ngIf="enddate.invalid && (enddate.dirty || enddate.touched)" class="error">
+          <div *ngIf="enddate.errors.required">End Date is required</div>
+          </div> 
+      </ion-item>
+      <div style="padding: 10px;"></div>
+      <div style="display: flex;flex-direction: row;">
+        <div style="padding-right:10px;">
+          <ion-checkbox slot="start" name="sendStatementToEmail" id="sendStatementToEmail" #sendStatementToEmail="ngModel" [(ngModel)]="GetAccountStatement.sendStatementToEmail" ></ion-checkbox>
+        </div>
+        
+        <ion-label>Send to Email </ion-label>
+      </div>  
+
+      <div style="padding: 10px;"></div>
+      <!-- <ion-input type="email" name="myemail" placeholder="Enter your email here" #myemail="ngModel" [(ngModel)]="GetAccountStatement.accountNo" required></ion-input>
+      <div *ngIf="myemail.invalid && (myemail.dirty || myemail.touched)" class="error">
+        <div *ngIf="myemail.errors.required">Email is required</div>
+        </div> -->
+</ion-list>
+
   
   </div>
 
   <div style="text-align:center;z-index:1000; width:100%;">
     <div style="padding-top:20px;"></div>
-    <ion-button routerLink="statement" color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
-      PROCEED
+    <ion-button *ngIf="!showProcessing" [disabled]="statementForm.invalid" (click)="statementRequest()"  color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+     PROCEED
+    </ion-button>
+    <ion-button *ngIf="showProcessing"  color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+   PROCESSING ...
     </ion-button>
     </div>
+  </form>
+<div *ngIf="statementBody.length > 0 " style="background-color: rgb(0,0,0,.2);">
+  <div style="border-bottom: 1px solid rgb(194, 192, 192);display:flex;justify-content:center;align-items:center;width:100%; padding: 5px;">
+    <small style="color: #fff;font-size: 16px;font-weight: normal;"><b>Transaction Statement</b></small>
+</div>
+
+<div *ngFor="let trx of statementBody;let i = index" style="border-bottom: 1px solid rgb(194, 192, 192);padding-bottom: 5px;" >
+  <div style="display:flex;flex-direction:row; padding-top: 5px;">
+    <div class="detailsdiv"><small>Transaction Date:</small></div>
+    <div class="valdetailsdiv"><small>{{trx.transactionDate | date :'medium'}}</small></div>
+    </div>
+  <div style="display:flex;flex-direction:row; padding-top: 5px;">
+    <div class="detailsdiv"><small>Refernce Number:</small></div>
+    <div class="valdetailsdiv"><small>{{trx.transactionRef}}</small></div>
+    </div>
+  
+        <div style="display:flex;flex-direction:row; padding-top: 5px;">
+            <div class="detailsdiv"><small>Transaction Amount:</small></div>
+            <div class="valdetailsdiv">
+              <small *ngIf="trx.debitAmt" style="color: red;">Dr {{trx.debitAmt | number: '.2'}} NGN</small>
+              <small *ngIf="trx.creditAmt" style="color: green;">Cr {{trx.creditAmt | number: '.2'}} NGN</small>
+            </div>
+            </div>
+            
+            <div style="display:flex;flex-direction:row; padding-top: 5px;">
+              <div class="detailsdiv"><small>Narration:</small></div>
+              <div class="valdetailsdiv"><small>{{trx.narration}}</small></div>
+          </div>
+</div>
+</div>
+<div style="padding: 30px;"></div>

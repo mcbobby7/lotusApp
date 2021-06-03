@@ -7,8 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { FundtransferPageRoutingModule } from './fundtransfer-routing.module';
 
 import { FundtransferPage } from './fundtransfer.page';
-import { AmountInputComponent } from '../components/amount-input/amount-input.component';
-import { AccountInputComponent } from '../components/account-input/account-input.component';
+import { ComponentsModule } from '../components/components.module';
 
 @NgModule({
   imports: [
@@ -16,8 +15,9 @@ import { AccountInputComponent } from '../components/account-input/account-input
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    FundtransferPageRoutingModule
+    FundtransferPageRoutingModule,
+    ComponentsModule
   ],
-  declarations: [FundtransferPage, AccountInputComponent]
+  declarations: [FundtransferPage]
 })
 export class FundtransferPageModule {}

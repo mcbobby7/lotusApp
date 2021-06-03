@@ -12,7 +12,7 @@ export class AuthenticationService {
     user: IUser;
     users: IUser[] = [];
     public globalUser = new BehaviorSubject<IUser>(new User().clone());
-
+    public  imei = new BehaviorSubject<any>('');
     constructor(private router: Router,private storage: Storage) { }
 
     getuser(): Promise<IUser[]> {

@@ -39,25 +39,26 @@
       <ng-content *ngIf="!processCompleted" select="[processing-title]"></ng-content>
     </ion-label></div>
   <div style="font-size: 15px;">
-    <ng-content *ngIf="processCompleted && (cashWithdrawal && !cashColleted)" select="[processed-detail]"></ng-content>
+    <!-- <ng-content *ngIf="processCompleted && (cashWithdrawal && !cashColleted)" select="[processed-detail]"></ng-content> -->
+    <ng-content *ngIf="processCompleted" select="[processed-detail]"></ng-content>
     <ng-content *ngIf="!processCompleted" select="[processing-detail]"></ng-content>
   </div>
   </div>
-  <div style="margin: 10px; width: 70vw;" *ngIf="!cashWithdrawal && cashColleted">
-    <ion-button class="btnStyle" *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' >{{successButtonText}}</ion-button>
-    <div style="padding: 5px;"></div>
+  <div style="margin: 10px; width: 70vw;">
+    <!-- <ion-button class="btnStyle" *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' >{{successButtonText}}</ion-button>
+    <div style="padding: 5px;"></div> -->
     <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Email</ion-button>
-    <div style="padding: 5px;"></div>
-    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Whatsapp</ion-button>
+    <!-- <div style="padding: 5px;"></div>
+    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Whatsapp</ion-button> -->
     <div style="padding: 5px;"></div>
     <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Skip</ion-button>
   </div>
 </div>
 
-<div style="margin: 12px;padding: 10px; display: flex;" class="justifyCenter" *ngIf="(cashWithdrawal && !cashColleted) && processCompleted">
+<!-- <div style="margin: 12px;padding: 10px; display: flex;" class="justifyCenter" *ngIf="(cashWithdrawal && !cashColleted) && processCompleted">
   <img src="assets/images/cashCollected.png" style="height: 5rem;cursor: pointer;" (click)="confirmCashCollected()">
 
-</div>
+</div> -->
 
 </div>
 </div>

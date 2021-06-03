@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { GlobalalertservicesService } from 'src/app/_services/globalalertservices.service';
+import { InputvalidationService } from 'src/app/_services/inputvalidation.service';
+import { LotusServiceProxy,UpdateAccountInfoPayload,UpdateAccountInfoPayloadBody } from 'src/app/_services/service-proxies';
 
 export function phoneNumberValidator(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
@@ -25,31 +29,62 @@ export function phoneNumberValidator(): ValidatorFn {
   styleUrls: ['./account-update.page.scss'],
 })
 export class AccountUpdatePage{
-
-  formValid = false
-  profileForm = new FormGroup({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email
-    ]),
-    phoneNo: new FormControl('', [
-      Validators.required,
-      phoneNumberValidator()
-    ]),
-  });
-
-  get email() { return this.profileForm.get('email'); }
-
-  get phoneNo() { return this.profileForm.get('phoneNo'); }
-
+  updateForm: FormGroup;
   prefferedLocation: string;
   page = 0
-  details: any = {}
+  details: any = {};
+  UpdateAccountInfo = new UpdateAccountInfoPayload().clone();
+  bodyUpdateAccountInfo = new UpdateAccountInfoPayloadBody().clone();
+  accountDetailsResp = "";
+  accountName = "";
   constructor(
     private router: Router,
-    private navController: NavController
+    private navController: NavController,
+    private AuthenService: AuthenticationService,
+    private lotusService: LotusServiceProxy,
+    private GalertService: GlobalalertservicesService,
+    public inpVali: InputvalidationService,
   ) { }
+  submitUpdateRequest() {
+    this.GalertService.gPresentLoading('Please wait...');
+    this.AuthenService.getuser().then(userDetails => {
+      this.bodyUpdateAccountInfo.category = "Update";
+      this.UpdateAccountInfo.body = this.bodyUpdateAccountInfo;
+      this.lotusService.updateAccountInfo(this.UpdateAccountInfo, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe(data => {
+        this.GalertService.gdismissLoading();
+        if (!data.hasError) {
+          this.GalertService.gPresentToast(data.message, "success");
+          this.UpdateAccountInfo = new UpdateAccountInfoPayload().clone();
+          this.page += 1;
+        }
+        else {
+          this.GalertService.gPresentToast("Oops! Update Failed", "danger");
+        }
+      });
+    });
+}
+  getAccountDetails() {
+    if (this.bodyUpdateAccountInfo.accountNo.length == 10) {
+      this.GalertService.gPresentLoading('Please wait...');
+      this.AuthenService.getuser().then(userDetails => {
+        this.lotusService.getAccountDetails(this.bodyUpdateAccountInfo.accountNo, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
+          if (!data.hasError && data.result.body.length >0) {
+           var accountResp = data.result.body.find(x=>x.longAccount == this.bodyUpdateAccountInfo.accountNo);
+            this.accountName = accountResp.accountName;
+            this.bodyUpdateAccountInfo.currency = accountResp.currencyCode;
+          } else {
+            this.GalertService.gPresentToast(data.message, "danger");
+            this.accountName = '';
+          }
+          this.GalertService.gdismissLoading();
+        }, error => {
+          this.GalertService.gdismissLoading();
+          this.accountName = '';
+        });
+       })
+    }
 
+  }
   ionViewWillEnter() {
     this.page = 0
   }

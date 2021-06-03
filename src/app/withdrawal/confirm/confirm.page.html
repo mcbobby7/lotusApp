@@ -33,9 +33,17 @@
       <ion-grid >
         <ion-row>
           <ion-col size="12"  style="border-bottom:1px solid rgb(255,255,255,0.20);">
+            <span *ngIf="withdrawal.chequeNo">
+              Cheque Number: <br>
+              <span style="font-size: 14px; font-weight: normal;">{{withdrawal.chequeNo}} </span><br>
+            </span>
+        
             Amount: <br>
             <span style="font-size: 16px; font-weight: bold;">&#8358; {{withdrawal.amount | number: '.2'}}</span> <br>
-           
+            <span *ngIf="withdrawal.narration" >
+              Narration: <br>
+              <span style="font-size: 14px; font-weight: normal;">{{withdrawal.narration}} </span><br>
+           </span>
           </ion-col>
        
         </ion-row> 
@@ -75,7 +83,7 @@
     <!-- Print Receipt -->
   </span>
   <span processed-detail style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    Please take your cash
+    Please proceed to a teller to collect your cash
   </span>
   <span processing-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
     Please hold on for confirmation

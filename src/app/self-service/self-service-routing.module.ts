@@ -31,7 +31,11 @@ const routes: Routes = [
   {
     path: 'account-activation',
     loadChildren: () => import('./account-activation/account-activation.module').then( m => m.AccountActivationPageModule)
+  },  {
+    path: 'freeze-account',
+    loadChildren: () => import('./freeze-account/freeze-account.module').then( m => m.FreezeAccountPageModule)
   }
+
 ];
 
 @NgModule({

@@ -27,12 +27,18 @@ export class AuthServiceProxy {
 
     /**
      * @param username (optional) 
+     * @param isbackofficestaff (optional) 
+     * @param getAll (optional) 
      * @return OK
      */
-    getAllUsers(username: string | null | undefined, session_token: string): Observable<ApiResultOfIListOfUser> {
+    getAllUsers(username: string | null | undefined, isbackofficestaff: boolean | null | undefined, getAll: number | null | undefined, session_token: string, imei: string): Observable<ApiResultOfIListOfUser> {
         let url_ = this.baseUrl + "/api/auth/GetAllUsers?";
         if (username !== undefined && username !== null)
             url_ += "username=" + encodeURIComponent("" + username) + "&";
+        if (isbackofficestaff !== undefined && isbackofficestaff !== null)
+            url_ += "isbackofficestaff=" + encodeURIComponent("" + isbackofficestaff) + "&";
+        if (getAll !== undefined && getAll !== null)
+            url_ += "getAll=" + encodeURIComponent("" + getAll) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -40,6 +46,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -83,7 +90,7 @@ export class AuthServiceProxy {
     /**
      * @return OK
      */
-    login(payload: UserLoginPayload, session_token: string): Observable<ApiResultOfUser> {
+    login(payload: UserLoginPayload, session_token: string, imei: string): Observable<ApiResultOfUser> {
         let url_ = this.baseUrl + "/api/auth/Login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -95,6 +102,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -139,7 +147,64 @@ export class AuthServiceProxy {
     /**
      * @return OK
      */
-    validateToken(session_token: string): Observable<ApiResultOfUser> {
+    refreshCustomerInfo(accountno: string, session_token: string, imei: string): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/auth/RefreshCustomerInfo?";
+        if (accountno === undefined || accountno === null)
+            throw new Error("The parameter 'accountno' must be defined and cannot be null.");
+        else
+            url_ += "accountno=" + encodeURIComponent("" + accountno) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRefreshCustomerInfo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRefreshCustomerInfo(<any>response_);
+                } catch (e) {
+                    return <Observable<boolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<boolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRefreshCustomerInfo(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    validateToken(session_token: string, imei: string): Observable<ApiResultOfUser> {
         let url_ = this.baseUrl + "/api/auth/ValidateToken";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -148,6 +213,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -191,7 +257,7 @@ export class AuthServiceProxy {
     /**
      * @return OK
      */
-    logout(session_token: string): Observable<ApiResultOfBoolean> {
+    logout(session_token: string, imei: string): Observable<ApiResultOfBoolean> {
         let url_ = this.baseUrl + "/api/auth/Logout";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -200,6 +266,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -243,7 +310,7 @@ export class AuthServiceProxy {
     /**
      * @return OK
      */
-    changePassword(payload: ChangePINPayload, session_token: string): Observable<ApiResultOfBoolean> {
+    changePassword(payload: ChangePINPayload, session_token: string, imei: string): Observable<ApiResultOfBoolean> {
         let url_ = this.baseUrl + "/api/auth/ChangePassword";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -255,6 +322,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -299,7 +367,7 @@ export class AuthServiceProxy {
     /**
      * @return OK
      */
-    sendOTP(username: string, session_token: string): Observable<ApiResultOfInt32> {
+    sendOTP(username: string, session_token: string, imei: string): Observable<ApiResultOfInt32> {
         let url_ = this.baseUrl + "/api/auth/SendOTP?";
         if (username === undefined || username === null)
             throw new Error("The parameter 'username' must be defined and cannot be null.");
@@ -312,6 +380,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -355,16 +424,12 @@ export class AuthServiceProxy {
     /**
      * @return OK
      */
-    verifyOTP(username: string, phoneno: string, otp: number, session_token: string): Observable<ApiResultOfMessageOut> {
+    verifyOTP(username: string, otp: number, session_token: string, imei: string): Observable<ApiResultOfUser> {
         let url_ = this.baseUrl + "/api/auth/VerifyOTP?";
         if (username === undefined || username === null)
             throw new Error("The parameter 'username' must be defined and cannot be null.");
         else
             url_ += "username=" + encodeURIComponent("" + username) + "&";
-        if (phoneno === undefined || phoneno === null)
-            throw new Error("The parameter 'phoneno' must be defined and cannot be null.");
-        else
-            url_ += "phoneno=" + encodeURIComponent("" + phoneno) + "&";
         if (otp === undefined || otp === null)
             throw new Error("The parameter 'otp' must be defined and cannot be null.");
         else
@@ -376,6 +441,7 @@ export class AuthServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -387,14 +453,14 @@ export class AuthServiceProxy {
                 try {
                     return this.processVerifyOTP(<any>response_);
                 } catch (e) {
-                    return <Observable<ApiResultOfMessageOut>><any>_observableThrow(e);
+                    return <Observable<ApiResultOfUser>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<ApiResultOfMessageOut>><any>_observableThrow(response_);
+                return <Observable<ApiResultOfUser>><any>_observableThrow(response_);
         }));
     }
 
-    protected processVerifyOTP(response: HttpResponseBase): Observable<ApiResultOfMessageOut> {
+    protected processVerifyOTP(response: HttpResponseBase): Observable<ApiResultOfUser> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -405,7 +471,7 @@ export class AuthServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResultOfMessageOut.fromJS(resultData200);
+            result200 = ApiResultOfUser.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -413,7 +479,231 @@ export class AuthServiceProxy {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ApiResultOfMessageOut>(<any>null);
+        return _observableOf<ApiResultOfUser>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    setNewPassword(payload: SetNewPINPayload, session_token: string, imei: string): Observable<ApiResultOfBoolean> {
+        let url_ = this.baseUrl + "/api/auth/SetNewPassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetNewPassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetNewPassword(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfBoolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfBoolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetNewPassword(response: HttpResponseBase): Observable<ApiResultOfBoolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfBoolean.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfBoolean>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    saveUser(payload: User, session_token: string, imei: string): Observable<ApiResultOfUser> {
+        let url_ = this.baseUrl + "/api/auth/SaveUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveUser(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveUser(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfUser>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfUser>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSaveUser(response: HttpResponseBase): Observable<ApiResultOfUser> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfUser.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfUser>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    setSessionData(payload: UserSessionState, session_token: string, imei: string): Observable<ApiResultOfBoolean> {
+        let url_ = this.baseUrl + "/api/auth/SetSessionData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetSessionData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetSessionData(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfBoolean>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfBoolean>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSetSessionData(response: HttpResponseBase): Observable<ApiResultOfBoolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfBoolean.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfBoolean>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    fetchSessionData(session_token: string, imei: string): Observable<ApiResultOfUserSessionState> {
+        let url_ = this.baseUrl + "/api/auth/FetchSessionData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFetchSessionData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFetchSessionData(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfUserSessionState>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfUserSessionState>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFetchSessionData(response: HttpResponseBase): Observable<ApiResultOfUserSessionState> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfUserSessionState.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfUserSessionState>(<any>null);
     }
 }
 
@@ -431,7 +721,7 @@ export class LotusServiceProxy {
     /**
      * @return OK
      */
-    getAccountDetails(accountno: string, session_token: string): Observable<ApiResultOfGetAccountDetailsResponse> {
+    getAccountDetails(accountno: string, session_token: string, imei: string): Observable<ApiResultOfGetAccountDetailsResponse> {
         let url_ = this.baseUrl + "/api/lotus/getAccountDetails?";
         if (accountno === undefined || accountno === null)
             throw new Error("The parameter 'accountno' must be defined and cannot be null.");
@@ -444,6 +734,7 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -487,7 +778,7 @@ export class LotusServiceProxy {
     /**
      * @return OK
      */
-    nameenquiry(payload: NameEnquiryPayload, session_token: string): Observable<ApiResultOfNameEnquiryResponse> {
+    nameenquiry(payload: NameEnquiryPayload, session_token: string, imei: string): Observable<ApiResultOfNameEnquiryResponse> {
         let url_ = this.baseUrl + "/api/lotus/nameenquiry";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -499,6 +790,7 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -541,72 +833,9 @@ export class LotusServiceProxy {
     }
 
     /**
-     * @param amt (optional) 
      * @return OK
      */
-    singleGet(cr: string, dr: string, amt: number | null | undefined, session_token: string): Observable<ApiResultOfRoot> {
-        let url_ = this.baseUrl + "/api/lotus/single?";
-        if (cr === undefined || cr === null)
-            throw new Error("The parameter 'cr' must be defined and cannot be null.");
-        else
-            url_ += "cr=" + encodeURIComponent("" + cr) + "&";
-        if (dr === undefined || dr === null)
-            throw new Error("The parameter 'dr' must be defined and cannot be null.");
-        else
-            url_ += "dr=" + encodeURIComponent("" + dr) + "&";
-        if (amt !== undefined && amt !== null)
-            url_ += "amt=" + encodeURIComponent("" + amt) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSingleGet(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSingleGet(<any>response_);
-                } catch (e) {
-                    return <Observable<ApiResultOfRoot>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<ApiResultOfRoot>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processSingleGet(response: HttpResponseBase): Observable<ApiResultOfRoot> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ApiResultOfRoot.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<ApiResultOfRoot>(<any>null);
-    }
-
-    /**
-     * @return OK
-     */
-    singlePost(payload: SingleBody, session_token: string): Observable<ApiResultOfRoot> {
+    single(payload: SingleBody, session_token: string, imei: string): Observable<ApiResultOfRoot> {
         let url_ = this.baseUrl + "/api/lotus/single";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -618,17 +847,18 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSinglePost(response_);
+            return this.processSingle(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSinglePost(<any>response_);
+                    return this.processSingle(<any>response_);
                 } catch (e) {
                     return <Observable<ApiResultOfRoot>><any>_observableThrow(e);
                 }
@@ -637,7 +867,7 @@ export class LotusServiceProxy {
         }));
     }
 
-    protected processSinglePost(response: HttpResponseBase): Observable<ApiResultOfRoot> {
+    protected processSingle(response: HttpResponseBase): Observable<ApiResultOfRoot> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -662,7 +892,7 @@ export class LotusServiceProxy {
     /**
      * @return OK
      */
-    nipTransfer(payload: Nptransfer, session_token: string): Observable<ApiResultOfNpRoot> {
+    nipTransfer(payload: Nptransfer, session_token: string, imei: string): Observable<ApiResultOfNpRoot> {
         let url_ = this.baseUrl + "/api/lotus/nipTransfer";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -674,6 +904,7 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -718,7 +949,7 @@ export class LotusServiceProxy {
     /**
      * @return OK
      */
-    tellerCashDep(payload: CtRoot, session_token: string): Observable<ApiResultOfCtRRoot> {
+    tellerCashDep(payload: CtRoot, session_token: string, imei: string): Observable<ApiResultOfCtRRoot> {
         let url_ = this.baseUrl + "/api/lotus/tellerCashDep";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -730,6 +961,7 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -774,7 +1006,7 @@ export class LotusServiceProxy {
     /**
      * @return OK
      */
-    singleGenericCall(payload: SingleBody, session_token: string): Observable<ApiResultOfRoot> {
+    singleGenericCall(payload: SingleBody, session_token: string, imei: string): Observable<ApiResultOfRoot> {
         let url_ = this.baseUrl + "/api/lotus/SingleGenericCall";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -786,6 +1018,7 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -830,7 +1063,7 @@ export class LotusServiceProxy {
     /**
      * @return OK
      */
-    fetchBanks(session_token: string): Observable<ApiResultOfBankResponseModel> {
+    fetchBanks(session_token: string, imei: string): Observable<ApiResultOfBankResponseModel> {
         let url_ = this.baseUrl + "/api/lotus/fetchBanks";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -839,6 +1072,7 @@ export class LotusServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
@@ -878,6 +1112,462 @@ export class LotusServiceProxy {
         }
         return _observableOf<ApiResultOfBankResponseModel>(<any>null);
     }
+
+    /**
+     * @return OK
+     */
+    tellerCashWithdrawal(payload: CashWithdrawalModel, session_token: string, imei: string): Observable<ApiResultOfCashWithdrawalResponse> {
+        let url_ = this.baseUrl + "/api/lotus/tellerCashWithdrawal";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTellerCashWithdrawal(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTellerCashWithdrawal(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfCashWithdrawalResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfCashWithdrawalResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTellerCashWithdrawal(response: HttpResponseBase): Observable<ApiResultOfCashWithdrawalResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfCashWithdrawalResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfCashWithdrawalResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    postChequeInward(payload: PostChequePayload, session_token: string, imei: string): Observable<ApiResultOfPostChequeResponse> {
+        let url_ = this.baseUrl + "/api/lotus/postChequeInward";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPostChequeInward(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPostChequeInward(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfPostChequeResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfPostChequeResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPostChequeInward(response: HttpResponseBase): Observable<ApiResultOfPostChequeResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfPostChequeResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfPostChequeResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    authorizeInwardCheque(header_id: string, session_token: string, imei: string): Observable<ApiResultOfAuthorizeChequeResponse> {
+        let url_ = this.baseUrl + "/api/lotus/authorizeInwardCheque?";
+        if (header_id === undefined || header_id === null)
+            throw new Error("The parameter 'header_id' must be defined and cannot be null.");
+        else
+            url_ += "header_id=" + encodeURIComponent("" + header_id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAuthorizeInwardCheque(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAuthorizeInwardCheque(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfAuthorizeChequeResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfAuthorizeChequeResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAuthorizeInwardCheque(response: HttpResponseBase): Observable<ApiResultOfAuthorizeChequeResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfAuthorizeChequeResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfAuthorizeChequeResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    createCustomer(payload: CreateCustomerPayload, session_token: string, imei: string): Observable<ApiResultOfCreateCustomerResponse> {
+        let url_ = this.baseUrl + "/api/lotus/createCustomer";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateCustomer(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateCustomer(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfCreateCustomerResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfCreateCustomerResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateCustomer(response: HttpResponseBase): Observable<ApiResultOfCreateCustomerResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfCreateCustomerResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfCreateCustomerResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    createAccount(payload: CreateAccountPayload, session_token: string, imei: string): Observable<ApiResultOfCreateAccountResponse> {
+        let url_ = this.baseUrl + "/api/lotus/createAccount";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateAccount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateAccount(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfCreateAccountResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfCreateAccountResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreateAccount(response: HttpResponseBase): Observable<ApiResultOfCreateAccountResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfCreateAccountResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfCreateAccountResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    updateAccountInfo(payload: UpdateAccountInfoPayload, session_token: string, imei: string): Observable<ApiResultOfUpdateAccountInfoResponse> {
+        let url_ = this.baseUrl + "/api/lotus/updateAccountInfo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAccountInfo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAccountInfo(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfUpdateAccountInfoResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfUpdateAccountInfoResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateAccountInfo(response: HttpResponseBase): Observable<ApiResultOfUpdateAccountInfoResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfUpdateAccountInfoResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfUpdateAccountInfoResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    freezeAccount(payload: FreezeAccountPayload, session_token: string, imei: string): Observable<ApiResultOfFreezeAccountResponse> {
+        let url_ = this.baseUrl + "/api/lotus/freezeAccount";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFreezeAccount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFreezeAccount(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfFreezeAccountResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfFreezeAccountResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processFreezeAccount(response: HttpResponseBase): Observable<ApiResultOfFreezeAccountResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfFreezeAccountResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfFreezeAccountResponse>(<any>null);
+    }
+
+    /**
+     * @return OK
+     */
+    getAccountStatement(payload: GetAccountStatementPayload, session_token: string, imei: string): Observable<ApiResultOfGetAccountStatementResponse> {
+        let url_ = this.baseUrl + "/api/lotus/getAccountStatement";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(payload);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAccountStatement(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAccountStatement(<any>response_);
+                } catch (e) {
+                    return <Observable<ApiResultOfGetAccountStatementResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ApiResultOfGetAccountStatementResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAccountStatement(response: HttpResponseBase): Observable<ApiResultOfGetAccountStatementResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ApiResultOfGetAccountStatementResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ApiResultOfGetAccountStatementResponse>(<any>null);
+    }
 }
 
 @Injectable()
@@ -894,7 +1584,7 @@ export class ApiServiceProxy {
     /**
      * @return OK
      */
-    valuesGetSession(session_token: string): Observable<string[]> {
+    valuesGet(session_token: string, imei: string): Observable<string[]> {
         let url_ = this.baseUrl + "/api/Values";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -903,16 +1593,17 @@ export class ApiServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processValuesGetvaluesGetSession(response_);
+            return this.processValuesGet(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processValuesGetvaluesGetSession(<any>response_);
+                    return this.processValuesGet(<any>response_);
                 } catch (e) {
                     return <Observable<string[]>><any>_observableThrow(e);
                 }
@@ -921,7 +1612,7 @@ export class ApiServiceProxy {
         }));
     }
 
-    protected processValuesGetvaluesGetSession(response: HttpResponseBase): Observable<string[]> {
+    protected processValuesGet(response: HttpResponseBase): Observable<string[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -950,7 +1641,7 @@ export class ApiServiceProxy {
     /**
      * @return No Content
      */
-    valuesPost(value: string, session_token: string): Observable<void> {
+    valuesPost(value: string, session_token: string, imei: string): Observable<void> {
         let url_ = this.baseUrl + "/api/Values";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -962,6 +1653,7 @@ export class ApiServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
             })
         };
@@ -1002,7 +1694,7 @@ export class ApiServiceProxy {
     /**
      * @return OK
      */
-    valuesGet(id: number, session_token: string): Observable<string> {
+    valuesGetid(id: number, session_token: string, imei: string): Observable<string> {
         let url_ = this.baseUrl + "/api/Values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1014,16 +1706,17 @@ export class ApiServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processValuesGet(response_);
+            return this.processValuesGetid(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processValuesGet(<any>response_);
+                    return this.processValuesGetid(<any>response_);
                 } catch (e) {
                     return <Observable<string>><any>_observableThrow(e);
                 }
@@ -1032,7 +1725,7 @@ export class ApiServiceProxy {
         }));
     }
 
-    protected processValuesGet(response: HttpResponseBase): Observable<string> {
+    protected processValuesGetid(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1057,7 +1750,7 @@ export class ApiServiceProxy {
     /**
      * @return No Content
      */
-    valuesPut(id: number, value: string, session_token: string): Observable<void> {
+    valuesPut(id: number, value: string, session_token: string, imei: string): Observable<void> {
         let url_ = this.baseUrl + "/api/Values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1072,6 +1765,7 @@ export class ApiServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
                 "Content-Type": "application/json",
             })
         };
@@ -1112,7 +1806,7 @@ export class ApiServiceProxy {
     /**
      * @return No Content
      */
-    valuesDelete(id: number, session_token: string): Observable<void> {
+    valuesDelete(id: number, session_token: string, imei: string): Observable<void> {
         let url_ = this.baseUrl + "/api/Values/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1124,6 +1818,7 @@ export class ApiServiceProxy {
             responseType: "blob",
             headers: new HttpHeaders({
                 "session_token": session_token !== undefined && session_token !== null ? "" + session_token : "",
+                "imei": imei !== undefined && imei !== null ? "" + imei : "",
             })
         };
 
@@ -1232,10 +1927,17 @@ export class User implements IUser {
     fullName: string | undefined;
     emailAddress: string | undefined;
     phoneNo: string | undefined;
+    dOB: string | undefined;
     oTP: number | undefined;
     oTPExpiryDate: Date | undefined;
     sessionToken: string | undefined;
     sessionTokenExpiry: Date | undefined;
+    isBackOfficeStaff: boolean | undefined;
+    secretQuestion: string | undefined;
+    secretAnswer: string | undefined;
+    roleName: string | undefined;
+    branchCode: string | undefined;
+    isActive: boolean | undefined;
     userAccounts: UserAccount[] | undefined;
     userRoles: UserRole[] | undefined;
 
@@ -1257,10 +1959,17 @@ export class User implements IUser {
             this.fullName = _data["FullName"];
             this.emailAddress = _data["EmailAddress"];
             this.phoneNo = _data["PhoneNo"];
+            this.dOB = _data["DOB"];
             this.oTP = _data["OTP"];
             this.oTPExpiryDate = _data["OTPExpiryDate"] ? new Date(_data["OTPExpiryDate"].toString()) : <any>undefined;
             this.sessionToken = _data["SessionToken"];
             this.sessionTokenExpiry = _data["SessionTokenExpiry"] ? new Date(_data["SessionTokenExpiry"].toString()) : <any>undefined;
+            this.isBackOfficeStaff = _data["IsBackOfficeStaff"];
+            this.secretQuestion = _data["SecretQuestion"];
+            this.secretAnswer = _data["SecretAnswer"];
+            this.roleName = _data["RoleName"];
+            this.branchCode = _data["BranchCode"];
+            this.isActive = _data["IsActive"];
             if (Array.isArray(_data["UserAccounts"])) {
                 this.userAccounts = [] as any;
                 for (let item of _data["UserAccounts"])
@@ -1290,10 +1999,17 @@ export class User implements IUser {
         data["FullName"] = this.fullName;
         data["EmailAddress"] = this.emailAddress;
         data["PhoneNo"] = this.phoneNo;
+        data["DOB"] = this.dOB;
         data["OTP"] = this.oTP;
         data["OTPExpiryDate"] = this.oTPExpiryDate ? this.oTPExpiryDate.toISOString() : <any>undefined;
         data["SessionToken"] = this.sessionToken;
         data["SessionTokenExpiry"] = this.sessionTokenExpiry ? this.sessionTokenExpiry.toISOString() : <any>undefined;
+        data["IsBackOfficeStaff"] = this.isBackOfficeStaff;
+        data["SecretQuestion"] = this.secretQuestion;
+        data["SecretAnswer"] = this.secretAnswer;
+        data["RoleName"] = this.roleName;
+        data["BranchCode"] = this.branchCode;
+        data["IsActive"] = this.isActive;
         if (Array.isArray(this.userAccounts)) {
             data["UserAccounts"] = [];
             for (let item of this.userAccounts)
@@ -1323,10 +2039,17 @@ export interface IUser {
     fullName: string | undefined;
     emailAddress: string | undefined;
     phoneNo: string | undefined;
+    dOB: string | undefined;
     oTP: number | undefined;
     oTPExpiryDate: Date | undefined;
     sessionToken: string | undefined;
     sessionTokenExpiry: Date | undefined;
+    isBackOfficeStaff: boolean | undefined;
+    secretQuestion: string | undefined;
+    secretAnswer: string | undefined;
+    roleName: string | undefined;
+    branchCode: string | undefined;
+    isActive: boolean | undefined;
     userAccounts: UserAccount[] | undefined;
     userRoles: UserRole[] | undefined;
 }
@@ -1505,6 +2228,7 @@ export class UserLoginPayload implements IUserLoginPayload {
     pIN: string | undefined;
     oTP: number | undefined;
     authMode: string | undefined;
+    dOB: string | undefined;
 
     constructor(data?: IUserLoginPayload) {
         if (data) {
@@ -1521,6 +2245,7 @@ export class UserLoginPayload implements IUserLoginPayload {
             this.pIN = _data["PIN"];
             this.oTP = _data["OTP"];
             this.authMode = _data["AuthMode"];
+            this.dOB = _data["DOB"];
         }
     }
 
@@ -1537,6 +2262,7 @@ export class UserLoginPayload implements IUserLoginPayload {
         data["PIN"] = this.pIN;
         data["OTP"] = this.oTP;
         data["AuthMode"] = this.authMode;
+        data["DOB"] = this.dOB;
         return data; 
     }
 
@@ -1553,6 +2279,7 @@ export interface IUserLoginPayload {
     pIN: string | undefined;
     oTP: number | undefined;
     authMode: string | undefined;
+    dOB: string | undefined;
 }
 
 export class ApiResultOfUser implements IApiResultOfUser {
@@ -1767,13 +2494,123 @@ export interface IApiResultOfInt32 {
     totalCount: number | undefined;
 }
 
-export class ApiResultOfMessageOut implements IApiResultOfMessageOut {
+export class SetNewPINPayload implements ISetNewPINPayload {
+    newPIN: string | undefined;
+    secretQuestion: string | undefined;
+    secretAnswer: string | undefined;
+
+    constructor(data?: ISetNewPINPayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newPIN = _data["NewPIN"];
+            this.secretQuestion = _data["SecretQuestion"];
+            this.secretAnswer = _data["SecretAnswer"];
+        }
+    }
+
+    static fromJS(data: any): SetNewPINPayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new SetNewPINPayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["NewPIN"] = this.newPIN;
+        data["SecretQuestion"] = this.secretQuestion;
+        data["SecretAnswer"] = this.secretAnswer;
+        return data; 
+    }
+
+    clone(): SetNewPINPayload {
+        const json = this.toJSON();
+        let result = new SetNewPINPayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISetNewPINPayload {
+    newPIN: string | undefined;
+    secretQuestion: string | undefined;
+    secretAnswer: string | undefined;
+}
+
+export class UserSessionState implements IUserSessionState {
+    id: number | undefined;
+    userId: number | undefined;
+    lastBranchCode: string | undefined;
+    sessionData: string | undefined;
+    timestamp: Date | undefined;
+
+    constructor(data?: IUserSessionState) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["Id"];
+            this.userId = _data["UserId"];
+            this.lastBranchCode = _data["LastBranchCode"];
+            this.sessionData = _data["SessionData"];
+            this.timestamp = _data["Timestamp"] ? new Date(_data["Timestamp"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UserSessionState {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserSessionState();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["Id"] = this.id;
+        data["UserId"] = this.userId;
+        data["LastBranchCode"] = this.lastBranchCode;
+        data["SessionData"] = this.sessionData;
+        data["Timestamp"] = this.timestamp ? this.timestamp.toISOString() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UserSessionState {
+        const json = this.toJSON();
+        let result = new UserSessionState();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUserSessionState {
+    id: number | undefined;
+    userId: number | undefined;
+    lastBranchCode: string | undefined;
+    sessionData: string | undefined;
+    timestamp: Date | undefined;
+}
+
+export class ApiResultOfUserSessionState implements IApiResultOfUserSessionState {
     hasError: boolean | undefined;
     message: string | undefined;
-    result: MessageOut | undefined;
+    result: UserSessionState | undefined;
     totalCount: number | undefined;
 
-    constructor(data?: IApiResultOfMessageOut) {
+    constructor(data?: IApiResultOfUserSessionState) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1786,14 +2623,14 @@ export class ApiResultOfMessageOut implements IApiResultOfMessageOut {
         if (_data) {
             this.hasError = _data["HasError"];
             this.message = _data["Message"];
-            this.result = _data["Result"] ? MessageOut.fromJS(_data["Result"]) : <any>undefined;
+            this.result = _data["Result"] ? UserSessionState.fromJS(_data["Result"]) : <any>undefined;
             this.totalCount = _data["TotalCount"];
         }
     }
 
-    static fromJS(data: any): ApiResultOfMessageOut {
+    static fromJS(data: any): ApiResultOfUserSessionState {
         data = typeof data === 'object' ? data : {};
-        let result = new ApiResultOfMessageOut();
+        let result = new ApiResultOfUserSessionState();
         result.init(data);
         return result;
     }
@@ -1807,66 +2644,19 @@ export class ApiResultOfMessageOut implements IApiResultOfMessageOut {
         return data; 
     }
 
-    clone(): ApiResultOfMessageOut {
+    clone(): ApiResultOfUserSessionState {
         const json = this.toJSON();
-        let result = new ApiResultOfMessageOut();
+        let result = new ApiResultOfUserSessionState();
         result.init(json);
         return result;
     }
 }
 
-export interface IApiResultOfMessageOut {
+export interface IApiResultOfUserSessionState {
     hasError: boolean | undefined;
     message: string | undefined;
-    result: MessageOut | undefined;
+    result: UserSessionState | undefined;
     totalCount: number | undefined;
-}
-
-export class MessageOut implements IMessageOut {
-    message: string | undefined;
-    isSuccessful: boolean | undefined;
-
-    constructor(data?: IMessageOut) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.message = _data["Message"];
-            this.isSuccessful = _data["IsSuccessful"];
-        }
-    }
-
-    static fromJS(data: any): MessageOut {
-        data = typeof data === 'object' ? data : {};
-        let result = new MessageOut();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["Message"] = this.message;
-        data["IsSuccessful"] = this.isSuccessful;
-        return data; 
-    }
-
-    clone(): MessageOut {
-        const json = this.toJSON();
-        let result = new MessageOut();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IMessageOut {
-    message: string | undefined;
-    isSuccessful: boolean | undefined;
 }
 
 export class ApiResultOfGetAccountDetailsResponse implements IApiResultOfGetAccountDetailsResponse {
@@ -1927,6 +2717,7 @@ export interface IApiResultOfGetAccountDetailsResponse {
 export class GetAccountDetailsResponse implements IGetAccountDetailsResponse {
     header: GetAccountDetailsResponseHeader | undefined;
     body: GetAccountDetailsResponseBody[] | undefined;
+    error: ErrorDto | undefined;
 
     constructor(data?: IGetAccountDetailsResponse) {
         if (data) {
@@ -1945,6 +2736,7 @@ export class GetAccountDetailsResponse implements IGetAccountDetailsResponse {
                 for (let item of _data["body"])
                     this.body.push(GetAccountDetailsResponseBody.fromJS(item));
             }
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
         }
     }
 
@@ -1963,6 +2755,7 @@ export class GetAccountDetailsResponse implements IGetAccountDetailsResponse {
             for (let item of this.body)
                 data["body"].push(item.toJSON());
         }
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -1977,6 +2770,7 @@ export class GetAccountDetailsResponse implements IGetAccountDetailsResponse {
 export interface IGetAccountDetailsResponse {
     header: GetAccountDetailsResponseHeader | undefined;
     body: GetAccountDetailsResponseBody[] | undefined;
+    error: ErrorDto | undefined;
 }
 
 export class GetAccountDetailsResponseHeader implements IGetAccountDetailsResponseHeader {
@@ -2145,6 +2939,69 @@ export interface IGetAccountDetailsResponseBody {
     customerPhone: string | undefined;
 }
 
+export class ErrorDto implements IErrorDto {
+    errorDetails: ErrorDetail[] | undefined;
+    type: string | undefined;
+    code: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: IErrorDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errorDetails"])) {
+                this.errorDetails = [] as any;
+                for (let item of _data["errorDetails"])
+                    this.errorDetails.push(ErrorDetail.fromJS(item));
+            }
+            this.type = _data["type"];
+            this.code = _data["code"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): ErrorDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errorDetails)) {
+            data["errorDetails"] = [];
+            for (let item of this.errorDetails)
+                data["errorDetails"].push(item.toJSON());
+        }
+        data["type"] = this.type;
+        data["code"] = this.code;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): ErrorDto {
+        const json = this.toJSON();
+        let result = new ErrorDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IErrorDto {
+    errorDetails: ErrorDetail[] | undefined;
+    type: string | undefined;
+    code: string | undefined;
+    message: string | undefined;
+}
+
 export class Audit implements IAudit {
     t24_time: number | undefined;
     responseParse_time: number | undefined;
@@ -2198,6 +3055,57 @@ export interface IAudit {
     responseParse_time: number | undefined;
     requestParse_time: number | undefined;
     versionNumber: string | undefined;
+}
+
+export class ErrorDetail implements IErrorDetail {
+    fieldName: string | undefined;
+    code: string | undefined;
+    message: string | undefined;
+
+    constructor(data?: IErrorDetail) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fieldName = _data["fieldName"];
+            this.code = _data["code"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): ErrorDetail {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorDetail();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fieldName"] = this.fieldName;
+        data["code"] = this.code;
+        data["message"] = this.message;
+        return data; 
+    }
+
+    clone(): ErrorDetail {
+        const json = this.toJSON();
+        let result = new ErrorDetail();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IErrorDetail {
+    fieldName: string | undefined;
+    code: string | undefined;
+    message: string | undefined;
 }
 
 export class NameEnquiryPayload implements INameEnquiryPayload {
@@ -2541,6 +3449,7 @@ export interface IApiResultOfRoot {
 export class Root implements IRoot {
     header: Header | undefined;
     body: Body | undefined;
+    error: ErrorDto | undefined;
 
     constructor(data?: IRoot) {
         if (data) {
@@ -2555,6 +3464,7 @@ export class Root implements IRoot {
         if (_data) {
             this.header = _data["header"] ? Header.fromJS(_data["header"]) : <any>undefined;
             this.body = _data["body"] ? Body.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
         }
     }
 
@@ -2569,6 +3479,7 @@ export class Root implements IRoot {
         data = typeof data === 'object' ? data : {};
         data["header"] = this.header ? this.header.toJSON() : <any>undefined;
         data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -2583,6 +3494,7 @@ export class Root implements IRoot {
 export interface IRoot {
     header: Header | undefined;
     body: Body | undefined;
+    error: ErrorDto | undefined;
 }
 
 export class Header implements IHeader {
@@ -2888,6 +3800,7 @@ export class NpRoot implements INpRoot {
     linkedActivities: NpLinkedActivity[] | undefined;
     header: NpHeader | undefined;
     body: NpBody | undefined;
+    error: ErrorDto | undefined;
 
     constructor(data?: INpRoot) {
         if (data) {
@@ -2907,6 +3820,7 @@ export class NpRoot implements INpRoot {
             }
             this.header = _data["header"] ? NpHeader.fromJS(_data["header"]) : <any>undefined;
             this.body = _data["body"] ? NpBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
         }
     }
 
@@ -2926,6 +3840,7 @@ export class NpRoot implements INpRoot {
         }
         data["header"] = this.header ? this.header.toJSON() : <any>undefined;
         data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -2941,11 +3856,13 @@ export interface INpRoot {
     linkedActivities: NpLinkedActivity[] | undefined;
     header: NpHeader | undefined;
     body: NpBody | undefined;
+    error: ErrorDto | undefined;
 }
 
 export class NpLinkedActivity implements INpLinkedActivity {
     header: NpHeader | undefined;
     body: NpBody | undefined;
+    error: ErrorDto | undefined;
 
     constructor(data?: INpLinkedActivity) {
         if (data) {
@@ -2960,6 +3877,7 @@ export class NpLinkedActivity implements INpLinkedActivity {
         if (_data) {
             this.header = _data["header"] ? NpHeader.fromJS(_data["header"]) : <any>undefined;
             this.body = _data["body"] ? NpBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
         }
     }
 
@@ -2974,6 +3892,7 @@ export class NpLinkedActivity implements INpLinkedActivity {
         data = typeof data === 'object' ? data : {};
         data["header"] = this.header ? this.header.toJSON() : <any>undefined;
         data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -2988,6 +3907,7 @@ export class NpLinkedActivity implements INpLinkedActivity {
 export interface INpLinkedActivity {
     header: NpHeader | undefined;
     body: NpBody | undefined;
+    error: ErrorDto | undefined;
 }
 
 export class NpHeader implements INpHeader {
@@ -3261,6 +4181,7 @@ export class CtBody implements ICtBody {
     narrative: string | undefined;
     documentNo: string | undefined;
     channel: string | undefined;
+    currency: string | undefined;
 
     constructor(data?: ICtBody) {
         if (data) {
@@ -3283,6 +4204,7 @@ export class CtBody implements ICtBody {
             this.narrative = _data["narrative"];
             this.documentNo = _data["documentNo"];
             this.channel = _data["channel"];
+            this.currency = _data["currency"];
         }
     }
 
@@ -3305,6 +4227,7 @@ export class CtBody implements ICtBody {
         data["narrative"] = this.narrative;
         data["documentNo"] = this.documentNo;
         data["channel"] = this.channel;
+        data["currency"] = this.currency;
         return data; 
     }
 
@@ -3323,6 +4246,7 @@ export interface ICtBody {
     narrative: string | undefined;
     documentNo: string | undefined;
     channel: string | undefined;
+    currency: string | undefined;
 }
 
 export class DenominationValue implements IDenominationValue {
@@ -3430,6 +4354,7 @@ export interface IApiResultOfCtRRoot {
 export class CtRRoot implements ICtRRoot {
     header: CtHeader | undefined;
     body: CtBody | undefined;
+    error: ErrorDto | undefined;
 
     constructor(data?: ICtRRoot) {
         if (data) {
@@ -3444,6 +4369,7 @@ export class CtRRoot implements ICtRRoot {
         if (_data) {
             this.header = _data["header"] ? CtHeader.fromJS(_data["header"]) : <any>undefined;
             this.body = _data["body"] ? CtBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
         }
     }
 
@@ -3458,6 +4384,7 @@ export class CtRRoot implements ICtRRoot {
         data = typeof data === 'object' ? data : {};
         data["header"] = this.header ? this.header.toJSON() : <any>undefined;
         data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -3472,6 +4399,7 @@ export class CtRRoot implements ICtRRoot {
 export interface ICtRRoot {
     header: CtHeader | undefined;
     body: CtBody | undefined;
+    error: ErrorDto | undefined;
 }
 
 export class CtHeader implements ICtHeader {
@@ -3642,6 +4570,7 @@ export interface IApiResultOfBankResponseModel {
 export class BankResponseModel implements IBankResponseModel {
     header: BankResponseModelHeader | undefined;
     body: BankResponseModelBody[] | undefined;
+    error: ErrorDto | undefined;
 
     constructor(data?: IBankResponseModel) {
         if (data) {
@@ -3660,6 +4589,7 @@ export class BankResponseModel implements IBankResponseModel {
                 for (let item of _data["body"])
                     this.body.push(BankResponseModelBody.fromJS(item));
             }
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
         }
     }
 
@@ -3678,6 +4608,7 @@ export class BankResponseModel implements IBankResponseModel {
             for (let item of this.body)
                 data["body"].push(item.toJSON());
         }
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -3692,6 +4623,7 @@ export class BankResponseModel implements IBankResponseModel {
 export interface IBankResponseModel {
     header: BankResponseModelHeader | undefined;
     body: BankResponseModelBody[] | undefined;
+    error: ErrorDto | undefined;
 }
 
 export class BankResponseModelHeader implements IBankResponseModelHeader {
@@ -3802,6 +4734,2582 @@ export class BankResponseModelBody implements IBankResponseModelBody {
 export interface IBankResponseModelBody {
     institutionCode: string | undefined;
     institutionName: string | undefined;
+}
+
+export class CashWithdrawalModel implements ICashWithdrawalModel {
+    body: CashWithdrawalModelBody | undefined;
+
+    constructor(data?: ICashWithdrawalModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.body = _data["body"] ? CashWithdrawalModelBody.fromJS(_data["body"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CashWithdrawalModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CashWithdrawalModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CashWithdrawalModel {
+        const json = this.toJSON();
+        let result = new CashWithdrawalModel();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICashWithdrawalModel {
+    body: CashWithdrawalModelBody | undefined;
+}
+
+export class CashWithdrawalModelBody implements ICashWithdrawalModelBody {
+    denominationValues: DenominationValue[] | undefined;
+    localAmount: string | undefined;
+    debitAccount: string | undefined;
+    narrative: string | undefined;
+    documentNo: string | undefined;
+    channel: string | undefined;
+    currency: string | undefined;
+
+    constructor(data?: ICashWithdrawalModelBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["denominationValues"])) {
+                this.denominationValues = [] as any;
+                for (let item of _data["denominationValues"])
+                    this.denominationValues.push(DenominationValue.fromJS(item));
+            }
+            this.localAmount = _data["localAmount"];
+            this.debitAccount = _data["debitAccount"];
+            this.narrative = _data["narrative"];
+            this.documentNo = _data["documentNo"];
+            this.channel = _data["channel"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): CashWithdrawalModelBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new CashWithdrawalModelBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.denominationValues)) {
+            data["denominationValues"] = [];
+            for (let item of this.denominationValues)
+                data["denominationValues"].push(item.toJSON());
+        }
+        data["localAmount"] = this.localAmount;
+        data["debitAccount"] = this.debitAccount;
+        data["narrative"] = this.narrative;
+        data["documentNo"] = this.documentNo;
+        data["channel"] = this.channel;
+        data["currency"] = this.currency;
+        return data; 
+    }
+
+    clone(): CashWithdrawalModelBody {
+        const json = this.toJSON();
+        let result = new CashWithdrawalModelBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICashWithdrawalModelBody {
+    denominationValues: DenominationValue[] | undefined;
+    localAmount: string | undefined;
+    debitAccount: string | undefined;
+    narrative: string | undefined;
+    documentNo: string | undefined;
+    channel: string | undefined;
+    currency: string | undefined;
+}
+
+export class ApiResultOfCashWithdrawalResponse implements IApiResultOfCashWithdrawalResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: CashWithdrawalResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfCashWithdrawalResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? CashWithdrawalResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfCashWithdrawalResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfCashWithdrawalResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfCashWithdrawalResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfCashWithdrawalResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfCashWithdrawalResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: CashWithdrawalResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class CashWithdrawalResponse implements ICashWithdrawalResponse {
+    header: CashWithdrawalResponseHeader | undefined;
+    body: CashWithdrawalResponseBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: ICashWithdrawalResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? CashWithdrawalResponseHeader.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? CashWithdrawalResponseBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CashWithdrawalResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CashWithdrawalResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CashWithdrawalResponse {
+        const json = this.toJSON();
+        let result = new CashWithdrawalResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICashWithdrawalResponse {
+    header: CashWithdrawalResponseHeader | undefined;
+    body: CashWithdrawalResponseBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class CashWithdrawalResponseHeader implements ICashWithdrawalResponseHeader {
+    transactionStatus: string | undefined;
+    audit: Audit | undefined;
+    id: string | undefined;
+    status: string | undefined;
+
+    constructor(data?: ICashWithdrawalResponseHeader) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.transactionStatus = _data["transactionStatus"];
+            this.audit = _data["audit"] ? Audit.fromJS(_data["audit"]) : <any>undefined;
+            this.id = _data["id"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): CashWithdrawalResponseHeader {
+        data = typeof data === 'object' ? data : {};
+        let result = new CashWithdrawalResponseHeader();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["transactionStatus"] = this.transactionStatus;
+        data["audit"] = this.audit ? this.audit.toJSON() : <any>undefined;
+        data["id"] = this.id;
+        data["status"] = this.status;
+        return data; 
+    }
+
+    clone(): CashWithdrawalResponseHeader {
+        const json = this.toJSON();
+        let result = new CashWithdrawalResponseHeader();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICashWithdrawalResponseHeader {
+    transactionStatus: string | undefined;
+    audit: Audit | undefined;
+    id: string | undefined;
+    status: string | undefined;
+}
+
+export class CashWithdrawalResponseBody implements ICashWithdrawalResponseBody {
+    debitAccount: string | undefined;
+    narrative: string | undefined;
+    channel: string | undefined;
+    teller: string | undefined;
+    dr_CrMarker: string | undefined;
+    valueDate: string | undefined;
+    internalAccount: string | undefined;
+    documentNo: string | undefined;
+    cashPaidtoCust: string | undefined;
+    newCustBal: string | undefined;
+    currency: string | undefined;
+    localAmount: string | undefined;
+    customer: string | undefined;
+
+    constructor(data?: ICashWithdrawalResponseBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.debitAccount = _data["debitAccount"];
+            this.narrative = _data["narrative"];
+            this.channel = _data["channel"];
+            this.teller = _data["teller"];
+            this.dr_CrMarker = _data["dr/CrMarker"];
+            this.valueDate = _data["valueDate"];
+            this.internalAccount = _data["internalAccount"];
+            this.documentNo = _data["documentNo"];
+            this.cashPaidtoCust = _data["cashPaidtoCust"];
+            this.newCustBal = _data["newCustBal"];
+            this.currency = _data["currency"];
+            this.localAmount = _data["localAmount"];
+            this.customer = _data["customer"];
+        }
+    }
+
+    static fromJS(data: any): CashWithdrawalResponseBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new CashWithdrawalResponseBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["debitAccount"] = this.debitAccount;
+        data["narrative"] = this.narrative;
+        data["channel"] = this.channel;
+        data["teller"] = this.teller;
+        data["dr/CrMarker"] = this.dr_CrMarker;
+        data["valueDate"] = this.valueDate;
+        data["internalAccount"] = this.internalAccount;
+        data["documentNo"] = this.documentNo;
+        data["cashPaidtoCust"] = this.cashPaidtoCust;
+        data["newCustBal"] = this.newCustBal;
+        data["currency"] = this.currency;
+        data["localAmount"] = this.localAmount;
+        data["customer"] = this.customer;
+        return data; 
+    }
+
+    clone(): CashWithdrawalResponseBody {
+        const json = this.toJSON();
+        let result = new CashWithdrawalResponseBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICashWithdrawalResponseBody {
+    debitAccount: string | undefined;
+    narrative: string | undefined;
+    channel: string | undefined;
+    teller: string | undefined;
+    dr_CrMarker: string | undefined;
+    valueDate: string | undefined;
+    internalAccount: string | undefined;
+    documentNo: string | undefined;
+    cashPaidtoCust: string | undefined;
+    newCustBal: string | undefined;
+    currency: string | undefined;
+    localAmount: string | undefined;
+    customer: string | undefined;
+}
+
+export class PostChequePayload implements IPostChequePayload {
+    body: PostChequePayloadBody | undefined;
+
+    constructor(data?: IPostChequePayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.body = _data["body"] ? PostChequePayloadBody.fromJS(_data["body"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PostChequePayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostChequePayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): PostChequePayload {
+        const json = this.toJSON();
+        let result = new PostChequePayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostChequePayload {
+    body: PostChequePayloadBody | undefined;
+}
+
+export class PostChequePayloadBody implements IPostChequePayloadBody {
+    chequeNo: string | undefined;
+    debitAccount: string | undefined;
+    amount: string | undefined;
+    currency: string | undefined;
+    narration: string | undefined;
+
+    constructor(data?: IPostChequePayloadBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.chequeNo = _data["chequeNo"];
+            this.debitAccount = _data["debitAccount"];
+            this.amount = _data["amount"];
+            this.currency = _data["currency"];
+            this.narration = _data["narration"];
+        }
+    }
+
+    static fromJS(data: any): PostChequePayloadBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostChequePayloadBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["chequeNo"] = this.chequeNo;
+        data["debitAccount"] = this.debitAccount;
+        data["amount"] = this.amount;
+        data["currency"] = this.currency;
+        data["narration"] = this.narration;
+        return data; 
+    }
+
+    clone(): PostChequePayloadBody {
+        const json = this.toJSON();
+        let result = new PostChequePayloadBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostChequePayloadBody {
+    chequeNo: string | undefined;
+    debitAccount: string | undefined;
+    amount: string | undefined;
+    currency: string | undefined;
+    narration: string | undefined;
+}
+
+export class ApiResultOfPostChequeResponse implements IApiResultOfPostChequeResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: PostChequeResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfPostChequeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? PostChequeResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfPostChequeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfPostChequeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfPostChequeResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfPostChequeResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfPostChequeResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: PostChequeResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class PostChequeResponse implements IPostChequeResponse {
+    header: PostChequeResponseHeader | undefined;
+    body: PostChequeResponseBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: IPostChequeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? PostChequeResponseHeader.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? PostChequeResponseBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PostChequeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostChequeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): PostChequeResponse {
+        const json = this.toJSON();
+        let result = new PostChequeResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostChequeResponse {
+    header: PostChequeResponseHeader | undefined;
+    body: PostChequeResponseBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class PostChequeResponseHeader implements IPostChequeResponseHeader {
+    id: string | undefined;
+    status: string | undefined;
+    transactionStatus: string | undefined;
+    uniqueIdentifier: string | undefined;
+    audit: Audit | undefined;
+
+    constructor(data?: IPostChequeResponseHeader) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.status = _data["status"];
+            this.transactionStatus = _data["transactionStatus"];
+            this.uniqueIdentifier = _data["uniqueIdentifier"];
+            this.audit = _data["audit"] ? Audit.fromJS(_data["audit"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PostChequeResponseHeader {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostChequeResponseHeader();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["status"] = this.status;
+        data["transactionStatus"] = this.transactionStatus;
+        data["uniqueIdentifier"] = this.uniqueIdentifier;
+        data["audit"] = this.audit ? this.audit.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): PostChequeResponseHeader {
+        const json = this.toJSON();
+        let result = new PostChequeResponseHeader();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostChequeResponseHeader {
+    id: string | undefined;
+    status: string | undefined;
+    transactionStatus: string | undefined;
+    uniqueIdentifier: string | undefined;
+    audit: Audit | undefined;
+}
+
+export class PostChequeResponseBody implements IPostChequeResponseBody {
+    debitAccount: string | undefined;
+    amount: string | undefined;
+    debitValueDate: string | undefined;
+    chequeNo: string | undefined;
+    narration: string | undefined;
+    creditValueDate: string | undefined;
+    amountDebited: string | undefined;
+    amountCredited: string | undefined;
+    deliveryReference: string | undefined;
+    override: string | undefined;
+    currency: string | undefined;
+
+    constructor(data?: IPostChequeResponseBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.debitAccount = _data["debitAccount"];
+            this.amount = _data["amount"];
+            this.debitValueDate = _data["debitValueDate"];
+            this.chequeNo = _data["chequeNo"];
+            this.narration = _data["narration"];
+            this.creditValueDate = _data["creditValueDate"];
+            this.amountDebited = _data["amountDebited"];
+            this.amountCredited = _data["amountCredited"];
+            this.deliveryReference = _data["deliveryReference"];
+            this.override = _data["override"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): PostChequeResponseBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new PostChequeResponseBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["debitAccount"] = this.debitAccount;
+        data["amount"] = this.amount;
+        data["debitValueDate"] = this.debitValueDate;
+        data["chequeNo"] = this.chequeNo;
+        data["narration"] = this.narration;
+        data["creditValueDate"] = this.creditValueDate;
+        data["amountDebited"] = this.amountDebited;
+        data["amountCredited"] = this.amountCredited;
+        data["deliveryReference"] = this.deliveryReference;
+        data["override"] = this.override;
+        data["currency"] = this.currency;
+        return data; 
+    }
+
+    clone(): PostChequeResponseBody {
+        const json = this.toJSON();
+        let result = new PostChequeResponseBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPostChequeResponseBody {
+    debitAccount: string | undefined;
+    amount: string | undefined;
+    debitValueDate: string | undefined;
+    chequeNo: string | undefined;
+    narration: string | undefined;
+    creditValueDate: string | undefined;
+    amountDebited: string | undefined;
+    amountCredited: string | undefined;
+    deliveryReference: string | undefined;
+    override: string | undefined;
+    currency: string | undefined;
+}
+
+export class ApiResultOfAuthorizeChequeResponse implements IApiResultOfAuthorizeChequeResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: AuthorizeChequeResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfAuthorizeChequeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? AuthorizeChequeResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfAuthorizeChequeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfAuthorizeChequeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfAuthorizeChequeResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfAuthorizeChequeResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfAuthorizeChequeResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: AuthorizeChequeResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class AuthorizeChequeResponse implements IAuthorizeChequeResponse {
+    header: PostChequeResponseHeader | undefined;
+    body: PostChequeResponseBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: IAuthorizeChequeResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? PostChequeResponseHeader.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? PostChequeResponseBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuthorizeChequeResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthorizeChequeResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): AuthorizeChequeResponse {
+        const json = this.toJSON();
+        let result = new AuthorizeChequeResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAuthorizeChequeResponse {
+    header: PostChequeResponseHeader | undefined;
+    body: PostChequeResponseBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class CreateCustomerPayload implements ICreateCustomerPayload {
+    body: CreateCustomerPayloadBody | undefined;
+
+    constructor(data?: ICreateCustomerPayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.body = _data["body"] ? CreateCustomerPayloadBody.fromJS(_data["body"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateCustomerPayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomerPayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CreateCustomerPayload {
+        const json = this.toJSON();
+        let result = new CreateCustomerPayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCustomerPayload {
+    body: CreateCustomerPayloadBody | undefined;
+}
+
+export class CreateCustomerPayloadBody implements ICreateCustomerPayloadBody {
+    displayNames: DisplayName[] | undefined;
+    customerNames: CustomerName[] | undefined;
+    communicationDevices: CommunicationDevice[] | undefined;
+    streets: Street[] | undefined;
+    addresses: Address[] | undefined;
+    countries: Country[] | undefined;
+    dateOfBirth: string | undefined;
+    customerStatus: string | undefined;
+    nationality: string | undefined;
+    residence: string | undefined;
+    industry: string | undefined;
+    target: string | undefined;
+    maritalStatus: string | undefined;
+    bvn: string | undefined;
+
+    constructor(data?: ICreateCustomerPayloadBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["displayNames"])) {
+                this.displayNames = [] as any;
+                for (let item of _data["displayNames"])
+                    this.displayNames.push(DisplayName.fromJS(item));
+            }
+            if (Array.isArray(_data["customerNames"])) {
+                this.customerNames = [] as any;
+                for (let item of _data["customerNames"])
+                    this.customerNames.push(CustomerName.fromJS(item));
+            }
+            if (Array.isArray(_data["communicationDevices"])) {
+                this.communicationDevices = [] as any;
+                for (let item of _data["communicationDevices"])
+                    this.communicationDevices.push(CommunicationDevice.fromJS(item));
+            }
+            if (Array.isArray(_data["streets"])) {
+                this.streets = [] as any;
+                for (let item of _data["streets"])
+                    this.streets.push(Street.fromJS(item));
+            }
+            if (Array.isArray(_data["addresses"])) {
+                this.addresses = [] as any;
+                for (let item of _data["addresses"])
+                    this.addresses.push(Address.fromJS(item));
+            }
+            if (Array.isArray(_data["countries"])) {
+                this.countries = [] as any;
+                for (let item of _data["countries"])
+                    this.countries.push(Country.fromJS(item));
+            }
+            this.dateOfBirth = _data["dateOfBirth"];
+            this.customerStatus = _data["customerStatus"];
+            this.nationality = _data["nationality"];
+            this.residence = _data["residence"];
+            this.industry = _data["industry"];
+            this.target = _data["target"];
+            this.maritalStatus = _data["maritalStatus"];
+            this.bvn = _data["bvn"];
+        }
+    }
+
+    static fromJS(data: any): CreateCustomerPayloadBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomerPayloadBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.displayNames)) {
+            data["displayNames"] = [];
+            for (let item of this.displayNames)
+                data["displayNames"].push(item.toJSON());
+        }
+        if (Array.isArray(this.customerNames)) {
+            data["customerNames"] = [];
+            for (let item of this.customerNames)
+                data["customerNames"].push(item.toJSON());
+        }
+        if (Array.isArray(this.communicationDevices)) {
+            data["communicationDevices"] = [];
+            for (let item of this.communicationDevices)
+                data["communicationDevices"].push(item.toJSON());
+        }
+        if (Array.isArray(this.streets)) {
+            data["streets"] = [];
+            for (let item of this.streets)
+                data["streets"].push(item.toJSON());
+        }
+        if (Array.isArray(this.addresses)) {
+            data["addresses"] = [];
+            for (let item of this.addresses)
+                data["addresses"].push(item.toJSON());
+        }
+        if (Array.isArray(this.countries)) {
+            data["countries"] = [];
+            for (let item of this.countries)
+                data["countries"].push(item.toJSON());
+        }
+        data["dateOfBirth"] = this.dateOfBirth;
+        data["customerStatus"] = this.customerStatus;
+        data["nationality"] = this.nationality;
+        data["residence"] = this.residence;
+        data["industry"] = this.industry;
+        data["target"] = this.target;
+        data["maritalStatus"] = this.maritalStatus;
+        data["bvn"] = this.bvn;
+        return data; 
+    }
+
+    clone(): CreateCustomerPayloadBody {
+        const json = this.toJSON();
+        let result = new CreateCustomerPayloadBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCustomerPayloadBody {
+    displayNames: DisplayName[] | undefined;
+    customerNames: CustomerName[] | undefined;
+    communicationDevices: CommunicationDevice[] | undefined;
+    streets: Street[] | undefined;
+    addresses: Address[] | undefined;
+    countries: Country[] | undefined;
+    dateOfBirth: string | undefined;
+    customerStatus: string | undefined;
+    nationality: string | undefined;
+    residence: string | undefined;
+    industry: string | undefined;
+    target: string | undefined;
+    maritalStatus: string | undefined;
+    bvn: string | undefined;
+}
+
+export class DisplayName implements IDisplayName {
+    firstName: string | undefined;
+
+    constructor(data?: IDisplayName) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.firstName = _data["firstName"];
+        }
+    }
+
+    static fromJS(data: any): DisplayName {
+        data = typeof data === 'object' ? data : {};
+        let result = new DisplayName();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firstName"] = this.firstName;
+        return data; 
+    }
+
+    clone(): DisplayName {
+        const json = this.toJSON();
+        let result = new DisplayName();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDisplayName {
+    firstName: string | undefined;
+}
+
+export class CustomerName implements ICustomerName {
+    lastName: string | undefined;
+
+    constructor(data?: ICustomerName) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.lastName = _data["lastName"];
+        }
+    }
+
+    static fromJS(data: any): CustomerName {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerName();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lastName"] = this.lastName;
+        return data; 
+    }
+
+    clone(): CustomerName {
+        const json = this.toJSON();
+        let result = new CustomerName();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICustomerName {
+    lastName: string | undefined;
+}
+
+export class CommunicationDevice implements ICommunicationDevice {
+    phoneNumber: string | undefined;
+    phoneNo: string | undefined;
+    email: string | undefined;
+
+    constructor(data?: ICommunicationDevice) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.phoneNumber = _data["phoneNumber"];
+            this.phoneNo = _data["phoneNo"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): CommunicationDevice {
+        data = typeof data === 'object' ? data : {};
+        let result = new CommunicationDevice();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["phoneNumber"] = this.phoneNumber;
+        data["phoneNo"] = this.phoneNo;
+        data["email"] = this.email;
+        return data; 
+    }
+
+    clone(): CommunicationDevice {
+        const json = this.toJSON();
+        let result = new CommunicationDevice();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICommunicationDevice {
+    phoneNumber: string | undefined;
+    phoneNo: string | undefined;
+    email: string | undefined;
+}
+
+export class Street implements IStreet {
+    street: string | undefined;
+
+    constructor(data?: IStreet) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.street = _data["street"];
+        }
+    }
+
+    static fromJS(data: any): Street {
+        data = typeof data === 'object' ? data : {};
+        let result = new Street();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["street"] = this.street;
+        return data; 
+    }
+
+    clone(): Street {
+        const json = this.toJSON();
+        let result = new Street();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStreet {
+    street: string | undefined;
+}
+
+export class Address implements IAddress {
+    address: string | undefined;
+
+    constructor(data?: IAddress) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.address = _data["address"];
+        }
+    }
+
+    static fromJS(data: any): Address {
+        data = typeof data === 'object' ? data : {};
+        let result = new Address();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["address"] = this.address;
+        return data; 
+    }
+
+    clone(): Address {
+        const json = this.toJSON();
+        let result = new Address();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAddress {
+    address: string | undefined;
+}
+
+export class Country implements ICountry {
+    country: string | undefined;
+
+    constructor(data?: ICountry) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.country = _data["country"];
+        }
+    }
+
+    static fromJS(data: any): Country {
+        data = typeof data === 'object' ? data : {};
+        let result = new Country();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["country"] = this.country;
+        return data; 
+    }
+
+    clone(): Country {
+        const json = this.toJSON();
+        let result = new Country();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICountry {
+    country: string | undefined;
+}
+
+export class ApiResultOfCreateCustomerResponse implements IApiResultOfCreateCustomerResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: CreateCustomerResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfCreateCustomerResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? CreateCustomerResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfCreateCustomerResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfCreateCustomerResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfCreateCustomerResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfCreateCustomerResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfCreateCustomerResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: CreateCustomerResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class CreateCustomerResponse implements ICreateCustomerResponse {
+    header: Header | undefined;
+    body: CreateCustomerResponseBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: ICreateCustomerResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? Header.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? CreateCustomerResponseBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateCustomerResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomerResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CreateCustomerResponse {
+        const json = this.toJSON();
+        let result = new CreateCustomerResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCustomerResponse {
+    header: Header | undefined;
+    body: CreateCustomerResponseBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class CreateCustomerResponseBody implements ICreateCustomerResponseBody {
+    customerMnemonic: string | undefined;
+    addresses: Address[] | undefined;
+    streets: Street[] | undefined;
+    displayNames: DisplayName[] | undefined;
+    customerNames: CustomerName[] | undefined;
+    industry: number | undefined;
+    language: string | undefined;
+    dateOfBirth: string | undefined;
+    countries: Country[] | undefined;
+    communicationDevices: CommunicationDevice[] | undefined;
+    target: number | undefined;
+    customerStatus: number | undefined;
+    nationality: string | undefined;
+    bvn: string | undefined;
+    residence: string | undefined;
+    sector: number | undefined;
+    maritalStatus: string | undefined;
+
+    constructor(data?: ICreateCustomerResponseBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.customerMnemonic = _data["customerMnemonic"];
+            if (Array.isArray(_data["addresses"])) {
+                this.addresses = [] as any;
+                for (let item of _data["addresses"])
+                    this.addresses.push(Address.fromJS(item));
+            }
+            if (Array.isArray(_data["streets"])) {
+                this.streets = [] as any;
+                for (let item of _data["streets"])
+                    this.streets.push(Street.fromJS(item));
+            }
+            if (Array.isArray(_data["displayNames"])) {
+                this.displayNames = [] as any;
+                for (let item of _data["displayNames"])
+                    this.displayNames.push(DisplayName.fromJS(item));
+            }
+            if (Array.isArray(_data["customerNames"])) {
+                this.customerNames = [] as any;
+                for (let item of _data["customerNames"])
+                    this.customerNames.push(CustomerName.fromJS(item));
+            }
+            this.industry = _data["industry"];
+            this.language = _data["language"];
+            this.dateOfBirth = _data["dateOfBirth"];
+            if (Array.isArray(_data["countries"])) {
+                this.countries = [] as any;
+                for (let item of _data["countries"])
+                    this.countries.push(Country.fromJS(item));
+            }
+            if (Array.isArray(_data["communicationDevices"])) {
+                this.communicationDevices = [] as any;
+                for (let item of _data["communicationDevices"])
+                    this.communicationDevices.push(CommunicationDevice.fromJS(item));
+            }
+            this.target = _data["target"];
+            this.customerStatus = _data["customerStatus"];
+            this.nationality = _data["nationality"];
+            this.bvn = _data["bvn"];
+            this.residence = _data["residence"];
+            this.sector = _data["sector"];
+            this.maritalStatus = _data["maritalStatus"];
+        }
+    }
+
+    static fromJS(data: any): CreateCustomerResponseBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCustomerResponseBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["customerMnemonic"] = this.customerMnemonic;
+        if (Array.isArray(this.addresses)) {
+            data["addresses"] = [];
+            for (let item of this.addresses)
+                data["addresses"].push(item.toJSON());
+        }
+        if (Array.isArray(this.streets)) {
+            data["streets"] = [];
+            for (let item of this.streets)
+                data["streets"].push(item.toJSON());
+        }
+        if (Array.isArray(this.displayNames)) {
+            data["displayNames"] = [];
+            for (let item of this.displayNames)
+                data["displayNames"].push(item.toJSON());
+        }
+        if (Array.isArray(this.customerNames)) {
+            data["customerNames"] = [];
+            for (let item of this.customerNames)
+                data["customerNames"].push(item.toJSON());
+        }
+        data["industry"] = this.industry;
+        data["language"] = this.language;
+        data["dateOfBirth"] = this.dateOfBirth;
+        if (Array.isArray(this.countries)) {
+            data["countries"] = [];
+            for (let item of this.countries)
+                data["countries"].push(item.toJSON());
+        }
+        if (Array.isArray(this.communicationDevices)) {
+            data["communicationDevices"] = [];
+            for (let item of this.communicationDevices)
+                data["communicationDevices"].push(item.toJSON());
+        }
+        data["target"] = this.target;
+        data["customerStatus"] = this.customerStatus;
+        data["nationality"] = this.nationality;
+        data["bvn"] = this.bvn;
+        data["residence"] = this.residence;
+        data["sector"] = this.sector;
+        data["maritalStatus"] = this.maritalStatus;
+        return data; 
+    }
+
+    clone(): CreateCustomerResponseBody {
+        const json = this.toJSON();
+        let result = new CreateCustomerResponseBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCustomerResponseBody {
+    customerMnemonic: string | undefined;
+    addresses: Address[] | undefined;
+    streets: Street[] | undefined;
+    displayNames: DisplayName[] | undefined;
+    customerNames: CustomerName[] | undefined;
+    industry: number | undefined;
+    language: string | undefined;
+    dateOfBirth: string | undefined;
+    countries: Country[] | undefined;
+    communicationDevices: CommunicationDevice[] | undefined;
+    target: number | undefined;
+    customerStatus: number | undefined;
+    nationality: string | undefined;
+    bvn: string | undefined;
+    residence: string | undefined;
+    sector: number | undefined;
+    maritalStatus: string | undefined;
+}
+
+export class CreateAccountPayload implements ICreateAccountPayload {
+    body: CreateAccountPayloadBody | undefined;
+
+    constructor(data?: ICreateAccountPayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.body = _data["body"] ? CreateAccountPayloadBody.fromJS(_data["body"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateAccountPayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateAccountPayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CreateAccountPayload {
+        const json = this.toJSON();
+        let result = new CreateAccountPayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateAccountPayload {
+    body: CreateAccountPayloadBody | undefined;
+}
+
+export class CreateAccountPayloadBody implements ICreateAccountPayloadBody {
+    customerNo: string | undefined;
+    category: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+    accountOfficer: string | undefined;
+    openingDate: string | undefined;
+    previousAcct: string | undefined;
+
+    constructor(data?: ICreateAccountPayloadBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.customerNo = _data["customerNo"];
+            this.category = _data["category"];
+            this.accountName = _data["accountName"];
+            this.currency = _data["currency"];
+            this.accountOfficer = _data["accountOfficer"];
+            this.openingDate = _data["openingDate"];
+            this.previousAcct = _data["previousAcct"];
+        }
+    }
+
+    static fromJS(data: any): CreateAccountPayloadBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateAccountPayloadBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["customerNo"] = this.customerNo;
+        data["category"] = this.category;
+        data["accountName"] = this.accountName;
+        data["currency"] = this.currency;
+        data["accountOfficer"] = this.accountOfficer;
+        data["openingDate"] = this.openingDate;
+        data["previousAcct"] = this.previousAcct;
+        return data; 
+    }
+
+    clone(): CreateAccountPayloadBody {
+        const json = this.toJSON();
+        let result = new CreateAccountPayloadBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateAccountPayloadBody {
+    customerNo: string | undefined;
+    category: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+    accountOfficer: string | undefined;
+    openingDate: string | undefined;
+    previousAcct: string | undefined;
+}
+
+export class ApiResultOfCreateAccountResponse implements IApiResultOfCreateAccountResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: CreateAccountResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfCreateAccountResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? CreateAccountResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfCreateAccountResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfCreateAccountResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfCreateAccountResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfCreateAccountResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfCreateAccountResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: CreateAccountResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class CreateAccountResponse implements ICreateAccountResponse {
+    header: Header | undefined;
+    body: CreateAccountResponseBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: ICreateAccountResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? Header.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? CreateAccountResponseBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateAccountResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateAccountResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): CreateAccountResponse {
+        const json = this.toJSON();
+        let result = new CreateAccountResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateAccountResponse {
+    header: Header | undefined;
+    body: CreateAccountResponseBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class CreateAccountResponseBody implements ICreateAccountResponseBody {
+    accountOfficer: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+    category: string | undefined;
+    openingDate: string | undefined;
+    customerNo: string | undefined;
+    previousAcct: string | undefined;
+
+    constructor(data?: ICreateAccountResponseBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accountOfficer = _data["accountOfficer"];
+            this.accountName = _data["accountName"];
+            this.currency = _data["currency"];
+            this.category = _data["category"];
+            this.openingDate = _data["openingDate"];
+            this.customerNo = _data["customerNo"];
+            this.previousAcct = _data["previousAcct"];
+        }
+    }
+
+    static fromJS(data: any): CreateAccountResponseBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateAccountResponseBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accountOfficer"] = this.accountOfficer;
+        data["accountName"] = this.accountName;
+        data["currency"] = this.currency;
+        data["category"] = this.category;
+        data["openingDate"] = this.openingDate;
+        data["customerNo"] = this.customerNo;
+        data["previousAcct"] = this.previousAcct;
+        return data; 
+    }
+
+    clone(): CreateAccountResponseBody {
+        const json = this.toJSON();
+        let result = new CreateAccountResponseBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateAccountResponseBody {
+    accountOfficer: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+    category: string | undefined;
+    openingDate: string | undefined;
+    customerNo: string | undefined;
+    previousAcct: string | undefined;
+}
+
+export class UpdateAccountInfoPayload implements IUpdateAccountInfoPayload {
+    body: UpdateAccountInfoPayloadBody | undefined;
+
+    constructor(data?: IUpdateAccountInfoPayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.body = _data["body"] ? UpdateAccountInfoPayloadBody.fromJS(_data["body"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateAccountInfoPayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAccountInfoPayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UpdateAccountInfoPayload {
+        const json = this.toJSON();
+        let result = new UpdateAccountInfoPayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAccountInfoPayload {
+    body: UpdateAccountInfoPayloadBody | undefined;
+}
+
+export class UpdateAccountInfoPayloadBody implements IUpdateAccountInfoPayloadBody {
+    accountNo: string | undefined;
+    category: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+
+    constructor(data?: IUpdateAccountInfoPayloadBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accountNo = _data["accountNo"];
+            this.category = _data["category"];
+            this.accountName = _data["accountName"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): UpdateAccountInfoPayloadBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAccountInfoPayloadBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accountNo"] = this.accountNo;
+        data["category"] = this.category;
+        data["accountName"] = this.accountName;
+        data["currency"] = this.currency;
+        return data; 
+    }
+
+    clone(): UpdateAccountInfoPayloadBody {
+        const json = this.toJSON();
+        let result = new UpdateAccountInfoPayloadBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAccountInfoPayloadBody {
+    accountNo: string | undefined;
+    category: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+}
+
+export class ApiResultOfUpdateAccountInfoResponse implements IApiResultOfUpdateAccountInfoResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: UpdateAccountInfoResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfUpdateAccountInfoResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? UpdateAccountInfoResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfUpdateAccountInfoResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfUpdateAccountInfoResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfUpdateAccountInfoResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfUpdateAccountInfoResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfUpdateAccountInfoResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: UpdateAccountInfoResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class UpdateAccountInfoResponse implements IUpdateAccountInfoResponse {
+    header: Header | undefined;
+    body: UpdateAccountInfoResponseBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: IUpdateAccountInfoResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? Header.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? UpdateAccountInfoResponseBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateAccountInfoResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAccountInfoResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): UpdateAccountInfoResponse {
+        const json = this.toJSON();
+        let result = new UpdateAccountInfoResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAccountInfoResponse {
+    header: Header | undefined;
+    body: UpdateAccountInfoResponseBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class UpdateAccountInfoResponseBody implements IUpdateAccountInfoResponseBody {
+    openingDate: string | undefined;
+    customerNo: string | undefined;
+    accountNo: string | undefined;
+    category: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+
+    constructor(data?: IUpdateAccountInfoResponseBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.openingDate = _data["openingDate"];
+            this.customerNo = _data["customerNo"];
+            this.accountNo = _data["accountNo"];
+            this.category = _data["category"];
+            this.accountName = _data["accountName"];
+            this.currency = _data["currency"];
+        }
+    }
+
+    static fromJS(data: any): UpdateAccountInfoResponseBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAccountInfoResponseBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["openingDate"] = this.openingDate;
+        data["customerNo"] = this.customerNo;
+        data["accountNo"] = this.accountNo;
+        data["category"] = this.category;
+        data["accountName"] = this.accountName;
+        data["currency"] = this.currency;
+        return data; 
+    }
+
+    clone(): UpdateAccountInfoResponseBody {
+        const json = this.toJSON();
+        let result = new UpdateAccountInfoResponseBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAccountInfoResponseBody {
+    openingDate: string | undefined;
+    customerNo: string | undefined;
+    accountNo: string | undefined;
+    category: string | undefined;
+    accountName: string | undefined;
+    currency: string | undefined;
+}
+
+export class FreezeAccountPayload implements IFreezeAccountPayload {
+    body: FreezeAccountPayloadBody | undefined;
+
+    constructor(data?: IFreezeAccountPayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.body = _data["body"] ? FreezeAccountPayloadBody.fromJS(_data["body"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): FreezeAccountPayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new FreezeAccountPayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): FreezeAccountPayload {
+        const json = this.toJSON();
+        let result = new FreezeAccountPayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFreezeAccountPayload {
+    body: FreezeAccountPayloadBody | undefined;
+}
+
+export class FreezeAccountPayloadBody implements IFreezeAccountPayloadBody {
+    accountNo: string | undefined;
+    freezeAccount: string | undefined;
+    shortName: string | undefined;
+
+    constructor(data?: IFreezeAccountPayloadBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accountNo = _data["accountNo"];
+            this.freezeAccount = _data["freezeAccount"];
+            this.shortName = _data["shortName"];
+        }
+    }
+
+    static fromJS(data: any): FreezeAccountPayloadBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new FreezeAccountPayloadBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accountNo"] = this.accountNo;
+        data["freezeAccount"] = this.freezeAccount;
+        data["shortName"] = this.shortName;
+        return data; 
+    }
+
+    clone(): FreezeAccountPayloadBody {
+        const json = this.toJSON();
+        let result = new FreezeAccountPayloadBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFreezeAccountPayloadBody {
+    accountNo: string | undefined;
+    freezeAccount: string | undefined;
+    shortName: string | undefined;
+}
+
+export class ApiResultOfFreezeAccountResponse implements IApiResultOfFreezeAccountResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: FreezeAccountResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfFreezeAccountResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? FreezeAccountResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfFreezeAccountResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfFreezeAccountResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfFreezeAccountResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfFreezeAccountResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfFreezeAccountResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: FreezeAccountResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class FreezeAccountResponse implements IFreezeAccountResponse {
+    header: Header | undefined;
+    body: FreezeAccountPayloadBody | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: IFreezeAccountResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? Header.fromJS(_data["header"]) : <any>undefined;
+            this.body = _data["body"] ? FreezeAccountPayloadBody.fromJS(_data["body"]) : <any>undefined;
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): FreezeAccountResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new FreezeAccountResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        data["body"] = this.body ? this.body.toJSON() : <any>undefined;
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): FreezeAccountResponse {
+        const json = this.toJSON();
+        let result = new FreezeAccountResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IFreezeAccountResponse {
+    header: Header | undefined;
+    body: FreezeAccountPayloadBody | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class GetAccountStatementPayload implements IGetAccountStatementPayload {
+    accountNo: string | undefined;
+    startdate: Date | undefined;
+    enddate: Date | undefined;
+    sendStatementToEmail: boolean | undefined;
+
+    constructor(data?: IGetAccountStatementPayload) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accountNo = _data["accountNo"];
+            this.startdate = _data["startdate"] ? new Date(_data["startdate"].toString()) : <any>undefined;
+            this.enddate = _data["enddate"] ? new Date(_data["enddate"].toString()) : <any>undefined;
+            this.sendStatementToEmail = _data["SendStatementToEmail"];
+        }
+    }
+
+    static fromJS(data: any): GetAccountStatementPayload {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAccountStatementPayload();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accountNo"] = this.accountNo;
+        data["startdate"] = this.startdate ? this.startdate.toISOString() : <any>undefined;
+        data["enddate"] = this.enddate ? this.enddate.toISOString() : <any>undefined;
+        data["SendStatementToEmail"] = this.sendStatementToEmail;
+        return data; 
+    }
+
+    clone(): GetAccountStatementPayload {
+        const json = this.toJSON();
+        let result = new GetAccountStatementPayload();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAccountStatementPayload {
+    accountNo: string | undefined;
+    startdate: Date | undefined;
+    enddate: Date | undefined;
+    sendStatementToEmail: boolean | undefined;
+}
+
+export class ApiResultOfGetAccountStatementResponse implements IApiResultOfGetAccountStatementResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: GetAccountStatementResponse | undefined;
+    totalCount: number | undefined;
+
+    constructor(data?: IApiResultOfGetAccountStatementResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hasError = _data["HasError"];
+            this.message = _data["Message"];
+            this.result = _data["Result"] ? GetAccountStatementResponse.fromJS(_data["Result"]) : <any>undefined;
+            this.totalCount = _data["TotalCount"];
+        }
+    }
+
+    static fromJS(data: any): ApiResultOfGetAccountStatementResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResultOfGetAccountStatementResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["HasError"] = this.hasError;
+        data["Message"] = this.message;
+        data["Result"] = this.result ? this.result.toJSON() : <any>undefined;
+        data["TotalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ApiResultOfGetAccountStatementResponse {
+        const json = this.toJSON();
+        let result = new ApiResultOfGetAccountStatementResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IApiResultOfGetAccountStatementResponse {
+    hasError: boolean | undefined;
+    message: string | undefined;
+    result: GetAccountStatementResponse | undefined;
+    totalCount: number | undefined;
+}
+
+export class GetAccountStatementResponse implements IGetAccountStatementResponse {
+    header: GetAccountStatementHeader | undefined;
+    body: GetAccountStatementResponseBody[] | undefined;
+    error: ErrorDto | undefined;
+
+    constructor(data?: IGetAccountStatementResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.header = _data["header"] ? GetAccountStatementHeader.fromJS(_data["header"]) : <any>undefined;
+            if (Array.isArray(_data["body"])) {
+                this.body = [] as any;
+                for (let item of _data["body"])
+                    this.body.push(GetAccountStatementResponseBody.fromJS(item));
+            }
+            this.error = _data["error"] ? ErrorDto.fromJS(_data["error"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GetAccountStatementResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAccountStatementResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["header"] = this.header ? this.header.toJSON() : <any>undefined;
+        if (Array.isArray(this.body)) {
+            data["body"] = [];
+            for (let item of this.body)
+                data["body"].push(item.toJSON());
+        }
+        data["error"] = this.error ? this.error.toJSON() : <any>undefined;
+        return data; 
+    }
+
+    clone(): GetAccountStatementResponse {
+        const json = this.toJSON();
+        let result = new GetAccountStatementResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAccountStatementResponse {
+    header: GetAccountStatementHeader | undefined;
+    body: GetAccountStatementResponseBody[] | undefined;
+    error: ErrorDto | undefined;
+}
+
+export class GetAccountStatementHeader implements IGetAccountStatementHeader {
+    audit: Audit | undefined;
+    status: string | undefined;
+    page_size: number | undefined;
+    page_start: number | undefined;
+    total_size: number | undefined;
+
+    constructor(data?: IGetAccountStatementHeader) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.audit = _data["audit"] ? Audit.fromJS(_data["audit"]) : <any>undefined;
+            this.status = _data["status"];
+            this.page_size = _data["page_size"];
+            this.page_start = _data["page_start"];
+            this.total_size = _data["total_size"];
+        }
+    }
+
+    static fromJS(data: any): GetAccountStatementHeader {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAccountStatementHeader();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["audit"] = this.audit ? this.audit.toJSON() : <any>undefined;
+        data["status"] = this.status;
+        data["page_size"] = this.page_size;
+        data["page_start"] = this.page_start;
+        data["total_size"] = this.total_size;
+        return data; 
+    }
+
+    clone(): GetAccountStatementHeader {
+        const json = this.toJSON();
+        let result = new GetAccountStatementHeader();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAccountStatementHeader {
+    audit: Audit | undefined;
+    status: string | undefined;
+    page_size: number | undefined;
+    page_start: number | undefined;
+    total_size: number | undefined;
+}
+
+export class GetAccountStatementResponseBody implements IGetAccountStatementResponseBody {
+    transactionDate: string | undefined;
+    transactionRef: string | undefined;
+    narration: string | undefined;
+    debitAmt: string | undefined;
+    creditAmt: string | undefined;
+
+    constructor(data?: IGetAccountStatementResponseBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.transactionDate = _data["transactionDate"];
+            this.transactionRef = _data["transactionRef"];
+            this.narration = _data["narration"];
+            this.debitAmt = _data["debitAmt"];
+            this.creditAmt = _data["creditAmt"];
+        }
+    }
+
+    static fromJS(data: any): GetAccountStatementResponseBody {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetAccountStatementResponseBody();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["transactionDate"] = this.transactionDate;
+        data["transactionRef"] = this.transactionRef;
+        data["narration"] = this.narration;
+        data["debitAmt"] = this.debitAmt;
+        data["creditAmt"] = this.creditAmt;
+        return data; 
+    }
+
+    clone(): GetAccountStatementResponseBody {
+        const json = this.toJSON();
+        let result = new GetAccountStatementResponseBody();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGetAccountStatementResponseBody {
+    transactionDate: string | undefined;
+    transactionRef: string | undefined;
+    narration: string | undefined;
+    debitAmt: string | undefined;
+    creditAmt: string | undefined;
 }
 
 export class ApiException extends Error {

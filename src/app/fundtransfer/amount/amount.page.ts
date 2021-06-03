@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { ApiProvider } from 'src/app/_services/api.service';
@@ -16,6 +17,7 @@ import { FundTransfer, TransferService } from 'src/app/_services/transfer.servic
   styleUrls: ['./amount.page.scss'],
 })
 export class AmountPage implements OnInit {
+
   acctBal: number = 20000;
   amount?: number;
   bankAccount?: string = '';
@@ -45,7 +47,7 @@ export class AmountPage implements OnInit {
     return !(Number(this.amount) > 0)?true:(this.amount > this.acctBal?true:false)
   }
   ionViewWillEnter() {
-    
+
     this.AuthenService.getuser().then(userdata => {
       if (userdata) {
         if (userdata.length > 0) {
@@ -89,18 +91,47 @@ if(data.trftype == 'FX'){this.transferType = "Funds Transfer"}
     // })
   }
 
-valbeneficiaryAccount() {
-    if (!this.inpVali.invalidAccount) {      
+  valbeneficiaryAccount() {   
+    if (!this.inpVali.invalidAccount && this.tobankAccount.length == 10) {      
       this.AuthenService.getuser().then(userDetails => {
-        this.lotusService.getAccountDetails(this.tobankAccount, userDetails[0].sessionToken).subscribe((data) => {
+        this.GalertService.gPresentLoading('Please wait ...');
+        this.lotusService.getAccountDetails(this.tobankAccount, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
           this.customerAccountResp = data.result;
           if (!data.hasError &&  this.customerAccountResp.body) {            
             let acctDet = this.customerAccountResp.body.find(x => x.longAccount == this.tobankAccount);
             this.transfer.toAccountName = acctDet.accountName;
             this.transfer.toAccountNo = this.tobankAccount;
+            this.GalertService.gdismissLoading();
             return true;
            }
           else {
+            this.GalertService.gdismissLoading();
+           // this.GalertService.gPresentToast("Invalid Account", "danger");
+            return false;
+          }
+         
+        });
+
+       });
+    }
+    return false;
+  }
+  
+  fromvalbeneficiaryAccount() {
+    if (!this.inpVali.invalidtoAccount && this.bankAccount.length == 10) {      
+      this.AuthenService.getuser().then(userDetails => {
+        this.GalertService.gPresentLoading('Please wait ...');
+        this.lotusService.getAccountDetails(this.bankAccount, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
+          this.customerAccountResp = data.result;
+          if (!data.hasError &&  this.customerAccountResp.body) {            
+            let acctDet = this.customerAccountResp.body.find(x => x.longAccount == this.bankAccount);
+            this.transfer.accountName = acctDet.accountName;
+            this.transfer.accountNo = this.bankAccount;
+            this.GalertService.gdismissLoading();
+            return true;
+           }
+          else {
+            this.GalertService.gdismissLoading();
            // this.GalertService.gPresentToast("Invalid Account", "danger");
             return false;
           }         
@@ -119,7 +150,7 @@ valbeneficiaryAccount() {
       }else{
         this.loadingBankAccount = true;
         this.AuthenService.getuser().then(userDetails => {
-          this.lotusService.getAccountDetails(this.bankAccount, userDetails[0].sessionToken).subscribe((data) => {
+          this.lotusService.getAccountDetails(this.bankAccount, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
             this.customerAccountResp = data.result;
             if (!data.hasError && this.customerAccountResp.body) {
               this.loadingBankAccount = false;              
@@ -129,7 +160,7 @@ valbeneficiaryAccount() {
               this.transfer.transferType = this.transferType;
               this.transfer.currencyCode = acctDet.currencyCode;
               this.transfer.balance = Number(acctDet.accountBalance);
-              this.lotusService.getAccountDetails(this.tobankAccount, userDetails[0].sessionToken).subscribe((data) => {
+              this.lotusService.getAccountDetails(this.tobankAccount, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
                 this.customerAccountResp = data.result;
                 if (!data.hasError && this.customerAccountResp.body) {
                   this.loadingBankAccount = false;                 
@@ -227,7 +258,7 @@ valbeneficiaryAccount() {
       }else{
         this.loadingBankAccount = true
         this.AuthenService.getuser().then(userDetails => {
-          this.lotusService.getAccountDetails(this.bankAccount, userDetails[0].sessionToken).subscribe((data) => {
+          this.lotusService.getAccountDetails(this.bankAccount, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
             this.customerAccountResp = data.result;
             if (!data.hasError && this.customerAccountResp.body) {
               this.loadingBankAccount = false

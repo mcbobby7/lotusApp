@@ -1,0 +1,29 @@
+<ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Freeze Account</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <form id="freezeForm" name="freezeForm" #freezeForm="ngForm">
+    <div  class="page-wrapper" style="display: flexbox; align-items: center; justify-items: center; background-color: rgb(0,0,0,.2);">
+      <ion-input type="tel" style="color: #fff;" name="accountNo" id="accountNo" #accountNo="ngModel"  [(ngModel)]="bodyFreezeAccount.accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+      <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+      <div style="padding: 10px;"></div>
+      
+  <div style="text-align:center;z-index:1000; width:100%;">
+    <div style="padding-top:10px;"></div>
+    <ion-button *ngIf="!showProcessing" [disabled]="freezeForm.invalid" (click)="statementRequest()"  color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+     PROCEED
+    </ion-button>
+    <ion-button *ngIf="showProcessing"  color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+   PROCESSING ...
+    </ion-button>
+    </div>
+        </div>
+    </form>
+</ion-content>

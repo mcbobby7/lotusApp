@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ChequeWithdrawalPageRoutingModule } from './cheque-withdrawal-routing.module';
 
 import { ChequeWithdrawalPage } from './cheque-withdrawal.page';
-import { AccountInputComponent } from '../../components/account-input/account-input.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -16,6 +16,6 @@ import { AccountInputComponent } from '../../components/account-input/account-in
     ChequeWithdrawalPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [ChequeWithdrawalPage,AccountInputComponent]
+  declarations: [ChequeWithdrawalPage]
 })
 export class ChequeWithdrawalPageModule {}

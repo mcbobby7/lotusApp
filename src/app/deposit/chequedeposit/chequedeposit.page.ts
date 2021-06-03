@@ -6,6 +6,9 @@ import { InputvalidationService } from 'src/app/_services/inputvalidation.servic
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 import { BankAccount, BankService, } from 'src/app/_services/bank.service';
 import { Router } from '@angular/router';
+import { LotusServiceProxy } from 'src/app/_services/service-proxies';
+import { GlobalalertservicesService } from 'src/app/_services/globalalertservices.service';
+import { AuthenticationService } from 'src/app/_services/authentication.service';
 @Component({
   selector: 'app-chequedeposit',
   templateUrl: './chequedeposit.page.html',
@@ -17,13 +20,39 @@ export class ChequedepositPage implements OnInit {
   intrusmntType: any = '';
   invalidAccount: boolean = false;
   invalidAmount: boolean = false;
-  depositObj: multiChqDeposit = {accountInfo:[{issuingBank:'',chqNumber:'',amount:'',erroramount: false}],};
+  depositObj: multiChqDeposit = {
+    accountInfo: [{
+      issuingBank: '',
+      chequeNo: '',
+      amount: '',
+      erroramount: false,
+      debitAccount: '',
+      currency: '',
+      narration:''}],};
   constructor(private navCtrl: NavController,
     private inpVali: InputvalidationService,
     private shortcutService: ShortcutsService,
     private depositService: DepositService,
     private bankService: BankService,
-    private router: Router,) { }
+    private router: Router,    
+    private LotusService: LotusServiceProxy,
+    private GalertService: GlobalalertservicesService,
+    private AuthenService: AuthenticationService,
+  ) { }
+  ionViewWillEnter() {    
+    this.depositService.get().subscribe((data:any) => {
+      if (data) {
+        if (data.multiDeposit) {
+          this.depositObj = data
+    
+        } else {
+          this.depositObj = data 
+        }
+}
+      
+      
+    })
+  }
   goBack(){
     this.navCtrl.back()
       }

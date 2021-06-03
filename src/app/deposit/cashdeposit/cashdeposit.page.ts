@@ -73,7 +73,7 @@ this.navCtrl.back()
       this.GalertService.gPresentLoading('Please wait...');
       this.loadingBankAccount = true;
       this.AuthenService.getuser().then(userDetails => {
-        this.LotusService.getAccountDetails(this.depositObj.accountNumber,userDetails[0].sessionToken).subscribe((data) => {
+        this.LotusService.getAccountDetails(this.depositObj.accountNumber,'',this.AuthenService.imei.value).subscribe((data) => {
           this.customerAccountResp = data.result;
           if (!data.hasError && this.customerAccountResp.body) {
             this.GalertService.gPresentToast(data.message, "success");

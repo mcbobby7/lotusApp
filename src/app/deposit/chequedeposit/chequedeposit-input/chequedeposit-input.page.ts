@@ -18,7 +18,7 @@ export class ChequedepositInputPage implements OnInit {
   intrusmntType: any = '';
   invalidAccount: boolean = false;
   invalidAmount: boolean = false;
-  depositObj: multiChqDeposit ={accountInfo:[{issuingBank:'',chqNumber:'',amount:'',erroramount: false}],};
+  depositObj: multiChqDeposit ={accountInfo:[{issuingBank:'',chequeNo:'',amount:'',erroramount: false}],};
   tranxError: boolean = false;
   constructor(    
     private navCtrl: NavController,
@@ -61,7 +61,7 @@ if(this.inpVali.invalidAmount) {
   addDeposit(){
     console.log(this.depositObj.accountInfo)
   const errorChk =  this.depositObj.accountInfo.map(dep=>{
-  if(dep.erroramount  || !dep.amount || dep.amount == "0.00" || dep.amount == "0" || !dep.issuingBank || !dep.chqNumber){
+  if(dep.erroramount  || !dep.amount || dep.amount == "0.00" || dep.amount == "0" || !dep.issuingBank || !dep.chequeNo){
     return false
   }else{
     return true
@@ -72,7 +72,7 @@ if(this.inpVali.invalidAmount) {
   if(errorChk.indexOf(false) > -1){
     this.shortcutService.showErrorToast('All Fields are required')
   }else{
-    this.depositObj.accountInfo.push({issuingBank:'',chqNumber:'',amount:'',erroramount: false});
+    this.depositObj.accountInfo.push({issuingBank:'',chequeNo:'',amount:'',erroramount: false});
     console.log(this.depositObj.accountInfo)
   }
   
@@ -81,7 +81,7 @@ if(this.inpVali.invalidAmount) {
     if(this.depositObj.selfdeposit) 
   { 
      const errorChk =  this.depositObj.accountInfo.map(dep=>{
-      if(dep.erroramount  || !dep.amount || dep.amount == "0.00" || dep.amount == "0" || !dep.issuingBank || !dep.chqNumber){
+      if(dep.erroramount  || !dep.amount || dep.amount == "0.00" || dep.amount == "0" || !dep.issuingBank || !dep.chequeNo){
         return false
       }else{
         return true

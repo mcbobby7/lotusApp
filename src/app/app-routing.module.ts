@@ -115,6 +115,11 @@ const routes: Routes = [
     path: 'openaccount',
     loadChildren: () => import('./openaccount/openaccount.module').then( m => m.OpenaccountPageModule)
   },
+  {
+    path: 'transactions-receipt',
+    loadChildren: () => import('./transactions-receipt/transactions-receipt.module').then( m => m.TransactionsReceiptPageModule)
+  },
+
 
 
 

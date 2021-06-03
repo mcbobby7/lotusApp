@@ -75,7 +75,7 @@ export class ConfirmPage implements OnInit {
             this.bodyCashDeposit.narrative = "Cash Dep by Self - " + this.multideposit.narration;
           }
           this.cashdeposit.body = this.bodyCashDeposit;
-          this.LotusService.tellerCashDep(this.cashdeposit,userData[0].sessionToken).subscribe((data) => {
+          this.LotusService.tellerCashDep(this.cashdeposit,"",this.AuthenService.imei.value).subscribe((data) => {
             if (!data.hasError) {
               
               window.setTimeout(() => {
@@ -113,7 +113,7 @@ export class ConfirmPage implements OnInit {
           this.bodyCashDeposit.narrative = "Cash Dep by Self - " + this.depositObj.narration;
         }
         this.cashdeposit.body = this.bodyCashDeposit;
-        this.LotusService.tellerCashDep(this.cashdeposit,userData[0].sessionToken).subscribe((data) => {         
+        this.LotusService.tellerCashDep(this.cashdeposit,"",this.AuthenService.imei.value).subscribe((data) => {         
           if (!data.hasError) {
             
             window.setTimeout(() => {

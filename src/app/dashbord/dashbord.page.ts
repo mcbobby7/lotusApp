@@ -10,7 +10,7 @@ import { AuthenticationService } from '../_services/authentication.service';
 import { GlobalalertservicesService } from '../_services/globalalertservices.service';
 import { DepositService } from '../_services/deposit.service';
 import { WithdrawalService } from '../_services/withdrawal.service';
-
+import {CustomertypeComponent } from '../openaccount/customertype/customertype.component';
 declare var window:any;
 @Component({
   selector: 'app-dashbord',
@@ -52,7 +52,35 @@ export class DashbordPage implements OnInit {
     })
     return await modal.present();
   }
+  async popupAccountOpeningType() {
+    this.AuthenService.getuser().then(async userdata => {
+      if (userdata && userdata.length > 0) {
+        this.loggedinUserfullName = userdata[0].fullName;
+        this.router.navigate(['/openaccount']);  
+      } else {
+        const subject = new Subject<string>();
+        const modal = await this.popoverController.create({
+          component: CustomertypeComponent,
+          cssClass: 'my-custom-class',
+          componentProps: {
+            subject
+          }
+        });
+        subject.subscribe(async val => {
+          modal.dismiss()
+          if (val) {
+            if(val == "exist")this.router.navigate(['/loginpage'],{queryParams:{nxtRoute:'/openaccount'}});
+            if (val == "new") this.router.navigate(['/openaccount']);
+           }else {
+       modal.dismiss()
+      }
+        });
 
+        return await modal.present();
+       }
+
+     });
+}
 
   async popwithdrawltype(){
     const subject = new Subject<string>()
@@ -71,8 +99,8 @@ export class DashbordPage implements OnInit {
             if (userdata.length > 0) {
               this.loggedinUserfullName = userdata[0].fullName;
               if (this.loggedinUserfullName) {
-                if (val == "cash") this.router.navigate(['/withdrawal']);
-                if (val == "cheque") this.router.navigate(['/withdrawal/cheque-withdrawal']);                
+                if (val == "cash") this.router.navigate(['withdrawal']);
+                if (val == "cheque") this.router.navigate(['withdrawal/cheque-withdrawal']);                
               } else {
                 if(val == "cheque")this.router.navigate(['/loginpage'],{queryParams:{nxtRoute:'/withdrawal/cheque-withdrawal'}});
                 if (val == "cash") this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: 'withdrawal' } });
@@ -112,8 +140,10 @@ export class DashbordPage implements OnInit {
   logout() {
     this.GalertService.gPresentLoading('Please wait...');
     this.AuthenService.getuser().then(userdata => {
-      this.loginService.logout(userdata[0].sessionToken).subscribe(dataResp => {
+      this.loginService.logout(userdata[0].sessionToken,this.AuthenService.imei.value).subscribe(dataResp => {
         if (!dataResp.hasError) {
+          this.GalertService.gdismissLoading();
+          this.loggedinUserfullName = "";
           this.AuthenService.clearusers();
           this.GalertService.gPresentToast(dataResp.message, "success"); 
           this.router.navigate(['home'])
@@ -162,7 +192,7 @@ export class DashbordPage implements OnInit {
         if (userdata.length > 0) {
           this.loggedinUserfullName = userdata[0].fullName;
           if (this.loggedinUserfullName) {
-            this.router.navigate(['/selfservice']);
+            this.router.navigate(['selfservice']);
                      
           } else {
             this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: '/selfservice' } });
@@ -179,7 +209,7 @@ export class DashbordPage implements OnInit {
         if (userdata.length > 0) {
           this.loggedinUserfullName = userdata[0].fullName;
           if (this.loggedinUserfullName) {
-            this.router.navigate(['/self-service']);
+            this.router.navigate(['self-service']);
                      
           } else {
             this.router.navigate(['/loginpage'], { queryParams: { nxtRoute: '/self-service' } });

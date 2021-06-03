@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ChequeconfirmPageRoutingModule } from './chequeconfirm-routing.module';
 
 import { ChequeconfirmPage } from './chequeconfirm.page';
-import { ProcessingComponent } from 'src/app/processing/processing.component';
+
 
 @NgModule({
   imports: [
@@ -17,6 +17,6 @@ import { ProcessingComponent } from 'src/app/processing/processing.component';
     ChequeconfirmPageRoutingModule,
     
   ],
-  declarations: [ChequeconfirmPage,ProcessingComponent]
+  declarations: [ChequeconfirmPage]
 })
 export class ChequeconfirmPageModule {}

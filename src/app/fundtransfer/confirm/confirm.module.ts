@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { ConfirmPageRoutingModule } from './confirm-routing.module';
 
 import { ConfirmPage } from './confirm.page';
-import { ProcessingComponent } from 'src/app/processing/processing.component';
+
+import { ComponentsModule } from '../../components/components.module';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ConfirmPageRoutingModule
+    ConfirmPageRoutingModule,
+    ComponentsModule
   ],
-  declarations: [ConfirmPage,ProcessingComponent]
+  declarations: [ConfirmPage]
 })
 export class ConfirmPageModule {}

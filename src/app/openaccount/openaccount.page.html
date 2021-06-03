@@ -1,9 +1,476 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>openaccount</ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <img src="assets/images/back_btn.png" style="width: 2rem;">          
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Open Account</ion-title>
+      <ion-buttons slot="end"  class="pryColor" *ngIf="page == 4">
+        <ion-button [disabled]="newAccountOpeningForm.invalid" (click)="createCustomer()">
+          Submit
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <div class="page-wrapper"  >
+    <form id="newAccountOpeningForm" name="newAccountOpeningForm" #newAccountOpeningForm="ngForm">
+<div  *ngIf="page == 0 && newCustomer">
+  <ion-row>
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label class="justifyCenter">Firstname</ion-label>
+        <ion-input type="text" style="color: #fff;" name="firstName" id="firstName" #firstName="ngModel"  [(ngModel)]="newAccountOpeningCustomer.firstName"  placeholder="Enter Firstname" required></ion-input>
+        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="error">
+          <div *ngIf="firstName.errors.required">Firstname is required</div>
+        </div> 
+      </div>
+    </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Lastname</ion-label>
+          <ion-input type="text" style="color: #fff;" name="lastName" id="lastName" #lastName="ngModel"  [(ngModel)]="newAccountOpeningCustomer.lastName"  placeholder="Enter Lastname" required></ion-input>
+          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="error">
+            <div *ngIf="lastName.errors.required">Last name is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <ion-label class="justifyCenter">Phone Number</ion-label>
+            </div>
+            </ion-col>
+            </ion-row>
+   
+      <ion-row style="border-radius: 5px;border: 0.5px solid #00CECE;background: rgba(0,0,0,0.38) !important;margin: 3px;">
+        <ion-col size=2>
+          <div style="padding: 5px;"></div>
+          <span *ngFor="let imgSrc of selectedFlag">
+            <img style="width: 30px;height:35px;" [src]="imgSrc.flag" />
+          </span>
+          
+        </ion-col>
+        <ion-col size=3>
+          <ion-select style="background: none !important;border: none !important;" 
+          #selectCount (click)="openCountries()" (ionChange)="getCountryFlag(selectCount.value)"  [(ngModel)]="alpha2Code"  cancelText="Cancel" name="alpha2Code" okText="OK" required>
+            <ion-select-option *ngFor="let Ccode of ICountrys" value="{{Ccode.alpha2Code}}">
+              {{Ccode.name}}
+            </ion-select-option>             
+          </ion-select>
+        </ion-col>
+        <ion-col size=7>
+          
+          <ion-input style="background: none !important;border: none !important;" 
+           #phone (keyup)="phoneValidation(phoneNumber.value)" placeholder="Phone Number" type="tel" name="phoneNumber" id="phoneNumber" [(ngModel)]="newAccountOpeningCustomer.phoneNumber" #phoneNumber="ngModel" required ></ion-input>
+   
+        </ion-col>
+      </ion-row> 
+      <div style="padding: 2px;"></div>
+      <div *ngIf="phoneError" class="error">
+        valid Phone Number  is required
+    </div>
 
+        <ion-row>
+          <ion-col size="12">
+            <div class="form-group">
+              <div style="padding: 10px;"></div>
+              <ion-label class="justifyCenter">Email</ion-label>
+              <ion-input [pattern]="emailPattern"  type="email" style="color: #fff;" name="email" id="email" #email="ngModel"  [(ngModel)]="newAccountOpeningCustomer.email"  placeholder="Enter Email" required></ion-input>
+              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error">
+                <div *ngIf="email.errors.required">Email is required</div>
+              </div> 
+            </div>
+          </ion-col>
+          </ion-row>
+                              
+          <ion-row>
+            <ion-col size="12">
+              <div class="form-group">
+                <div style="padding: 10px;"></div>
+                <ion-label class="justifyCenter">Date Of Birth</ion-label>
+                <ion-datetime displayFormat="DD/MM/YYYY" name="dateOfBirth" id="dateOfBirth" #dateOfBirth="ngModel" [(ngModel)]="newAccountOpeningCustomer.dateOfBirth"  placeholder="Select Date" required></ion-datetime>
+                <div *ngIf="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)" class="error">
+                  <div *ngIf="dateOfBirth.errors.required">Date Of Birth is required</div>
+                </div> 
+              </div>
+            </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <div class="form-group">
+                  <div style="padding: 10px;"></div>
+                  <ion-label class="justifyCenter">Marital Status</ion-label>
+                  <ion-select placeholder="Select Status"  style="color: #fff;" name="maritalStatus" id="maritalStatus" #maritalStatus="ngModel"  [(ngModel)]="newAccountOpeningCustomer.maritalStatus"  required>
+                    <ion-select-option value="MARRIED">MARRIED</ion-select-option>
+                    <ion-select-option value="SINGLE">SINGLE</ion-select-option>
+                  </ion-select>
+                 
+                  <div *ngIf="maritalStatus.invalid && (maritalStatus.dirty || maritalStatus.touched)" class="error">
+                    <div *ngIf="maritalStatus.errors.required">Marital Status is required</div>
+                  </div> 
+                </div>
+              </ion-col>
+              </ion-row>
+                         <ion-row>
+              <ion-col size="12">
+                <div class="form-group">
+                  <div style="padding: 10px;"></div>
+                  <ion-label class="justifyCenter">Gender</ion-label>
+                  <ion-select placeholder="Select Status"  style="color: #fff;" name="gender" id="gender"    required>
+                    <ion-select-option value="MALE">MALE</ion-select-option>
+                    <ion-select-option value="FEMALE">FEMALE</ion-select-option>
+                  </ion-select>
+                 
+                  <!-- <div *ngIf="gender.invalid && (gender.dirty || gender.touched)" class="error">
+                    <div *ngIf="gender.errors.required">Gender is required</div>
+                  </div>  -->
+                </div>
+              </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="12">
+                  <div class="form-group">
+                    <div style="padding: 10px;"></div>
+                    <ion-label class="justifyCenter">BVN</ion-label>
+                    <ion-input type="text" style="color: #fff;" name="bvn" id="bvn" #bvn="ngModel"  [(ngModel)]="newAccountOpeningCustomer.bvn"  placeholder="Enter BVN" required></ion-input>
+                    <div *ngIf="bvn.invalid && (bvn.dirty || bvn.touched)" class="error">
+                      <div *ngIf="bvn.errors.required">BVN is required</div>
+                    </div> 
+                  </div>
+                </ion-col>
+                </ion-row>
+</div>
+<div  *ngIf="page == 1 && newCustomer">
+  <ion-row>
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label class="justifyCenter">Street Number</ion-label>
+        <ion-input type="text" style="color: #fff;" name="street" id="street" #street="ngModel"  [(ngModel)]="newAccountOpeningCustomer.street"  placeholder="Enter Street Number" required></ion-input>
+        <div *ngIf="street.invalid && (street.dirty || street.touched)" class="error">
+          <div *ngIf="street.errors.required">Street Number is required</div>
+        </div> 
+      </div>
+    </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Address</ion-label>
+          <ion-input type="text" style="color: #fff;" name="address" id="address" #address="ngModel"  [(ngModel)]="newAccountOpeningCustomer.address"  placeholder="Enter Address" required></ion-input>
+          <div *ngIf="address.invalid && (address.dirty || address.touched)" class="error">
+            <div *ngIf="address.errors.required">Address is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="form-group">
+              <div style="padding: 10px;"></div>
+              <ion-label class="justifyCenter">Nationality</ion-label>
+              <ion-select #nationality="ngModel"  style="color: #fff;"   [(ngModel)]="newAccountOpeningCustomer.nationality"  cancelText="Cancel" name="nationality" okText="OK" required>
+             
+                <ion-select-option *ngFor="let Ccode of ICountrys" value="{{Ccode.alpha2Code}}">
+                  {{Ccode.name}}
+                </ion-select-option>             
+              </ion-select>
+              <div *ngIf="nationality.invalid && (nationality.dirty || nationality.touched)" class="error">
+                <div *ngIf="nationality.errors.required">Nationality is required</div>
+              </div> 
+            </div>
+          </ion-col>
+          </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Country</ion-label>
+            <ion-select #country="ngModel"  style="color: #fff;"   [(ngModel)]="newAccountOpeningCustomer.country"  cancelText="Cancel" name="country" okText="OK" required>
+              <ion-select-option *ngFor="let Ccode of ICountrys" value="{{Ccode.alpha2Code}}">
+                {{Ccode.name}}
+              </ion-select-option>             
+            </ion-select>
+            <div *ngIf="country.invalid && (country.dirty || country.touched)" class="error">
+              <div *ngIf="country.errors.required">Country is required</div>
+            </div> 
+          </div>
+        </ion-col>
+        </ion-row>
+    <ion-row *ngIf="newAccountOpeningCustomer.nationality != 'NG'">
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Resident Permit Number</ion-label>
+          <ion-input type="text" style="color: #fff;" #residentPermit="ngModel"  [(ngModel)]="newAccountOpeningCustomer.residentPermit"  name="residentPermit" id="residentPermit"  placeholder="Enter Resident Permit Number" required></ion-input>
+          <div *ngIf="residentPermit.invalid && (residentPermit.dirty || residentPermit.touched)" class="error">
+            <div *ngIf="residentPermit.errors.required">Resident Permit is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+
+
+          <ion-row>
+            <ion-col size="12">
+              <div class="form-group">
+                <div style="padding: 10px;"></div>
+                <ion-label class="justifyCenter">Residence</ion-label>
+                <ion-select #residence="ngModel"  style="color: #fff;"   [(ngModel)]="newAccountOpeningCustomer.residence"  cancelText="Cancel" name="residence" okText="OK" required>
+             
+                  <ion-select-option *ngFor="let Ccode of ICountrys" value="{{Ccode.alpha2Code}}">
+                    {{Ccode.name}}
+                  </ion-select-option>             
+                </ion-select>
+               
+                <div *ngIf="residence.invalid && (residence.dirty || residence.touched)" class="error">
+                  <div *ngIf="residence.errors.required">Residence is required</div>
+                </div> 
+              </div>
+            </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12">
+                <div class="form-group">
+                  <div style="padding: 10px;"></div>
+                  <ion-label class="justifyCenter">Occupation</ion-label>
+                  <ion-input type="text" style="color: #fff;" name="industry" id="industry" #industry="ngModel"  [(ngModel)]="newAccountOpeningCustomer.industry"  placeholder="Enter Industry" required></ion-input>
+                  <div *ngIf="industry.invalid && (industry.dirty || industry.touched)" class="error">
+                    <div *ngIf="industry.errors.required">Occupation is required</div>
+                  </div> 
+                </div>
+              </ion-col>
+              </ion-row>
+
+</div>
+<div  *ngIf="page == 2  && newCustomer">
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Mother Maiden Name</ion-label>
+          <ion-input type="text" style="color: #fff;" #motherMaidenName="ngModel" [(ngModel)]="newAccountOpeningCustomer.motherMaidenName" name="motherMaidenName" id="motherMaidenName"  placeholder="Enter Mother Maiden Name" required></ion-input>
+          <div *ngIf="motherMaidenName.invalid && (motherMaidenName.dirty || motherMaidenName.touched)" class="error">
+            <div *ngIf="motherMaidenName.errors.required">Mother Maiden Name is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+          <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Next of Kin Name</ion-label>
+          <ion-input type="text" style="color: #fff;" #nextOfKinName="ngModel" [(ngModel)]="newAccountOpeningCustomer.nextOfKinName" name="nextOfKinName" id="nextOfKinName"  placeholder="Enter Next of Kin Name" required></ion-input>
+          <div *ngIf="nextOfKinName.invalid && (nextOfKinName.dirty || nextOfKinName.touched)" class="error">
+            <div *ngIf="nextOfKinName.errors.required">Next Of Kin Name is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+               <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Next of Kin Phone Number</ion-label>
+          <ion-input type="text" style="color: #fff;" #nextOfKinPhone="ngModel" [(ngModel)]="newAccountOpeningCustomer.nextOfKinPhone" name="nextOfKinPhone" id="nextOfKinPhone"  placeholder="Enter Next of Kin Phone Number" required></ion-input>
+          <div *ngIf="nextOfKinPhone.invalid && (nextOfKinPhone.dirty || nextOfKinPhone.touched)" class="error">
+            <div *ngIf="nextOfKinPhone.errors.required">Next Of Kin Phone is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+                  <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Next of Kin Relationship</ion-label>
+          <ion-input type="text" style="color: #fff;" #nextOfKinRelationship="ngModel" [(ngModel)]="newAccountOpeningCustomer.nextOfKinRelationship" name="nextOfKinRelationship" id="nextOfKinRelationship"  placeholder="Enter Next of Kin Relationship" required></ion-input>
+          <div *ngIf="nextOfKinRelationship.invalid && (nextOfKinRelationship.dirty || nextOfKinRelationship.touched)" class="error">
+            <div *ngIf="nextOfKinRelationship.errors.required">Next Of Kin Relationship is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Do you have a regulatory ID Card?</ion-label>
+              <ion-radio-group  #regulatoryId="ngModel" [(ngModel)]="newAccountOpeningCustomer.regulatoryId" name="regulatoryId" id="regulatoryId" required >
+    <ion-list style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+    
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>Yes</ion-label>
+        <ion-radio slot="end" value="Yes" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    
+    </ion-list>
+    <div style="padding: 10px;"></div>
+    <ion-list  style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>Other Id Card</ion-label>
+        <ion-radio slot="end" value="Other Id Card" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    </ion-list>
+        <div style="padding: 10px;"></div>
+    <ion-list  style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>No Id Card</ion-label>
+        <ion-radio slot="end" value="No Id Card" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    </ion-list>
+    
+    </ion-radio-group>
+<div style="padding: 10px;"></div>
+    <div style="display:flex;flex-direction:row;">
+     <ion-checkbox slot="start" style="width:50px;margin-right:5px"  #termsandcondition="ngModel" [(ngModel)]="newAccountOpeningCustomer.termsandcondition" name="termsandcondition" id="termsandcondition"></ion-checkbox>
+      <ion-label style="flex:auto">I accept and agree to be bound by LOTUS Bank Terms and Conditions.</ion-label>
+    </div>
+
+
+        </div>
+      </ion-col>
+      </ion-row>
+                 <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+                     <ion-radio-group id="chooseaccount" name="chooseaccount" #chooseaccount="ngModel" [(ngModel)]="newAccountOpeningCustomer.chooseaccount" >
+    <div style="padding: 10px;"></div>
+    <ion-list  style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>I want to choose my account number</ion-label>
+        <ion-radio slot="end" value="myaccount" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    </ion-list>
+        <div style="padding: 10px;"></div>
+    <ion-list  style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
+      <ion-item lines="none" class="grpRadio">
+        <ion-label>LOTUS Bank choose account number for me. </ion-label>
+        <ion-radio slot="end" value="lotusaccount" style="--color-checked:#fff;"></ion-radio>
+      </ion-item>
+    </ion-list>
+    
+    </ion-radio-group>
+        </div>
+      </ion-col>
+      </ion-row>
+            <ion-row *ngIf="chooseaccount.value == 'myaccount'">
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Enter your desired 8-digit Numbers.</ion-label>
+          <ion-input type="text" style="color: #fff;" id="desiredNumber" name="desiredNumber" #desiredNumber="ngModel" [(ngModel)]="newAccountOpeningCustomer.desiredNumber"   placeholder="Enter your desired 8-digit Numbers." required></ion-input>
+          <div *ngIf="desiredNumber.invalid && (desiredNumber.dirty || desiredNumber.touched)" class="error">
+            <div *ngIf="desiredNumber.errors.required">Desired Number is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+
+</div>
+
+<div  *ngIf="page == 3">
+
+  <ion-row>
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label class="justifyCenter">Account Category</ion-label>
+        <ion-select placeholder="Select Status"  style="color: #fff;" name="category" id="category" #category="ngModel"  [(ngModel)]="newAccount.category"  required>
+          <ion-select-option value="1001">Category</ion-select-option>
+         
+        </ion-select>
+       
+        <div *ngIf="category.invalid && (category.dirty || category.touched)" class="error">
+          <div *ngIf="category.errors.required">Account Category is required</div>
+        </div> 
+      </div>
+    </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <div class="form-group">
+          <div style="padding: 10px;"></div>
+          <ion-label class="justifyCenter">Account Name</ion-label>
+          <ion-input type="text" style="color: #fff;" name="accountName" id="accountName" #accountName="ngModel"  [(ngModel)]="newAccount.accountName"  placeholder="Enter Account name" required></ion-input>
+          <div *ngIf="accountName.invalid && (accountName.dirty || accountName.touched)" class="error">
+            <div *ngIf="accountName.errors.required">Account Name is required</div>
+          </div> 
+        </div>
+      </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Currency</ion-label>
+            <ion-select placeholder="Select Status"  style="color: #fff;" name="currency" id="currency" #currency="ngModel"  [(ngModel)]="newAccount.currency"  required>
+              <ion-select-option value="NGN">Naira</ion-select-option>
+              <ion-select-option value="USD">Dollar</ion-select-option>
+              <ion-select-option value="GBP">Pounds</ion-select-option>
+              <ion-select-option value="EUR">Euro</ion-select-option>
+            </ion-select>
+           
+            <div *ngIf="currency.invalid && (currency.dirty || currency.touched)" class="error">
+              <div *ngIf="currency.errors.required">Currency is required</div>
+            </div> 
+          </div>
+        </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="form-group">
+              <div style="padding: 10px;"></div>
+              <ion-label class="justifyCenter">Account Officer</ion-label>
+              <ion-select placeholder="Select Officer"  style="color: #fff;" name="accountOfficer" id="accountOfficer" #accountOfficer="ngModel"  [(ngModel)]="newAccount.accountOfficer"  required>
+                <ion-select-option value="1">Account Officer</ion-select-option>
+               
+              </ion-select>
+             
+              <div *ngIf="accountOfficer.invalid && (accountOfficer.dirty || accountOfficer.touched)" class="error">
+                <div *ngIf="accountOfficer.errors.required">Account Office is required</div>
+              </div> 
+            </div>
+          </ion-col>
+          </ion-row>
+</div>
+
+<div  *ngIf="page == 4 ">
+        <ion-row *ngFor="let det of accountOpeningDetails">         
+          <ion-col size="12" >
+            <span style="font-size: 16px;font-weight: normal;">{{det.key}}: &nbsp;{{det.value}} </span>      
+          
+          </ion-col>
+        </ion-row>
+</div>
+                     
+
+    </form>
+  </div>
 </ion-content>
+<ion-footer *ngIf="newCustomer" class="ion-no-border" style="padding-top: 3px;padding-bottom: 3px;">
+  <ion-row>
+    <ion-col size="6">
+      <ion-button expand="block" fill="fill" size="small" [disabled]="page < 1" class="pryColor"  (click)="navBack()">
+        Back
+      </ion-button>
+    </ion-col>
+    <ion-col size="6">
+      <ion-button (click)="navNext()" size="small" [disabled]="page > 3" class="pryColor" expand="block" fill="fill">Next</ion-button>
+    </ion-col>
+  </ion-row>
+ 
+
+</ion-footer>

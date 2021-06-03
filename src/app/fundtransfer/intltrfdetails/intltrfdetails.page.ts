@@ -57,7 +57,7 @@ export class IntltrfdetailsPage implements OnInit {
   ngOnInit() { }
   getallbanks() {
     this.AuthenService.getuser().then(userdata => {
-      this.lotusService.fetchBanks(userdata[0].sessionToken).subscribe(banksdata => {
+      this.lotusService.fetchBanks(userdata[0].sessionToken,this.AuthenService.imei.value).subscribe(banksdata => {
         if (!banksdata.hasError) {
           this.allbanks = banksdata.result.body;
         }
@@ -99,7 +99,7 @@ export class IntltrfdetailsPage implements OnInit {
         this.nameEnquiry.destinationInstitutionCode = this.bankType;
         this.nameEnquiry.channelCode = "OzayConsulting";
         this.nameEnquiry.accountNumber = this.tobankAccount;
-        this.lotusService.nameenquiry(this.nameEnquiry, userDetails[0].sessionToken).subscribe((data) => {
+        this.lotusService.nameenquiry(this.nameEnquiry, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
           this.customerAccountResp = data.result;
           if (!data.hasError) {            
             let acctDet = this.customerAccountResp;
@@ -130,7 +130,7 @@ export class IntltrfdetailsPage implements OnInit {
       this.nameEnquiry.channelCode = "OzayConsulting";
       this.nameEnquiry.accountNumber = this.tobankAccount;
       this.AuthenService.getuser().then(userDetails => {
-        this.lotusService.nameenquiry(this.nameEnquiry, userDetails[0].sessionToken).subscribe((data) => {
+        this.lotusService.nameenquiry(this.nameEnquiry, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
           this.customerAccountResp = data.result;
           if (!data.hasError) {
             let acctDet = this.customerAccountResp;

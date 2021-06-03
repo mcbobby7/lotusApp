@@ -1,9 +1,143 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>registerpage</ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content>
+  <ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="goBack()">
+          <ion-icon name="close-outline" style="font-size: 35px;font-weight: bolder;color: #fff;"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
+    <div style="position: absolute;top: 80px; display: flex;  width: 100%;flex-direction: column;">
+   <div style="display: flex;justify-content: center;align-items: center;width: 100%;flex-direction: column;">
+    <img src="assets/images/newLotus.png" style="width: 6rem;"  (click)="getfingers()">
+    <h4 style="color: #fff;">Lotus Bank</h4>
+   </div>
+    <form name="loginForm" id="loginForm" #loginForm="ngForm">
+      <div >
+        <ion-label for="" class="control-label" style="color: #fff;">Account Number</ion-label>
+        <div style="padding: 5px;"></div>
+        <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
+          <ion-col size="12" style="padding: 0px;margin: 0px;">
+            <ion-input type="tel" style="color: #fff;" name="accountNo"  [(ngModel)]="accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+            <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+      
+          </ion-col>
+        </ion-row>
+    
+      <div style="padding: 5px;"></div>
+        <ion-label for="" class="control-label" style="color: #fff;">Username</ion-label>
+        <div style="padding: 5px;"></div>
+        <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
+          <ion-col size="12" style="padding: 0px;margin: 0px;">
+            <ion-input style="border: none;font-size: 22px !important;color: #fff !important;" placeholder="Username" type="text" name="username" id="username" [(ngModel)]="User.username" #username="ngModel"  required></ion-input>
+      
+          </ion-col>
+        </ion-row>
+          <div *ngIf="username.invalid && (username.dirty || username.touched) " class="error">
+          <div *ngIf="(username.errors.required || username.errors)">
+            Username is required
+          </div>
+      </div>
+      <div style="padding: 5px;"></div>
+  
+        <ion-label for="" style="color: #fff;" >Pin</ion-label>
+        <div style="padding: 5px;"></div>
+        <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0 10px 0 0;background-color:rgba(0,0,0, 0.38) !important;">
+          <ion-col size="10" style="padding: 0px;margin: 0px;">
+            <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Password" 
+            [type]="show ? 'text' : 'password'" id="pIN" name="pIN" #pIN="ngModel"  [(ngModel)]="User.pIN" required></ion-input>
+          </ion-col>
+          <ion-col size="2" style="padding: 0px;margin: 0px;">
+            <ion-button (click)="viewpassword()" fill="clear" style="color: #fff;">
+              <ion-icon *ngIf="!show" name="eye-off-outline" style="font-size: 32px;"></ion-icon>
+              <ion-icon *ngIf="show" name="eye-outline" style="font-size: 32px;"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        <div style="padding: 5px;"></div>     
+        <div *ngIf="pIN.invalid && (pIN.dirty || pIN.touched)" class="error">
+          <div *ngIf="pIN.errors.required">
+            PIN is required
+          </div>
+      </div>
+
+      <div style="padding: 5px;"></div>
+  
+      <ion-label for="" style="color: #fff;" >Confirm Pin</ion-label>
+      <div style="padding: 5px;"></div>
+      <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0 10px 0 0;background-color:rgba(0,0,0, 0.38) !important;">
+        <ion-col size="10" style="padding: 0px;margin: 0px;">
+          <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Password" 
+          [type]="show ? 'text' : 'password'" id="confirmpIN" name="confirmpIN"   [(ngModel)]="confirmpIN" required></ion-input>
+        </ion-col>
+        <ion-col size="2" style="padding: 0px;margin: 0px;">
+          <ion-button (click)="viewpassword()" fill="clear" style="color: #fff;">
+            <ion-icon *ngIf="!show" name="eye-off-outline" style="font-size: 32px;"></ion-icon>
+            <ion-icon *ngIf="show" name="eye-outline" style="font-size: 32px;"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <div style="padding: 5px;"></div>     
+ 
+        <div *ngIf="confirmpIN != User.pIN" class="error">
+          PIN does not match
+        </div>
+
+
+            
+      <div style="padding: 5px;"></div>
+      <ion-label for="" class="control-label" style="color: #fff;">Security Question</ion-label>
+      <div style="padding: 5px;"></div>
+      <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
+        <ion-col size="12" style="padding: 0px;margin: 0px;">
+          <!-- <ion-select placeholder="Select Status" style="border: none;font-size: 22px !important;color: #fff !important;" name="secretQuestion" id="secretQuestion" #secretQuestion="ngModel"  [(ngModel)]="User.secretQuestion"  required>
+            <ion-select-option [value]="quest.secQues" *ngFor="let quest of secQuest;let i = index">{{quest.secQues}}</ion-select-option>
+           
+          </ion-select> -->
+          <ion-input style="border: none;font-size: 22px !important;color: #fff !important;" placeholder="Secret Question" type="text" name="secretQuestion" id="secretQuestion" [(ngModel)]="User.secretQuestion" #secretQuestion="ngModel"  required></ion-input>
+  
+        </ion-col>
+      </ion-row>
+        <div *ngIf="secretQuestion.invalid && (secretQuestion.dirty || secretQuestion.touched) " class="error">
+        <div *ngIf="(secretQuestion.errors.required || secretQuestion.errors)">
+          Secret Question is required
+        </div>
+    </div>
+    <div style="padding: 5px;"></div>
+
+        
+    <div style="padding: 5px;"></div>
+    <ion-label for="" class="control-label" style="color: #fff;"> Security Question Answer</ion-label>
+    <div style="padding: 5px;"></div>
+    <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
+      <ion-col size="12" style="padding: 0px;margin: 0px;">
+        <ion-input style="border: none;font-size: 22px !important;color: #fff !important;" placeholder="Secret Answer" type="text" name="secretAnswer" id="secretAnswer" [(ngModel)]="User.secretAnswer" #secretAnswer="ngModel"  required></ion-input>
+  
+      </ion-col>
+    </ion-row>
+      <div *ngIf="secretAnswer.invalid && (secretAnswer.dirty || secretAnswer.touched) " class="error">
+      <div *ngIf="(secretAnswer.errors.required || secretAnswer.errors)">
+        Secret Answer is required
+      </div>
+  </div>
+  <div style="padding: 5px;"></div>
+      </div>
+         
+    
+              <div style="padding: 5px;"></div>
+      <ion-button [disabled]="loginForm.invalid || inpVali.invalidAccount" shape="round" fill="solid" expand="block" class="btnStyle" style="text-transform: none !important; color: #00CECE !important;font-size: 22px !important;" (click)="loginUser()">Signup</ion-button>
+      <div style="padding: 5px;"></div>
+      <div style="display: flex;flex-direction: row;">
+        <div >
+        
+        </div>
+        <div style="display: flex;flex: auto;">
+          <a href="javascript:void(0)" [routerLink]="['/loginpage']" style="float: right;text-transform: none;" ><span style="color: #fff;font-size: 20px;">SignIn instead </span></a>
+        </div>
+              </div>
+    </form>
+  </div>
 </ion-content>

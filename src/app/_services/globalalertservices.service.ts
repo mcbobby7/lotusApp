@@ -32,12 +32,13 @@ export class GlobalalertservicesService {
   gdismissLoading() {
   setTimeout(() => {
     this.globalLoading.next('close');
-  }, 2000);
+  }, 3000);
   }
   
- async gPresentToast(message, alertType) {
+  async gPresentToast(message, alertType, duration?) {
+   
     const toast = await this.toastCtrl.create({
-      duration: 5000,
+      duration: duration? duration: 5000,
       message: message,
       color: alertType
     });

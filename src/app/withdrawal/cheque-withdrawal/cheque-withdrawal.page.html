@@ -11,14 +11,15 @@
       <ion-title>Cheque Withdrawal</ion-title>
     </ion-toolbar>
   </ion-header>
-  <div class="page-wrapper" [formGroup]="formGroup">
+  <div class="page-wrapper">
     <ion-row>
       <ion-col size="12">
         <div class="form-group">
           <div style="padding: 10px;"></div>
           <ion-label class="justifyCenter">Enter Account Number</ion-label>
-          <div style="padding: 5px;"></div>
-          <app-account-input [(value)]="accountNo" formControlName="accountNo"></app-account-input> 
+          <div style="padding: 5px;"></div>        
+          <ion-input type="tel" style="color: #fff;"  [(ngModel)]="accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+          <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
         </div>
       </ion-col>
     </ion-row>

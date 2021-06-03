@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
 import { Deposit, DepositService } from 'src/app/_services/deposit.service';
@@ -18,7 +18,7 @@ export class BalancePage implements OnInit {
     private depositService: DepositService, private activivatedroute: ActivatedRoute,
     private GalertService: GlobalalertservicesService,
     private AuthenService: AuthenticationService,
-    private LotusService: LotusServiceProxy,) { }
+    private LotusService: LotusServiceProxy,private router: Router) { }
   ionViewWillEnter() {
     this.activivatedroute.queryParams.subscribe(data => {
       if (data) {
@@ -26,7 +26,7 @@ export class BalancePage implements OnInit {
           var acctNo = data.accountNumber;
           this.GalertService.gPresentLoading('Please wait...');
           this.AuthenService.getuser().then(userDetails => {
-            this.LotusService.getAccountDetails(acctNo, userDetails[0].sessionToken).subscribe((data) => {
+            this.LotusService.getAccountDetails(acctNo, userDetails[0].sessionToken,this.AuthenService.imei.value).subscribe((data) => {
               this.customerAccountResp = data.result;
               if (!data.hasError && this.customerAccountResp.body) {
                 this.GalertService.gPresentToast(data.message, "success");
@@ -41,7 +41,9 @@ export class BalancePage implements OnInit {
                 this.depositObj.currencyCode = acctDet.currencyCode;
                }
               else {
-                this.GalertService.gPresentToast(data.message, "danger");
+                this.GalertService.gdismissLoading();
+                this.router.navigate(['/selfservice/customeraccountlist'])
+                this.GalertService.gPresentToast('Invalid Account Number', "danger");
               }
               this.GalertService.gdismissLoading();
             });

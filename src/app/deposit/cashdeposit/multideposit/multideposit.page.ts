@@ -69,7 +69,7 @@ if(this.inpVali.invalidAmount) {
         this.depositMultpleObj.accountInfo[arg[2]].erroraccountNumber = true
       } else {
         this.AuthenService.getuser().then(userDetails => {
-          this.LotusService.getAccountDetails(inputentry, userDetails[0].sessionToken).subscribe((data) => {
+          this.LotusService.getAccountDetails(inputentry, '',this.AuthenService.imei.value).subscribe((data) => {
             this.customerAccountResp = data.result;
             if (!data.hasError && this.customerAccountResp.body) {              
               let acctDet = this.customerAccountResp.body.find(x=>x.longAccount == inputentry);

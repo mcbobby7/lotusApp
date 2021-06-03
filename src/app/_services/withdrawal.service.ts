@@ -9,7 +9,10 @@ export interface Withdrawal{
   accountName?: string,
   amount?: number,
   balance?: number,
-  currencyCode?: string
+  currencyCode?: string,
+  chequeNo?: string,
+  narration?: string,
+  withdrawaltype?: string
 }
 
 @Injectable({
