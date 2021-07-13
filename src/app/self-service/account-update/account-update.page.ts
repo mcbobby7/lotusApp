@@ -37,6 +37,7 @@ export class AccountUpdatePage{
   bodyUpdateAccountInfo = new UpdateAccountInfoPayloadBody().clone();
   accountDetailsResp = "";
   accountName = "";
+  currentUser: any = "";
   constructor(
     private router: Router,
     private navController: NavController,
@@ -86,6 +87,16 @@ export class AccountUpdatePage{
 
   }
   ionViewWillEnter() {
+        
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.currentUser = userdata[0];
+          console.log(this.currentUser)
+          this.GalertService.gdismissLoading();
+        }
+      }
+    })
     this.page = 0
   }
 

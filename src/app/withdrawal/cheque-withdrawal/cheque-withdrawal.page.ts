@@ -23,6 +23,7 @@ export class ChequeWithdrawalPage implements OnInit {
   withdrawal: Withdrawal = {}
   loadingAccountName = false;
   customerAccountResp: IGetAccountDetailsResponse;
+  currentUser: any = "";
   constructor(
     private router: Router,
     private navCtrl: NavController,
@@ -38,6 +39,18 @@ export class ChequeWithdrawalPage implements OnInit {
 
   ) { }
   accountNo = ""
+  ionViewWillEnter() {
+    
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.currentUser = userdata[0];
+          console.log(this.currentUser)
+          this.GalertService.gdismissLoading();
+        }
+      }
+    })
+  }
   ngOnInit() {}
   get disableSubmit(){
     return !(this.accountNo.length == 10 && Number(this.accountNo) > 0)
@@ -93,7 +106,7 @@ export class ChequeWithdrawalPage implements OnInit {
   }
 
   goBack(){
-    this.navCtrl.back()
+    this.router.navigate(['/dashbord']);
   }
 
 }

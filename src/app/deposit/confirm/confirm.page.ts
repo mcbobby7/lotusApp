@@ -7,6 +7,8 @@ import { intratransferM, nipenquiry, niptransfer, cashdepositM, inwardchqPost,de
 import { ShortcutsService } from 'src/app/_services/shortcuts.service';
 import { LotusServiceProxy,CtRoot,CtBody,DenominationValue, } from 'src/app/_services/service-proxies';
 import { AuthenticationService } from 'src/app/_services/authentication.service';
+import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
+
 @Component({
   selector: 'app-confirm',
   templateUrl: './confirm.page.html',
@@ -22,6 +24,8 @@ export class ConfirmPage implements OnInit {
   multideposit: multiDeposit = {}
   cashdenomination: DenominationValue[]=[];
   denomination = new DenominationValue().clone();
+  date = new Date()
+  transId: any = '';
   constructor(
     private router: Router,
     private navCtrl: NavController,
@@ -30,17 +34,20 @@ export class ConfirmPage implements OnInit {
     private shortcutService: ShortcutsService,
     private LotusService: LotusServiceProxy,
     private AuthenService: AuthenticationService,
+    private printer: Printer,
   ) { }
-  ionViewWillEnter() {
-    
+  ionViewWillEnter() {    
     this.depositService.get().subscribe((data: any) => {
-      console.log(data)
+     // console.log(data)
       if (data.multiDeposit) {
         this.multideposit = data;
         this.depositObj = data
+        console.log(this.depositObj);
+        
   
       } else {
         this.depositObj = data 
+        console.log(this.depositObj);
       }
       
       
@@ -75,12 +82,16 @@ export class ConfirmPage implements OnInit {
             this.bodyCashDeposit.narrative = "Cash Dep by Self - " + this.multideposit.narration;
           }
           this.cashdeposit.body = this.bodyCashDeposit;
+          console.log(this.bodyCashDeposit);
+          
           this.LotusService.tellerCashDep(this.cashdeposit,"",this.AuthenService.imei.value).subscribe((data) => {
             if (!data.hasError) {
-              
-              window.setTimeout(() => {
+              this.transId = data.result.header.id;
+              console.log(data.result.header)
+              window.setTimeout(() => {               
                 this.processCompleted = true; this.depositService.store({});
                 this.shortcutService.showToast(`Deposit Number ${i} Posted Successfully`, 'success');
+        
               }, 5000)
             } else {
               this.showProcessing = false;
@@ -113,9 +124,12 @@ export class ConfirmPage implements OnInit {
           this.bodyCashDeposit.narrative = "Cash Dep by Self - " + this.depositObj.narration;
         }
         this.cashdeposit.body = this.bodyCashDeposit;
-        this.LotusService.tellerCashDep(this.cashdeposit,"",this.AuthenService.imei.value).subscribe((data) => {         
-          if (!data.hasError) {
-            
+        this.LotusService.tellerCashDep(this.cashdeposit,"",this.AuthenService.imei.value).subscribe((data) => {  
+          console.log(data);
+                 
+          if (!data.result.error) {  
+            console.log(data);
+                      
             window.setTimeout(() => {
               this.processCompleted = true; this.depositService.store({});
               this.shortcutService.showToast('Deposit Posted Successfully', 'success');
@@ -123,6 +137,7 @@ export class ConfirmPage implements OnInit {
           } else {
             this.showProcessing = false;
             this.shortcutService.showErrorToast('Error While Posting Deposit')
+            
           }
          
         }, (error) => {
@@ -139,7 +154,33 @@ export class ConfirmPage implements OnInit {
     this.showProcessing = false
     this.router.navigateByUrl('/deposit/receipt')
     // this.router.navigateByUrl('/')
+    this.printStuff()
   }
+  printStuff() {
+    let  options: PrintOptions = {
+      name: 'MyDocument',
+      duplex: true,
+      orientation: 'landscape',
+      monochrome: true
+  }
+  this.printer.isAvailable().then(data => {
+
+      const div = document.getElementById("receipt").innerHTML    
+      this.printer.print(div, options).then(data => {
+        alert("printing done successfully !");
+        console.log("printing done successfully !");
+      },  err => {
+        const myJSON = JSON.stringify(err);
+        alert("Error while printing !");
+        console.log(myJSON);
+      });
+  },  err => {
+
+    alert("No Printer avalaible!");
+    console.log("No Printer avalaible!");
+
+  });
+   } 
   goedit() {
     var isEmpty = false;
     for (var a in this.multideposit) {

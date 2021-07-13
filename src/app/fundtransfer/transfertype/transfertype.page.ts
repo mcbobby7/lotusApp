@@ -25,6 +25,6 @@ export class TransfertypePage implements OnInit {
     this.GalertService.gdismissLoading();
   }
   goBack(){
-    this.navCtrl.back()
+    this.router.navigate(['/dashbord']);
   }
 }

@@ -28,7 +28,7 @@
         </ion-row>
     
       <div style="padding: 5px;"></div>
-        <ion-label for="" class="control-label" style="color: #fff;">Username</ion-label>
+        <!-- <ion-label for="" class="control-label" style="color: #fff;">Username</ion-label>
         <div style="padding: 5px;"></div>
         <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
           <ion-col size="12" style="padding: 0px;margin: 0px;">
@@ -41,13 +41,13 @@
             Username is required
           </div>
       </div>
-      <div style="padding: 5px;"></div>
+      <div style="padding: 5px;"></div> -->
   
         <ion-label for="" style="color: #fff;" >Pin</ion-label>
         <div style="padding: 5px;"></div>
         <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0 10px 0 0;background-color:rgba(0,0,0, 0.38) !important;">
           <ion-col size="10" style="padding: 0px;margin: 0px;">
-            <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Password" 
+            <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Pin" 
             [type]="show ? 'text' : 'password'" id="pIN" name="pIN" #pIN="ngModel"  [(ngModel)]="User.pIN" required></ion-input>
           </ion-col>
           <ion-col size="2" style="padding: 0px;margin: 0px;">
@@ -70,7 +70,7 @@
       <div style="padding: 5px;"></div>
       <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0 10px 0 0;background-color:rgba(0,0,0, 0.38) !important;">
         <ion-col size="10" style="padding: 0px;margin: 0px;">
-          <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Password" 
+          <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Pin" 
           [type]="show ? 'text' : 'password'" id="confirmpIN" name="confirmpIN"   [(ngModel)]="confirmpIN" required></ion-input>
         </ion-col>
         <ion-col size="2" style="padding: 0px;margin: 0px;">
@@ -89,6 +89,7 @@
 
             
       <div style="padding: 5px;"></div>
+
       <ion-label for="" class="control-label" style="color: #fff;">Security Question</ion-label>
       <div style="padding: 5px;"></div>
       <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
@@ -135,7 +136,7 @@
         
         </div>
         <div style="display: flex;flex: auto;">
-          <a href="javascript:void(0)" [routerLink]="['/loginpage']" style="float: right;text-transform: none;" ><span style="color: #fff;font-size: 20px;">SignIn instead </span></a>
+          <a href="javascript:void(0)" [routerLink]="['/loginpage']" style="float: right;text-transform: none;" ><span style="color: #fff;font-size: 20px;">Sign in instead </span></a>
         </div>
               </div>
     </form>

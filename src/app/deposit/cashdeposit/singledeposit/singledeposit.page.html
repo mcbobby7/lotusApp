@@ -23,7 +23,7 @@
       <ion-input type="tel" [(ngModel)]="depositObj.amount" name="accountNumber" id="accountNumber" #accountNumber="ngModel" placeholder="Enter amount" (keyup)="avalidate($event,'amount')" required></ion-input>
       <span *ngIf="inpVali.invalidAmount"><small class="error">Invalid Amount</small></span>
       </div>
-    <h5>Sending to:</h5>
+    <h5>Make deposit into:</h5>
     <ion-radio-group name="selfdeposit" [(ngModel)]="depositObj.selfdeposit" [value]="depositObj.selfdeposit">
     <ion-list style="background: transparent; border:1px solid rgba(255,255,255,0.50);border-radius: 4px;">
     

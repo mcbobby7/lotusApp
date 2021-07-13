@@ -24,11 +24,13 @@ import { BankService } from './_services/bank.service';
 import { TransferService } from './_services/transfer.service';
 import { ApiProvider } from './_services/api.service';
 import { HTTP } from '@ionic-native/http/ngx';
-import { IonicFingerPrintReader } from '@ionic-native/ionic-finger-print-reader/ngx';
+// import { IonicFingerPrintReader } from '@ionic-native/ionic-finger-print-reader/ngx';
 import { JwtInterceptor } from './_services/jwt.interceptor';
 import { AuthServiceProxy } from './_services/service-proxies';
 import { GlobalalertservicesService } from './_services/globalalertservices.service';
+import { NgIdleService } from './_services/ng-idle.service';
 import { LotusServiceProxy } from 'src/app/_services/service-proxies';
+import { Printer, PrintOptions } from '@ionic-native/printer/ngx';
 
 import { ComponentsModule} from '../app/components/components.module';
 @NgModule({
@@ -59,12 +61,14 @@ import { ComponentsModule} from '../app/components/components.module';
     Storage,
     ApiProvider,
     HttpClient,
-    IonicFingerPrintReader,
+    // IonicFingerPrintReader,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     AuthServiceProxy,
     GlobalalertservicesService,
     LotusServiceProxy,
-    Camera
+    Camera,
+    NgIdleService,
+    Printer,
   ],
   bootstrap: [AppComponent]
 })

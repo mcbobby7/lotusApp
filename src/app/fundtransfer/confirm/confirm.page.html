@@ -9,7 +9,7 @@
       <ion-title>Transfer Summary</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-card *ngIf="transfer.transferType == 'Funds Transfer'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
+  <ion-card id="receipt" *ngIf="transfer.transferType == 'Funds Transfer'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
       <ion-grid>
         <ion-row>
@@ -19,8 +19,8 @@
         </ion-row>
       </ion-grid>
 
-      <ion-grid >
-        <ion-row  >
+      <ion-grid>
+        <ion-row>
           <ion-col size="12" style="border-bottom:1px dashed rgb(255,255,255,0.20);">
             <span style="font-size: 14px; font-weight: normal;">
           <small style="float: left;">Swift:</small> 
@@ -76,7 +76,7 @@
   </ion-card>
 
 
-  <ion-card *ngIf="transfer.transferType != 'Funds Transfer'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
+  <ion-card id="receipt" *ngIf="transfer.transferType != 'Funds Transfer'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
       <ion-grid>
         <ion-row>
@@ -86,7 +86,57 @@
         </ion-row>
       </ion-grid>
 
-      <ion-grid >
+      <div>
+        <div>Lotus receipt</div>
+      </div>
+      <table style="width: 100%; margin-top: 20px;">
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Account Name</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{transfer.accountName}}</td>
+        </tr>
+
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Account Number</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{transfer.accountNo}}</td>
+        </tr>
+
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>To</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{transfer.toAccountNo}} <br> {{transfer.toAccountName}} <br> {{transfer.tobank}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Amount</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{transfer.amount}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Naration</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{transfer.narration}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Date</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{date | date:'mediumDate'}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Time</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{date | date:'shortTime'}}</td>
+        </tr>
+      </table>
+
+      <!-- <ion-grid >
         <ion-row  >
           <ion-col size="12" style="border-bottom:1px dashed rgb(255,255,255,0.20);">
             <small>Account Details</small><br>
@@ -128,7 +178,7 @@
        
         </ion-row>  
         
-      </ion-grid>
+      </ion-grid> -->
     </ion-card-content>
   </ion-card>
 

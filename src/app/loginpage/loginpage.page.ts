@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { AuthenticationService } from '../_services/authentication.service';
-import { AuthServiceProxy, User, UserLoginPayload,LotusServiceProxy,IGetAccountDetailsResponse  } from '../_services/service-proxies';
+import { AuthServiceProxy, User,SetNewPINPayload, UserLoginPayload,LotusServiceProxy,IGetAccountDetailsResponse  } from '../_services/service-proxies';
 import {GlobalalertservicesService } from '../_services/globalalertservices.service';
 @Component({
   selector: 'app-loginpage',
@@ -18,7 +18,8 @@ export class LoginpagePage implements OnInit {
   loading: any;
   ForgotPasswordViewModel: any = "";
   nxtRoute: string = "";
-    customerAccountResp: IGetAccountDetailsResponse;
+  customerAccountResp: IGetAccountDetailsResponse;
+  NewPINPayload = new SetNewPINPayload().clone()
   constructor(
     private navCtrl: NavController,
     public loadingController: LoadingController,
@@ -43,13 +44,14 @@ export class LoginpagePage implements OnInit {
     this.LoginResource.authMode = "pin";
     this.loginService.login(this.LoginResource,"",'').subscribe(async (data)=>{
       if(!data.hasError){
+        this.GalertService.gdismissLoading();
         this.newUser = data.result;
         this.AuthenService.addUser(this.newUser);
-        this.GalertService.gPresentToast(data.message, "success");     
+        this.GalertService.gPresentToast(data.message, "success");
+
         this.router.navigate([this.nxtRoute]);
-        this.GalertService.gdismissLoading();
       } else {
-        this.GalertService.gPresentToast(data.message, "danger");   
+        this.GalertService.gPresentToast("Login Failed", "danger");   
         this.GalertService.gdismissLoading();
       }
      

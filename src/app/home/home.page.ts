@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { AuthenticationService } from '../_services/authentication.service';
 import { DepositService } from '../_services/deposit.service';
 import { WithdrawalService } from '../_services/withdrawal.service';
+import { environment } from '../../environments/environment'
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,7 @@ import { WithdrawalService } from '../_services/withdrawal.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  mode = "development"
 
   constructor(private router: Router, private navCtrl: NavController,
     private AuthenService: AuthenticationService,private depositService: DepositService,private withdrawalService: WithdrawalService) { }
@@ -23,6 +25,15 @@ export class HomePage implements OnInit {
  this.router.navigate(['dashbord'])
   }
   ngOnInit() {
+    if(environment.production == true) {
+      this.mode = "production"
+      console.log("true");
+      
+    }else {
+      this.mode == "development"
+      console.log("false");
+      
+    }
   }
 
 }

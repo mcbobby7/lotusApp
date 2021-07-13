@@ -11,7 +11,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-card style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
+  <ion-card id="receipt" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
       <ion-grid>
         <ion-row>
@@ -21,7 +21,51 @@
         </ion-row>
       </ion-grid>
 
-      <ion-grid *ngIf="depositObj.multiDeposit">
+      <div>
+        <div>Lotus receipt</div>
+      </div>
+      <table style="width: 100%; margin-top: 20px;">
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Account Name</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{depositObj.accountName}}</td>
+        </tr>
+
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Account Number</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{depositObj.accountNumber}}</td>
+        </tr>
+
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Amount</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{depositObj.amount}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Amount</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{depositObj.narration}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Date</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{date | date:'mediumDate'}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Time</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{date | date:'shortTime'}}</td>
+        </tr>
+      </table>
+
+      <!-- <ion-grid *ngIf="depositObj.multiDeposit">
         <ion-row *ngFor="let dep of depositObj.accountInfo" >
           <ion-col size="12" style="border-bottom:1px dashed rgb(255,255,255,0.20);">
             <span style="font-size: 14px; font-weight: normal;">{{dep.accountName}} - {{dep.accountNumber}}</span><br>
@@ -53,11 +97,11 @@
         
         </ion-row>   
         
-      </ion-grid>
+      </ion-grid> -->
     </ion-card-content>
   </ion-card>
 
-  <ion-card  *ngIf="depositObj.multiDeposit || depositObj.selfdeposit == 'otheraccount'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
+  <!-- <ion-card  *ngIf="depositObj.multiDeposit || depositObj.selfdeposit == 'otheraccount'" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
       <ion-grid>
         <ion-row>
@@ -77,7 +121,7 @@
         </ion-row>        
       </ion-grid>
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
 
   <ion-row>
     <ion-col size="6">
@@ -96,14 +140,19 @@
 
 <app-processing *ngIf="showProcessing" (buttonClick)="processingButtonClicked()" (click)="processingClicked()" [processCompleted]="processCompleted">
   <span processed-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    Your deposit has been posted.
+    <!-- Your deposit has been submited.  <br><br> -->
+    Kindly take your receipt and proceed to the next available teller to complete your transaction  <br><br>
+    <!-- Transaction Id: <br> {{transId}} -->
   </span>
   <span processed-detail>
     <!-- Transaction Successful -->
   </span>
+  <span other-deposit *ngIf="depositObj.selfdeposit == 'otheraccount'">
+  <ion-button *ngIf="processCompleted"  expand='block' fill="outline" style="color: #fff;">Receipt to Email</ion-button>
+  </span>
   <span processing-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    Your Transaction is being processed, 
-    Please hand cash over to Teller
+    Your request is being processed
+    <!-- Please hand cash over to Teller -->
   </span>
   <span processing-detail>
     <!-- Generate Receipt -->

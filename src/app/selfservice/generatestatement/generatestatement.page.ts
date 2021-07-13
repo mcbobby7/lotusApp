@@ -17,6 +17,7 @@ import { Storage } from '@ionic/storage';
 export class GeneratestatementPage implements OnInit {
   statementForm: FormGroup;
   user: IUser;
+  currentUser: any = "";
   accountNo = "";
   fromDate = new Date();
   toDate = new Date();
@@ -38,6 +39,7 @@ export class GeneratestatementPage implements OnInit {
       if (userData) {
         if (userData.length > 0) {
           this.user = userData[0];
+          this.currentUser = userData[0];
          }
       }
      

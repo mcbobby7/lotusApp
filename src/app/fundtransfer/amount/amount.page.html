@@ -41,13 +41,13 @@
      Debit Account
     </ion-label>
     <div style="padding: 5px;"></div>
-    <!-- <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="bankAccount">
+    <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="bankAccount">
       <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option>       
-    </ion-select> -->
-    <ion-input type="tel" style="color: #fff;" [(ngModel)]="bankAccount"  placeholder="Debit Account Number" (keyup)="inpVali.validate($event,'accountNumber');fromvalbeneficiaryAccount()" required></ion-input>
+    </ion-select>
+    <!-- <ion-input type="tel" style="color: #fff;" [(ngModel)]="bankAccount"  placeholder="Debit Account Number" (keyup)="inpVali.validate($event,'accountNumber');fromvalbeneficiaryAccount()" required></ion-input>
     <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
     <div *ngIf="transfer.accountName" style="padding: 3px;"></div>
-    <span *ngIf="transfer.accountName"><small style="color: #fff;font-size: 18px;" >{{transfer.accountName}}</small></span>
+    <span *ngIf="transfer.accountName"><small style="color: #fff;font-size: 18px;" >{{transfer.accountName}}</small></span> -->
 
   </div>
 
@@ -56,14 +56,14 @@
      Credit Account
     </ion-label>
     <div style="padding: 5px;"></div>
-    <!-- <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="tobankAccount">
+    <ion-select style="color: #fff;"  placeholder="Select Account" [(ngModel)]="tobankAccount">
       <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option> 
      
-    </ion-select> -->
-    <ion-input type="tel" style="color: #fff;" [(ngModel)]="tobankAccount"  placeholder="Credit Account Number" (keyup)="inpVali.tovalidate($event,'accountNumber');valbeneficiaryAccount()" required></ion-input>
+    </ion-select>
+    <!-- <ion-input type="tel" style="color: #fff;" [(ngModel)]="tobankAccount"  placeholder="Credit Account Number" (keyup)="inpVali.tovalidate($event,'accountNumber');valbeneficiaryAccount()" required></ion-input>
     <span *ngIf="inpVali.invalidtoAccount"><small class="error">Invalid Account Number</small></span>
     <div *ngIf="transfer.toAccountName" style="padding: 3px;"></div>
-    <span *ngIf="transfer.toAccountName"><small style="color: #fff;font-size: 18px;" >{{transfer.toAccountName}}</small></span>
+    <span *ngIf="transfer.toAccountName"><small style="color: #fff;font-size: 18px;" >{{transfer.toAccountName}}</small></span> -->
   </div>
   <div class="form-group" *ngIf="transferType == 'Lotus Bank'">
     <ion-label style="display: flex;justify-content: center;">

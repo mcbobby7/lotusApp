@@ -17,7 +17,8 @@ export class FreezeAccountPage implements OnInit {
   freezeForm: FormGroup;
   showProcessing: boolean = false;
   FreezeAccount = new FreezeAccountPayload().clone();
-  bodyFreezeAccount = new  FreezeAccountPayloadBody().clone()
+  bodyFreezeAccount = new FreezeAccountPayloadBody().clone();
+  currentUser: any = "";
   constructor(private navCtrl: NavController,
     private AuthenService: AuthenticationService,
     public inpVali: InputvalidationService,
@@ -54,5 +55,16 @@ export class FreezeAccountPage implements OnInit {
 }
   ngOnInit() {
   }
-
+  ionViewWillEnter() {
+    
+    this.AuthenService.getuser().then(userdata => {
+      if (userdata) {
+        if (userdata.length > 0) {
+          this.currentUser = userdata[0];
+          console.log(this.currentUser)
+          this.GalertService.gdismissLoading();
+        }
+      }
+    })
+  }
 }

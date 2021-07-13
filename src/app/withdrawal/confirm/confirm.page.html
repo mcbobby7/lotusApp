@@ -11,44 +11,55 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-card style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
+  <ion-card id="receipt" style="margin: 12px; background-color: rgba(0,0,0, 0.38);color: #fff;">
     <ion-card-content>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12" style="border-bottom:1px solid rgb(255,255,255,0.20);">
-          <span style="font-size: 16px; font-weight: normal;">Account Details:</span>
-        </ion-col>         
-        </ion-row>
-      </ion-grid>
-
-      <ion-grid >
-        <ion-row  >
-          <ion-col size="12" style="border-bottom:1px dashed rgb(255,255,255,0.20);">
-            <span style="font-size: 14px; font-weight: normal;">{{withdrawal.accountName}} </span><br>
-            <span style="font-size: 14px; font-weight: normal;">{{withdrawal.accountNo}}</span>
-          </ion-col>         
-        </ion-row>
-      </ion-grid>
-
-      <ion-grid >
-        <ion-row>
-          <ion-col size="12"  style="border-bottom:1px solid rgb(255,255,255,0.20);">
-            <span *ngIf="withdrawal.chequeNo">
-              Cheque Number: <br>
-              <span style="font-size: 14px; font-weight: normal;">{{withdrawal.chequeNo}} </span><br>
-            </span>
-        
-            Amount: <br>
-            <span style="font-size: 16px; font-weight: bold;">&#8358; {{withdrawal.amount | number: '.2'}}</span> <br>
-            <span *ngIf="withdrawal.narration" >
-              Narration: <br>
-              <span style="font-size: 14px; font-weight: normal;">{{withdrawal.narration}} </span><br>
-           </span>
-          </ion-col>
-       
-        </ion-row> 
-        
-      </ion-grid>
+      <div>
+        <div>Lotus receipt</div>
+      </div>
+      <table style="width: 100%; margin-top: 20px;">
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"> <b>Name</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{withdrawal.accountName}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Account No.</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{withdrawal.accountNo}}</td>
+        </tr>
+        <tr *ngIf="withdrawal.chequeNo">
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Cheque No.</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{withdrawal.chequeNo}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Amount</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">&#8358; {{withdrawal.amount | number: '.2'}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Narration</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{withdrawal.narration}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Date</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{date | date:'mediumDate'}}</td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-bottom: 10px;"><b>Time</b></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px; padding-left: 0px; padding-bottom: 10px;">{{date | date:'shortTime'}}</td>
+        </tr>
+      </table>
     </ion-card-content>
   </ion-card>
 
@@ -72,23 +83,27 @@
 </ion-content>
 
 
-
+<!-- <button (click)="printStuff()"></button> -->
 <app-processing 
 [cashWithdrawal]="cashtoggleWithdrawal"
   *ngIf="showProcessing"
   (buttonClick)="processingButtonClicked()"
   [processCompleted]="processCompleted"
   >
-  <span processed-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    <!-- Print Receipt -->
-  </span>
   <span processed-detail style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
-    Please proceed to a teller to collect your cash
+    <!-- Please proceed to the teller to complete your transaction <br> <br> -->
+    <!-- Transaction Id: <br> {{transId}} -->
+    kindly take your receipt and proceed to the next available teller to complete your transaction  <br><br>
   </span>
+  <span processed-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
+    
+  </span>
+
   <span processing-title style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center;">
     Please hold on for confirmation
   </span>
   <span processing-detail style="display: flex;justify-content: center;color: #fff;text-align: center;font-weight: normal;align-items: center; font-size: 12px;">
- Your Transaction is being processed
+ <!-- Your Transaction is being processed -->
+ Your request is being processed
   </span>
 </app-processing>

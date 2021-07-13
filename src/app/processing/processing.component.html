@@ -47,11 +47,12 @@
   <div style="margin: 10px; width: 70vw;">
     <!-- <ion-button class="btnStyle" *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' >{{successButtonText}}</ion-button>
     <div style="padding: 5px;"></div> -->
-    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Email</ion-button>
-    <!-- <div style="padding: 5px;"></div>
-    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Whatsapp</ion-button> -->
+    <!-- <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Receipt to Email</ion-button> -->
+    <ng-content *ngIf="processCompleted" select="[other-deposit]"></ng-content>
     <div style="padding: 5px;"></div>
-    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Skip</ion-button>
+    <!-- <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Print Receipt</ion-button>  -->
+    <div style="padding: 5px;"></div>
+    <ion-button *ngIf="processCompleted" (click)="buttonClick.emit()" expand='block' fill="outline" style="color: #fff;">Ok</ion-button>
   </div>
 </div>
 

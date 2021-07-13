@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 export class InputvalidationService {
   amountChanged = new Subject<any>()
   invalidAccount: boolean = false;
+  invalidMiddleName: boolean = false;
   invalidtoAccount: boolean = false;
   invalidAmount: boolean = false;
   constructor(  private toastCtrl: ToastController,
@@ -27,6 +28,7 @@ export class InputvalidationService {
     if(inputentry && reg.test(inputentry) ){
       this.invalidAccount = false;
       this.invalidAmount = false;
+      this.invalidMiddleName = false;
       if(fieldelement == "accountNumber"){
         if(inputentry.length != 10){
           this.invalidAccount = true;
@@ -37,6 +39,16 @@ export class InputvalidationService {
         }
         
         }
+        if(fieldelement == "middleName"){
+          if(inputentry.length > 0){
+            this.invalidMiddleName = true;
+            return true;
+          }else{
+            this.invalidMiddleName = false;
+            return false;
+          }
+          
+          }
         if(fieldelement == "amount" ){
           var amt = inputentry.replace(/,/g, "");
           var newamt = amt.replace('.', "");

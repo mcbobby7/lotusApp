@@ -39,8 +39,8 @@ export class CashdepositPage implements OnInit {
     private LotusService: LotusServiceProxy,
     private GalertService: GlobalalertservicesService,
     private AuthenService: AuthenticationService,) { }
-  goBack(){
-this.navCtrl.back()
+  goBack() {
+    this.router.navigate(['/dashbord']);
   }
   avalidate(event,fieldelement){
   var inputentry =  event.target.value;
@@ -87,7 +87,11 @@ this.navCtrl.back()
             })
           } else {
             this.loadingBankAccount = false;
-            this.GalertService.gPresentToast(data.message, "danger");
+            this.GalertService.gPresentToast(data.result.error.message, "danger");
+            console.log(data.result.error.message);
+            console.log("error");
+            
+            
           }
           this.GalertService.gdismissLoading();
           

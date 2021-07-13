@@ -17,12 +17,14 @@ import { authorizeinwardchqResult } from '../_models/bankapiresult/authorizeinwa
 import { HTTP } from '@ionic-native/http/ngx';
 import { from } from 'rxjs';
 import { ApiResultOfCtRRoot } from './service-proxies';
+import { environment } from '../../environments/environment';
+
 @Injectable()
 export class ApiProvider {
   Urlbase: string = "http://10.55.15.50:9895/LOTUS/api/v1.0.0/";
   urlbaseSec: string = "http://10.55.15.55:9042/api/LotusBank/";
   newUrlBase: string = "http://20.77.40.129/lotus/"
-  baseUrl ="http://10.55.15.98";
+  baseUrl = environment.urls.api_main;
   constructor(public http: HttpClient, private nativhttp: HTTP) {}
  
   sentOTP(otp:number, phone:string) {
@@ -48,6 +50,14 @@ export class ApiProvider {
     {'Content-Type': 'application/json'})}
     let endPoint: string = 'party/GETFIList';
     var _result = this.http.get<getBanksListResult>(this.Urlbase + endPoint,options);
+    return _result;
+  }
+
+  verifBvn(bvn) {
+    let options = {headers: new HttpHeaders(
+    {'Content-Type': 'application/json'})}
+    let endPoint: string = `/api/lotus/verifySingleBVN?bvn=${bvn}`;
+    var _result = this.http.get(this.baseUrl + endPoint,options);
     return _result;
   }
 

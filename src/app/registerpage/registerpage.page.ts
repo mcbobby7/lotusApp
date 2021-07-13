@@ -66,7 +66,9 @@ export class RegisterpagePage implements OnInit {
     this.navCtrl.back()
   }
 
-    async loginUser(){
+    async loginUser(){  
+      console.log(this.User);
+          
       this.GalertService.gPresentLoading('Please wait...');
       this.LotusService.getAccountDetails(this.accountNo, "", this.AuthenService.imei.value).subscribe((data) => {
         this.customerAccountResp = data.result;

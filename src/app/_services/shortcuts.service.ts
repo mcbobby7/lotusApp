@@ -16,6 +16,7 @@ export class ShortcutsService {
   ) { }
 //format DAte 01 APR 2021
   formatDAte(date: Date): string{
+    console.log(date)
     var newDate = "";
     var dateday = date.getDay();
     var datemnth = this.months[date.getMonth()];

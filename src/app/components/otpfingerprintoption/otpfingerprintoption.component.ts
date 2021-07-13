@@ -13,6 +13,8 @@ export class OtpfingerprintoptionComponent implements OnInit {
     this.subject.next(depType);
     this.subject.complete()
   }
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
 }

@@ -19,16 +19,19 @@
 
   <div class="page-wrapper" >
 
-      <!-- <ion-item style="--background: transparent;--color:#fff; cursor: pointer;" *ngFor="let acct of currentUser.userAccounts">
+      <ion-item style="--background: transparent;--color:#fff; cursor: pointer;" *ngFor="let acct of currentUser.userAccounts">
        <a routerLink="/selfservice/balance" [queryParams]="{accountNumber: acct.accountNo}" style="color: #fff;">
-        {{acct.accountNo}} - {{acct.accountType}}
+     <div style="display: flex;flex-direction: row;">
+      <ion-radio style="--color:#fff"></ion-radio> <span style="display: flex;align-items: center; padding-left: 10px;">{{acct.accountNo}} </span>
+    </div>
+        <!-- - {{acct.accountType}} -->
       </a> 
-      </ion-item> -->
+      </ion-item>
 
-      <ion-input type="tel" style="color: #fff;" [(ngModel)]="bankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber');valbeneficiaryAccount()" required></ion-input>
-      <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+      <!-- <ion-input type="tel" style="color: #fff;" [(ngModel)]="bankAccount"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber');valbeneficiaryAccount()" required></ion-input>
+      <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
         <div style="padding: 10px;"></div>
-  <ion-row>
+  <!-- <ion-row>
     <ion-col size="12" style="padding: 20px">
       <ion-button  [disabled]="!bankAccount" (click)="valbeneficiaryAccount()" shape="round" fill="solid" expand="block" class="btnStyle">
         <span >Proceed</span>
@@ -36,6 +39,6 @@
       </ion-button>
       <div style="padding: 10px;"></div>
     </ion-col>
-  </ion-row>
+  </ion-row> -->
   </div>
 </ion-content>

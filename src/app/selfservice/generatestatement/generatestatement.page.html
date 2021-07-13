@@ -14,9 +14,11 @@
     <span style="font-size: 22px; text-align: center;">{{user?.fullName}}</span><br>
       </div>
     <div class="page-wrapper" style="display: flexbox; align-items: center; justify-items: center; background-color: rgb(0,0,0,.2);">
-
-      <ion-input type="tel" style="color: #fff;" name="accountNo" id="accountNo" #accountNo="ngModel"  [(ngModel)]="GetAccountStatement.accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
-      <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
+      <ion-select placeholder="Account Number" [(ngModel)]="GetAccountStatement.accountNo" name="accountNo" id="accountNo" #accountNo="ngModel">
+        <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option>       
+      </ion-select>
+      <!-- <ion-input type="tel" style="color: #fff;" name="accountNo" id="accountNo" #accountNo="ngModel"  [(ngModel)]="GetAccountStatement.accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber')" required></ion-input>
+      <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span> -->
       <div style="padding: 10px;"></div>
       <ion-list style="background: transparent;">
       <ion-item>

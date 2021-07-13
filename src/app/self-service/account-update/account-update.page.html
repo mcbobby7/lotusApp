@@ -18,17 +18,26 @@
         <div class="form-group">
           <div style="padding: 10px;"></div>
           <ion-label class="justifyCenter">Account Number</ion-label>
-          <ion-input type="tel" style="color: #fff;" name="accountNo" id="accountNo" #accountNo="ngModel"  [(ngModel)]="bodyUpdateAccountInfo.accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber');getAccountDetails()" required></ion-input>
+          <ion-select placeholder="Account Number" [(ngModel)]="bodyUpdateAccountInfo.accountNo" name="accountNo" id="accountNo" #accountNo="ngModel" >
+            <ion-select-option *ngFor="let acct of currentUser.userAccounts" [value]="acct.accountNo">{{acct.accountNo}} - {{acct.accountType}}</ion-select-option>       
+          </ion-select>
+          <!-- <ion-input type="tel" style="color: #fff;" name="accountNo" id="accountNo" #accountNo="ngModel"  [(ngModel)]="bodyUpdateAccountInfo.accountNo"  placeholder="Account Number" (keyup)="inpVali.validate($event,'accountNumber');getAccountDetails()" required></ion-input>
           <span *ngIf="inpVali.invalidAccount"><small class="error">Invalid Account Number</small></span>
           <span *ngIf="accountName"><small style="font-size:16px;color: #ffff;">{{accountName}}</small></span>
           <div class="error" >
             <div *ngIf="accountDetailsResp">
               {{accountDetailsResp}}
             </div>         
-          </div>
+          </div> -->
         </div>
       </ion-col>
       </ion-row>
+      <div style="text-align:center;z-index:1000; width:100%;">
+        <div style="padding-top:10px;"></div>
+        <ion-button [disabled]="!bodyUpdateAccountInfo.accountNo" (click)="getAccountDetails()"  color="light" shape="round" style="color: #000000; font-weight: bold; width: 187px;">
+         PROCEED
+        </ion-button>   
+        </div>
       <ion-row *ngIf="accountName">
         <ion-col size="12">
           <div class="form-group">
@@ -37,6 +46,27 @@
             <ion-input type="text" style="color: #fff;" name="accountName" id="accountName" #accountName="ngModel"  [(ngModel)]="bodyUpdateAccountInfo.accountName"  placeholder="Update Account Name" required></ion-input>
             <div *ngIf="accountName.invalid && (accountName.dirty || accountName.touched)" class="error">
               <div *ngIf="accountName.errors.required">Account Name is required</div>
+              </div> 
+          </div>
+        </ion-col>
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Update Email</ion-label>
+            <ion-input type="text" style="color: #fff;" name="email" id="emailAddress" #emailAddress="ngModel"  [(ngModel)]="bodyUpdateAccountInfo.emailAddress"  placeholder="Update Email Address"></ion-input>
+            <div *ngIf="emailAddress.invalid && (emailAddress.dirty || emailAddress.touched)" class="error">
+              <div *ngIf="emailAddress.errors.required">Account Name is required</div>
+              </div> 
+          </div>
+        </ion-col>
+
+        <ion-col size="12">
+          <div class="form-group">
+            <div style="padding: 10px;"></div>
+            <ion-label class="justifyCenter">Update Mobile Number</ion-label>
+            <ion-input type="text" style="color: #fff;" name="phoneNo" id="phoneNo" #phoneNo="ngModel"  [(ngModel)]="bodyUpdateAccountInfo.phoneNo"  placeholder="Update Mobile Number"></ion-input>
+            <div *ngIf="phoneNo.invalid && (phoneNo.dirty || phoneNo.touched)" class="error">
+              <div *ngIf="phoneNo.errors.required">Account Name is required</div>
               </div> 
           </div>
         </ion-col>

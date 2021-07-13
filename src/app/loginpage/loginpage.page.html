@@ -17,26 +17,26 @@
    </div>
     <form name="loginForm" id="loginForm" #loginForm="ngForm">
       <div >
-        <ion-label for="" class="control-label" style="color: #fff;">Username</ion-label>
+        <ion-label for="" class="control-label" style="color: #fff;">Account Number</ion-label>
         <div style="padding: 5px;"></div>
         <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0px;">
           <ion-col size="12" style="padding: 0px;margin: 0px;">
-            <ion-input style="border: none;font-size: 22px !important;color: #fff !important;" placeholder="Username" type="text" name="username" id="username" [(ngModel)]="LoginResource.username" #username="ngModel"  required></ion-input>
+            <ion-input style="border: none;font-size: 22px !important;color: #fff !important;" placeholder="Account Number" type="text" name="username" id="username" [(ngModel)]="LoginResource.username" #username="ngModel"  required></ion-input>
       
           </ion-col>
         </ion-row>
           <div *ngIf="username.invalid && (username.dirty || username.touched) " class="error">
           <div *ngIf="(username.errors.required || username.errors)">
-            Username is required
+            Account Number is required
           </div>
       </div>
       <div style="padding: 5px;"></div>
   
-        <ion-label for="" style="color: #fff;" >Password</ion-label>
+        <ion-label for="" style="color: #fff;" >Pin</ion-label>
         <div style="padding: 5px;"></div>
         <ion-row style="border-radius: 5px;border: 0.5px solid #d6d3d3;padding: 0 10px 0 0;background-color:rgba(0,0,0, 0.38) !important;">
           <ion-col size="10" style="padding: 0px;margin: 0px;">
-            <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Password" 
+            <ion-input style="border: none !important;background-color:transparent !important;font-size: 22px !important;color: #fff !important;"  placeholder="Pin" 
             [type]="show ? 'text' : 'password'" id="pIN" name="pIN" #pIN="ngModel"  [(ngModel)]="LoginResource.pIN" required></ion-input>
           </ion-col>
           <ion-col size="2" style="padding: 0px;margin: 0px;">
@@ -66,7 +66,7 @@
               <div style="padding: 5px;"></div>
       <ion-button [disabled]="loginForm.invalid" shape="round" fill="solid" expand="block" class="btnStyle" style="text-transform: none !important; color: #00CECE !important;font-size: 22px !important;" (click)="loginUser()">Login</ion-button>
 
-  
+<!--   
       <div style="color: #fff;text-align: center;">
         <div class="txt">
           <h6>Or Login in with</h6>
@@ -81,7 +81,7 @@
             </ion-button>
             </ion-col>
       
-            </ion-row>
+            </ion-row> -->
     </form>
   </div>
 

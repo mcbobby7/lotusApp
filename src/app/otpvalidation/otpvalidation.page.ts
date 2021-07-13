@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController,ToastController,AlertController, LoadingController } from '@ionic/angular';
 import { AuthenticationService } from '../_services/authentication.service';
 import { GlobalalertservicesService } from '../_services/globalalertservices.service';
-import { AuthServiceProxy, IGetAccountDetailsResponse, LotusServiceProxy, User,UserLoginPayload } from '../_services/service-proxies';
+import { AuthServiceProxy, IGetAccountDetailsResponse,SetNewPINPayload, LotusServiceProxy, User,UserLoginPayload } from '../_services/service-proxies';
 
 @Component({
   selector: 'app-otpvalidation',
@@ -26,7 +26,8 @@ processCompleted: boolean = false;
   newUser = new User().clone();
   customerAccountResp: IGetAccountDetailsResponse;
   LoginResource = new UserLoginPayload().clone();
-  regUser = new User().clone();
+  regUser:any = '';
+  NewPINPayload = new SetNewPINPayload().clone()
   constructor(private navCtrl: NavController,
     private activatedroute: ActivatedRoute,
     private alertController: AlertController,
@@ -57,7 +58,8 @@ processCompleted: boolean = false;
       if (data.useraccount) {
         this.username = data.useraccount;
         this.loginService.getAllUsers(this.username, false, undefined, '', '').subscribe(data => {
-          console.log(data.result)
+          this.NewPINPayload.id = data.result[0].id;
+         console.log(data.result)
         })
 
         this.GalertService.gdismissLoading();
@@ -66,17 +68,31 @@ processCompleted: boolean = false;
       }
       if (data.newUser) {
         this.regUser = JSON.parse(data.newUser);
-        console.log(this.regUser)
+      //  console.log(this.regUser)
       }
 
     })
   }
   saveUser() {
+    this.regUser.username = this.username;
     this.loginService.saveUser(this.regUser,"","").subscribe(async (data)=>{
       if(!data.hasError){  
-        this.GalertService.gPresentToast(data.message, "success");       
-        this.GalertService.gdismissLoading();
-        this.router.navigate([this.nxtRoute]);
+        this.GalertService.gPresentToast(data.message, "success");
+        this.AuthenService.getuser().then(user => {
+          this.NewPINPayload.id = user[0].id;
+          this.NewPINPayload.newPIN = this.regUser.PIN;
+          this.NewPINPayload.secretQuestion = this.regUser.SecretQuestion;
+          this.NewPINPayload.secretAnswer = this.regUser.SecretAnswer;
+          
+          console.log(this.NewPINPayload);
+          this.loginService.setNewPassword(this.NewPINPayload, user[0].sessionToken, '').subscribe(data => {
+            this.GalertService.gdismissLoading();
+            if (!data.hasError) {
+              this.router.navigate([this.nxtRoute]);
+            }
+          })
+        });
+
       } else {
         this.GalertService.gPresentToast(data.message, "danger");   
         this.GalertService.gdismissLoading();
@@ -143,6 +159,7 @@ processCompleted: boolean = false;
           this.GalertService.gdismissLoading();
           this.GalertService.gPresentToast(dataResp.message, "success");
           if (this.regUser) {
+            this.NewPINPayload.id = dataResp.result.id;
             this.saveUser();
           } else {
             this.router.navigate([this.nxtRoute]);
@@ -186,23 +203,25 @@ processCompleted: boolean = false;
           text: 'Verify',          
           handler: async (data) => {
             if (data.dob) {
-              var userdateofBirth = data.dob;
+              var userdateofBirth:string = data.dob;
               this.GalertService.gPresentLoading('Please wait...');            
     this.LotusService.getAccountDetails(this.username,'','').subscribe((data) => {
       this.customerAccountResp = data.result;      
       if (!data.hasError && this.customerAccountResp.body) {
-        this.LoginResource.username = "dob";
+        this.LoginResource.username = this.username;
         this.LoginResource.pIN = "dob";
         this.LoginResource.authMode = "dob";
-        this.LoginResource.dOB = userdateofBirth;
+        userdateofBirth = userdateofBirth.replace("-","");
+        this.LoginResource.dOB = userdateofBirth.replace("-","");
         this.loginService.login(this.LoginResource, "",'').subscribe(dataResp => {
           if (!dataResp.hasError) {
             this.newUser = dataResp.result;
             this.AuthenService.addUser(this.newUser);
                   this.GalertService.gdismissLoading();
                   this.GalertService.gPresentToast(dataResp.message, "success");
-                  if (this.regUser) {
-                    this.saveUser();
+            if (this.regUser) {
+              this.NewPINPayload.id = dataResp.result.id;
+              this.saveUser();                   
                   } else {
                     this.router.navigate([this.nxtRoute]);
                   }
