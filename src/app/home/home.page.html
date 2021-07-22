@@ -4,7 +4,17 @@
       <img src="assets/images/newLotus.png" style="width: 7rem;">
     </div>
   </div>
-  <div *ngIf="mode == 'development'" class="test">THIS IS A TEST BUILD</div>
+  <div (click)="printStuff()" *ngIf="mode == 'development'" class="test">THIS IS A TEST BUILD</div>
+  <img (click)="setIMEI()" src="assets/icon/transaction.svg" style="margin-left: 40px; margin-top: 20px;">
+  <ion-row style="margin-top: 250px;" *ngIf="imeiTrue">
+    <ion-col size="12">
+      <div class="form-group">
+        <div style="padding: 10px;"></div>
+        <ion-label class="justifyCenter">Device Number</ion-label>
+        <ion-input (ionChange)="onChange()"  type="email" style="color: #fff;" name="imei" id="imei"  [(ngModel)]="imei"  placeholder="Enter Device Number" required></ion-input>
+      </div>
+    </ion-col>
+    </ion-row>
 
 
   <div style="position: absolute;bottom: 50px;width:100%;">

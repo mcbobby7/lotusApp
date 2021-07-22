@@ -51,8 +51,19 @@ export class JwtInterceptor implements HttpInterceptor {
             request = request.clone({
                 setHeaders: {
                     session_token: `${token}`,
+                    imei: localStorage.getItem('imei')
                 },
             });
+        }else {
+            const token = this.authServ.globalUser.value.sessionToken;
+            request = request.clone({
+                setHeaders: {
+                    imei: localStorage.getItem('imei'),
+                    session_token: `${token}`,
+                },
+                
+            });
+            console.log(localStorage.getItem('imei'));
         }
 
         return next.handle(request)

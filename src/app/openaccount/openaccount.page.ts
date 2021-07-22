@@ -443,6 +443,12 @@ export class OpenaccountPage implements OnInit {
             let error = JSON.parse(data.result.error.message)
             this.GalertService.gPresentToast(error.error.errorDetails[0].message, "danger");
        }
+       let error = JSON.parse(data.result.error.message)
+       if(error) {
+        this.GalertService.gPresentToast(error.error.errorDetails[0].message, "danger");         
+       }else {
+        this.GalertService.gPresentToast("Something went wrong", "danger"); 
+       }
         }
         else {
           let error = JSON.parse(data.result.error.message)
